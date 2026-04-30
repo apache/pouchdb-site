@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Introducing PouchDB custom builds</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Introducing PouchDB custom builds</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2016-06-06-introducing-pouchdb-custom-builds.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 06 June 2016<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <blockquote>
+<p>&quot;Hold the pickles, hold the lettuce; special orders don't upset us.&quot;</p>
+<p><em>– Burger King jingle</em></p>
+</blockquote>
+<p>When you're building a large open-source project, the challenge often becomes less about &quot;how do we add new features?&quot; and more about &quot;how do we let people opt-out of the features they don't want?&quot;.</p>
+<p>This is especially important in JavaScript projects, where the code is usually shipped to users' browsers, meaning every byte counts. Furthermore, with modern build systems based on npm, it's painful to sit and wait for a large dependency to be <code>npm install</code>ed, especially if you're only using a small part of it.</p>
+<p>Large dependencies can mean a loading spinner in your user's browser, as well as an npm spinner in your own console.</p>
+<h3>PouchDB – not so pocket-sized anymore</h3>
+<p>PouchDB is an ambitious project, and as such it's grown a lot over the years. It started out as a simple way to sync CouchDB to IndexedDB (originally <a href="https://github.com/pouchdb/pouchdb/blob/e46433351bbda4adfbea8849e38c44edd9260a98/README">only supporting Firefox Nightly</a>!), whereas now it's used in a variety of contexts:</p>
+<ul>
+<li>In Node.js using <a href="https://github.com/Level/leveldown">LevelDB</a></li>
+<li>In hybrid apps using <a href="https://github.com/nolanlawson/cordova-plugin-sqlite-2">native SQLite</a></li>
+<li>As its own <a href="https://github.com/pouchdb/pouchdb-server/">server</a></li>
+<li>As an AJAX interface to CouchDB</li>
+<li>As a layer over WebSQL, LocalStorage, or even in-memory</li>
+</ul>
+<p>With each new addition, PouchDB's codebase has steadily swollen to support the new use case. And while we've been pretty good at keeping the core size down (45kB min+gz is hefty for a JavaScript library, but not enormous), users still often ask us these sorts of questions:</p>
+<ul>
+<li>What if I don't want map/reduce?</li>
+<li>What if I'm only using the IndexedDB adapter?</li>
+<li>What if I'm only using PouchDB to talk to CouchDB?</li>
+</ul>
+<p>If you're not using any of the dependencies, it's a shame to include them in the bundle that gets shipped to your users. We feel ya.</p>
+<p>Also, because PouchDB has some large native dependencies (such as LevelDB), the first <code>npm install</code> can take a very long time, and it can even fail on certain operating systems (Windows, looking at you). This is especially bothersome when you consider that those dependencies are only required if you're using PouchDB in Node.js. (And even then, you could just use the in-memory adapter instead.)</p>
+<p>So unfortunately, folks who are only using PouchDB in the browser still have to pay the extra cost of installing LevelDB. And ditto for SQLite, even though it's only used for the optional <code>node-websql</code> adapter! This is a less-than-ideal scenario.</p>
+<h3>Breaking up is hard to do</h3>
+<p>With PouchDB 5.4.0, though, we've made a huge architectural change to support users who want a slimmer or more customized PouchDB experience. Starting with this release, many of the core
+modules that were previously internal to PouchDB can now be <code>npm install</code>ed and configured separately.</p>
+<p>By adopting this pattern, PouchDB is joining the likes of <a href="http://babeljs.io/">Babel</a>, <a href="http://lodash.com/">Lodash</a>, <a href="http://emberjs.com/">Ember</a>, and other projects that have been unbundled for quite some time. However, even though many JavaScripters now take this kind of unbundling for granted, it's still <a href="https://medium.com/@jonathanewerner/thoughts-about-package-modularization-d9631f7a41f1">very difficult for library authors to implement</a>. npm itself does not come with built-in tools to manage multi-package projects, and even <a href="https://docs.npmjs.com/cli/link">npm link</a> can quickly break down if you're trying to run a large test suite with multiple projects across multiple repos.</p>
+<p>Luckily, the Babel authors have risen to the occasion and created <a href="http://lernajs.com/">Lerna</a>, which is the tool they use to manage <a href="https://github.com/babel/babel/tree/f7c6afe594202104b6047ec67b3cbe2987b04aa8/packages">Babel's numerous sub-packages</a>. Lerna allows JavaScript library authors to define multiple packages for a single repo, and then link and test them all as one. In other words, it's a tool to manage <a href="https://github.com/babel/babel/blob/f7c6afe594202104b6047ec67b3cbe2987b04aa8/doc/design/monorepo.md">monorepos</a>.</p>
+<p>As it turns out, this monorepo strategy is perfect for PouchDB. Logically, we have many small interdependent components (such as the replication module, the map/reduce module, or the IndexedDB adapter), but we prefer to test them all in one large test suite, because a change in one module can have cascading effects in another module. Breaking everything up into many tiny repos, which would be tested, versioned, and developed independently, is just not practical for us.</p>
+<p>Using Lerna, though, we can keep all of PouchDB's codebase in one repo, and still release it as separate packages. There are some tricky bits – such as how to manage source code versus bundled code, and how to measure code coverage – but in those cases <a href="http://rollupjs.org/">Rollup</a> remains a great tool to allow us to de-bundle and re-bundle at will. In particular, Rollup allows us to build a &quot;debug&quot; version of PouchDB with many more endpoints exposed, which we then test as a single <code>index.js</code> for measuring code coverage. Then, we are still free to ship a &quot;production&quot; version of PouchDB with those endpoints disabled.</p>
+<p>With this release, we are also committing to the <code>jsnext:main</code> standard <a href="https://github.com/rollup/rollup/wiki/jsnext:main">as promoted by Rollup</a>, meaning that all of our packages (including <code>pouchdb</code> itself) now ship with both ES modules and CommonJS, and you are free to use whichever one you want. In general, the ES modules will tend to give you smaller bundle sizes (assuming you are using Rollup, SystemJS, or Webpack 2 as your bundler), whereas the CommonJS bundle is more appropriate for backwards compatibility. (Neither release makes use of ES6 features aside from ES modules, so you do not need a transpiler like Babel or <a href="http://buble.surge.sh/">Bublé</a>).</p>
+<h3>Cool, how does it work?</h3>
+<p>PouchDB now ships with a few presets, which are a good demonstration of how the new plugin feature works. Here's <code>pouchdb-browser</code> (as CommonJS), which is the &quot;browser&quot; version of PouchDB:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-idb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-websql'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-mapreduce'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-replication'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> PouchDB<span class="token punctuation">;</span></code></pre></figure><p>As you can see, <code>pouchdb-browser</code> is just an extension of <code>pouchdb-core</code>, with some key modules added in: the IndexedDB adapter, the WebSQL adapter, the HTTP adapter, map/reduce, and replication. If you're not using any of these features, you can just delete that plugin and enjoy the file savings.</p>
+<p>Additionally, you'll notice that <code>pouchdb-browser</code> does not depend on LevelDB at all. Instead, that lives in <code>pouchdb-node</code>, a.k.a. the &quot;Node&quot; version of PouchDB:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-leveldb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-mapreduce'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-replication'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> PouchDB<span class="token punctuation">;</span></code></pre></figure><p>The only difference here is that <code>pouchdb-browser</code> uses IndexedDB and WebSQL, whereas <code>pouchdb-node</code> uses LevelDB. Hence, LevelDB is not installed if you do <code>npm install pouchdb-browser</code>.</p>
+<p>Also, if you'd like to use a custom adapter, those are now shipped separately. So if you want to use PouchDB in a purely in-memory mode, you can do:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-memory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Or if you're only using PouchDB to talk to CouchDB:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This applies to all of the plugins we previously shipped in the <a href="/api.html#extras">&quot;extras&quot; API</a>. Any of these can now be mixed and matched as desired:</p>
+<ul>
+<li><code>pouchdb-adapter-fruitdown</code></li>
+<li><code>pouchdb-adapter-localstorage</code></li>
+<li><code>pouchdb-adapter-memory</code></li>
+<li><code>pouchdb-adapter-node-websql</code></li>
+</ul>
+<p>Note that the plugin order of the non-HTTP adapters matters. So for instance, if you wanted to fall back from IndexedDB to WebSQL to LocalStorage to in-memory, you would do:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-idb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-websql'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-localstorage'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-memory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This also opens up the possibility of more easily including custom third-party adapters, such
+as <a href="https://github.com/nolanlawson/worker-pouch">worker-pouch</a> and <a href="https://github.com/nolanlawson/socket-pouch">socket-pouch</a>.</p>
+<h3>How many bytes can it save?</h3>
+<p>Here is a breakdown of the bundle size of various possible PouchDB configurations, using Browserify, <a href="https://github.com/substack/bundle-collapser">bundle-collapser</a>, and Uglify.</p>
+<div class="table-responsive">
+<table class="table"><thead>
+<tr>
+<th>Preset</th>
+<th>Browserify + Uglify</th>
+<th>Browserify + Uglify + Gzip</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>pouchdb</code></td>
+<td>140.06 kB</td>
+<td>45.15 kB</td>
+</tr>
+<tr>
+<td><code>pouchdb-browser</code></td>
+<td>148.3 kB</td>
+<td>47.54 kB</td>
+</tr>
+<tr>
+<td><code>pouchdb-http</code></td>
+<td>64.29 kB</td>
+<td>21.54 kB</td>
+</tr>
+<tr>
+<td>PouchDB, IndexedDB only</td>
+<td>83.47 kB</td>
+<td>27.79 kB</td>
+</tr>
+<tr>
+<td>PouchDB, WebSQL only</td>
+<td>85.15 kB</td>
+<td>28.16 kB</td>
+</tr>
+<tr>
+<td>PouchDB, replication only</td>
+<td>76.28 kB</td>
+<td>25.26 kB</td>
+</tr>
+<tr>
+<td>PouchDB, in-memory only</td>
+<td>350.74 kB</td>
+<td>100.81 kB</td>
+</tr>
+</tbody></table></div>
+<p>Note that <code>pouchdb-browser</code> is slightly bigger than <code>pouchdb</code>, because <code>pouchdb</code>
+is heavily optimized with Rollup before publishing, whereas <code>pouchdb-browser</code> is
+not. Also, some optional plugins (like <code>pouchdb-adapter-memory</code>) are still quite large. In the future, we may consider using Rollup more aggressively, or trying to reduce the size of <code>pouchdb-core</code>. Or we might just wait
+for the ecosystem to switch to tools that do automatic tree-shaking for ES modules,
+such as Rollup or Webpack 2. (If you use such a tool, and it supports <code>jsnext:main</code>, then you should already be able to get smaller bundle sizes.)</p>
+<p>In the meantime, though, a major benefit of PouchDB unbundling is still in reduced <code>npm install</code> times, as well as avoiding compatibility issues with native dependencies like <code>leveldown</code> and <code>sqlite3</code>.</p>
+<h3>Backwards compatibility?</h3>
+<p>Yes indeed, as suggested by the 5.4.0 release version, this is a fully <em>backwards-compatible change</em>. The <code>pouchdb</code> module will still act exactly as it did before, including the <code>dist/</code> and <code>extras/</code> APIs. Essentially, a <code>npm install pouchdb</code> will install the kitchen sink. We believe this is the best approach, because it provides a batteries-included experience for beginners, without having to burden them with understanding a vast plugin API.</p>
+<p>However, the <code>extras/</code> API is deprecated, and will be removed in a later version. Furthermore, the <code>PouchDB.utils</code>, <code>PouchDB.ajax</code>, and <code>PouchDB.Errors</code> APIs, which have been undocumented and unrecommended for years, are now removed. Plugin authors should update their code to use the new sub-packages.</p>
+<p>That said, there is an important note about the new sub-packages: all of them are pegged to PouchDB's version number, meaning that when PouchDB cuts a new release, each of the sub-packages will also be released with the same version number. Furthermore, not all of these sub-packages follow <a href="http://semver.org/">semantic versioning</a>, because conceptually they are internal modules, which are only exposed on npm as an implementation detail. The APIs for these packages may change at any time, so you should use exact versioning if you decide to use them directly. These packages will be clearly marked as non-semver in their READMEs.</p>
+<p>In the new system, the packages that serve as &quot;plugins&quot; (as well as <code>pouchdb</code> itself) are considered user-facing and semver-compliant. In particular, these packages follow semver:</p>
+<ul>
+<li><code>pouchdb</code></li>
+<li><code>pouchdb-adapter-fruitdown</code></li>
+<li><code>pouchdb-adapter-http</code></li>
+<li><code>pouchdb-adapter-idb</code></li>
+<li><code>pouchdb-adapter-leveldb</code></li>
+<li><code>pouchdb-adapter-localstorage</code></li>
+<li><code>pouchdb-adapter-memory</code></li>
+<li><code>pouchdb-adapter-node-websql</code></li>
+<li><code>pouchdb-adapter-websql</code></li>
+<li><code>pouchdb-browser</code></li>
+<li><code>pouchdb-http</code></li>
+<li><code>pouchdb-mapreduce</code></li>
+<li><code>pouchdb-node</code></li>
+<li><code>pouchdb-replication</code></li>
+</ul>
+<p>Other modules, such as <code>pouchdb-ajax</code>, <code>pouchdb-checkpointer</code>, and <code>pouchdb-promise</code>, may be freely used, but they make no guarantees as to semver. As we did with the <code>extras/</code> API, all of these are used at your own risk.</p>
+<h3>Scoped packages?</h3>
+<p>We considered using <a href="https://www.npmjs.com/private-modules">scoped packages</a> (e.g. <code>@pouchdb/foo</code>) as opposed to prefixed packages (e.g. <code>pouchdb-foo</code>) for the new monorepo architecture. In fact, we even asked the community to <a href="https://github.com/pouchdb/pouchdb/issues/5165">vote on the issue</a>, and as of today the vote stands at 27 for scopes and 24 for prefixes.</p>
+<p>However, the core team ultimately decided that it's too early to hop onto the scoping bandwagon. There are still plenty of thorny issues with scopes, such as the fact that npm organizations are not free for open-source yet, meaning we would have to register a single <code>pouchdb</code> account and share it among all the contributors. (See <a href="https://github.com/pouchdb/pouchdb/issues/5165">the voting issue</a> for discussion about other issues with scopes.) We look forward to these issues being resolved as scoping matures, at which point we may consider moving over to scoped packages.</p>
+<p>For the foreseeable future, though, PouchDB's sub-packages will sport names like <code>pouchdb-browser</code>, <code>pouchdb-ajax</code>, and <code>pouchdb-replication</code>. Even if it's a bit old-fashioned, we hope that PouchDB's users will experience fewer surprises and confusion with this more traditional naming convention. And considering the popularity of <code>ember-*</code>, <code>babel-*</code>, and <code>react-*</code> packages, it's safe to say PouchDB is in good company.</p>
+<h3>Build-a-bear, build-a-pouch</h3>
+<p>Since there are dozens of combinations for building your own PouchDB, we encourage the community to mix-and-match, and to publish any presets that they find useful. As of 5.4.0, there are three presets that PouchDB will officially support as first-party packages:</p>
+<ul>
+<li><code>pouchdb-browser</code> – the &quot;browser&quot; version of PouchDB</li>
+<li><code>pouchdb-node</code> – the &quot;Node&quot; version of PouchDB</li>
+<li><code>pouchdb-http</code> – PouchDB as an HTTP interface to CouchDB (sans map/reduce)</li>
+</ul>
+<p>In the future, we also plan to move some packages that have previously existed in third-party repos (including <code>pouchdb-server</code>, <code>pouchdb-express-router</code>, and <code>pouchdb-find</code>) into the main PouchDB repository, so that they can be tested, versioned, and released at the same time as PouchDB.</p>
+<p>So please, try out the new customizable PouchDB, and let us know what you think! And if there are any bugs, there's only one repo you need to worry about, so please direct your bugs to <a href="http://github.com/pouchdb/pouchdb/issues/">the PouchDB issues page</a>. Happy unbundling!</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Prebuilt databases with PouchDB</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Prebuilt databases with PouchDB</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2016-04-28-prebuilt-databases-with-pouchdb.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 28 April 2016<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <p>A common scenario when writing an app is that you have some data in a database,
+and you want it to be immediately available when the app starts up. Your users
+might be able to modify the data once it's loaded, but either way, they should
+be able to quickly start from a predetermined state.</p>
+<p>PouchDB offers two ways to do this:</p>
+<ol>
+<li>As a prebuilt SQLite file (appropriate for hybrid apps)</li>
+<li>As a &quot;dump&quot; file (appropriate for web apps)</li>
+</ol>
+<p>In this tutorial, I'll give step-by-step instructions for both techniques.</p>
+<h2>Prebuilt SQLite files</h2>
+<div class="alert alert-info">
+<div class="alert-text">
+<p><strong>Note:</strong> this method only works for hybrid apps, i.e. apps built with tools like Cordova,
+PhoneGap, and Ionic.</p>
+</div></div>
+<p>The advantage of bundling a SQLite file with your app is that the database is instantly
+available. There's no need to process any data to convert it to a usable format; the SQLite
+file is already ready for PouchDB to use.</p>
+<h3>Creating the SQLite file</h3>
+<p>To start, we'll need some data. Let's say I have a CouchDB or a PouchDB Server that looks like this:</p>
+<p>
+  <a href="/static/img/turtles_db.png" target="_blank">
+    <img class="img-responsive"  src="/static/img/turtles_db.png" alt="A database with some Teenage Mutant Ninja Turtles" />
+  </a>
+</p>
+<p>We have four documents in this database, which I've named <code>turtles</code>.</p>
+<p>Next, we need to convert this data into a SQLite file. If we started PouchDB Server like so:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ pouchdb-server <span class="token parameter variable">--sqlite</span></code></pre></figure><p>Then we're already done. There will be a file called <code>turtles</code> in the directory where we ran PouchDB Server, which is already a SQLite file.
+You can verify this for yourself by opening the file with the <code>sqlite3</code> command:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">$ sqlite3 turtles
+SQLite version 3.8.10.2 2015-05-20 18:17:19
+Enter ".help" for usage hints.
+sqlite> .tables
+attach-seq-store  by-sequence       local-store
+attach-store      document-store    metadata-store
+sqlite> select * from 'by-sequence';
+1|{"name":"Donatello","weapon":"bo","bandana":"purple"}|0|donatello|1-c2f9e6a91b946fb378d53c6a4dd6eaa2
+2|{"name":"Leonardo","weapon":"katana","bandana":"blue"}|0|leonardo|1-c95202ca170be0318d085b33528f7995
+3|{"name":"Michelangelo","weapon":"nunchaku","bandana":"orange"}|0|michelangelo|1-52ebc5a2f8dbc0dc247cd87213e742d1
+4|{"name":"Raphael","weapon":"sai","bandana":"red"}|0|raphael|1-77812e9da146bc18a37e51efb063dbac</code></pre></figure><p>However, if you're not using PouchDB Server with the <code>--sqlite</code> option, then we'll need to use a more generic approach, which
+can copy any CouchDB or PouchDB database to a SQLite file.</p>
+<p>So let's write a short Node script to do that:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// load PouchDB with the optional node-websql adapter</span>
+<span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-node-websql'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// set up our databases - make sure the URL is correct!</span>
+<span class="token keyword">var</span> inputDB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://localhost:5984/turtles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> outputDB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'turtles.db'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'websql'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// replicate</span>
+inputDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span>outputDB<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Let's call this script <code>dump.js</code>.</p>
+<p>Now, if you haven't already, you'll need to install PouchDB and the <a href="https://www.npmjs.com/package/pouchdb-adapter-node-websql">pouchdb-adapter-node-websql</a> plugin in the directory where we'll run the script:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> pouchdb
+$ <span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-node-websql</code></pre></figure><p>Next, we'll run our script using:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ <span class="token function">node</span> dump.js</code></pre></figure><p>If this works, you will have a file called <code>turtles.db</code> in the directory where you ran the script. (We're adding the <code>.db</code> extension, which is not strictly necessary, but is a common convention for SQLite files.)</p>
+<p>You can still inspect the database file using the <code>sqlite3</code> command, as described above. Note that the tables
+were built by PouchDB, though, and are not meant to be modified by hand.</p>
+<h3>Bundling the SQLite file in your app</h3>
+<p>Now we'll want to bundle the SQLite database file in our app. To do so, we'll use
+<a href="https://github.com/nolanlawson/cordova-plugin-sqlite-2">SQLite Plugin 2</a> and follow
+<a href="https://github.com/nolanlawson/cordova-plugin-sqlite-2#how-do-i-create-a-prepopulated-database">the instructions for creating prepopulated databases</a>.</p>
+<p>If you don't have it already, install the <code>cordova</code> tool:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> cordova</code></pre></figure><p>Then create a new Cordova project:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ cordova create pouchdb-prebuilt-demo</code></pre></figure><p>Next, we'll want to copy the <code>turtles.db</code> into the <code>www/</code> directory. This will ensure that the file
+is bundled with the app.</p>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>PouchDB 5.x instructions:</strong> Before PouchDB 6, SQLite databases need to be
+prefixed with <code>_pouch_</code> in order to be located. So you would need to rename
+<code>turtles.db</code> to <code>_pouch_turtles.db</code>. This is not necessary in PouchDB 6+.</p>
+</div></div>
+<p>At this point, we'll also need to install some plugins for our Cordova app. In particular, we'll need the <a href="https://github.com/apache/cordova-plugin-file">File Plugin</a>
+and <a href="https://github.com/nolanlawson/cordova-plugin-sqlite-2">SQLite Plugin 2</a>. Inside of the <code>pouchdb-prebuilt-demo</code> directory, run:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ cordova plugin <span class="token function">add</span> cordova-plugin-file <span class="token parameter variable">--save</span>
+$ cordova plugin <span class="token function">add</span> cordova-plugin-sqlite-2 <span class="token parameter variable">--save</span></code></pre></figure><p>(For Ionic, you can also do <code>ionic plugin add</code>, and it will have the same effect.)</p>
+<p>We'll also need PouchDB itself. For expediency, let's just <a href="/download.html">download PouchDB</a>
+and include <code>pouchdb.js</code> in the app, under <code>www/js</code>. Then we'll add it to <code>index.html</code>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>js/pouchdb.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><p>Next, we'll need to write some code to copy the <code>turtles.db</code> file at runtime from the read-only <code>www/</code> directory
+to a read-write directory. This is the only cost we pay at startup when using this approach, but it allows us to
+modify the database after it's been loaded.</p>
+<p>So let's write a helper function to do this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// copy a database file from www/ in the app directory to the data directory</span>
+<span class="token keyword">function</span> <span class="token function">copyDatabaseFile</span><span class="token punctuation">(</span><span class="token parameter">dbName</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> sourceFileName <span class="token operator">=</span> cordova<span class="token punctuation">.</span>file<span class="token punctuation">.</span>applicationDirectory <span class="token operator">+</span> <span class="token string">'www/'</span> <span class="token operator">+</span> dbName<span class="token punctuation">;</span>
+  <span class="token keyword">var</span> targetDirName <span class="token operator">=</span> cordova<span class="token punctuation">.</span>file<span class="token punctuation">.</span>dataDirectory<span class="token punctuation">;</span>
+  <span class="token comment">// resolve the source and target filenames simultaneously</span>
+  <span class="token keyword">return</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+    <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">resolveLocalFileSystemURL</span><span class="token punctuation">(</span>sourceFileName<span class="token punctuation">,</span> resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">resolveLocalFileSystemURL</span><span class="token punctuation">(</span>targetDirName<span class="token punctuation">,</span> resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">files</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> sourceFile <span class="token operator">=</span> files<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> targetDir <span class="token operator">=</span> files<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">// try to fetch the target file, to check if it exists</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      targetDir<span class="token punctuation">.</span><span class="token function">getFile</span><span class="token punctuation">(</span>dbName<span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// target file doesn't exist already, so copy it</span>
+      <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        sourceFile<span class="token punctuation">.</span><span class="token function">copyTo</span><span class="token punctuation">(</span>targetDir<span class="token punctuation">,</span> dbName<span class="token punctuation">,</span> resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>This uses the standard Cordova <a href="https://github.com/apache/cordova-plugin-file">File APIs</a> – such as <code>getFile()</code> and <code>copyTo()</code> – while adding Promises to make it a bit more easy to use. (Note that you will need a Promise shim if you are targeting older devices.)
+It also checks whether the target file already exists, ensuring that the database is only ever copied once.</p>
+<p>Next, we'll need to include a plugin, [pouchdb-adapter-cordova-sqlite(https://github.com/nolanlawson/pouchdb-adapter-cordova-sqlite)]. This plugin will allow us to use native SQLite rather than WebSQL (which doesn't support prebuilt databases).</p>
+<p>To include this plugin, either <code>npm install pouchdb-adapter-cordova-sqlite</code> or <a href="https://unpkg.com/pouchdb-adapter-cordova-sqlite/dist/pouchdb.cordova-sqlite.js">directly download it</a>, then link to it:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>js/pouchdb.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>js/pouchdb.cordova-sqlite.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><div class="alert alert-info">
+<div class="alert-text">
+<p><strong>PouchDB 5.x instructions:</strong> Before PouchDB 6, the WebSQL adapter would automatically fall back to SQLite if it detected it was running in a Cordova environment and the Cordova SQLite plugin was installed. This behavior <a href="https://github.com/pouchdb/pouchdb/wiki/Breaking-changes">was removed</a> because it was difficult to maintain and configure.</p>
+</div></div>
+<p>Next, let's write the code to call this function and then print the contents of our preloaded PouchDB. Add this code to <code>www/js/index.js</code>, ensuring that it runs after the <code>deviceready</code> event:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token function">copyDatabaseFile</span><span class="token punctuation">(</span><span class="token string">'turtles.db'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// using the Cordova SQLite plugin. Make sure this plugin is loaded correctly!</span>
+  <span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'turtles.db'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'cordova-sqlite'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">include_docs</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">results</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> pre <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'pre'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  pre<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>results<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token string">'  '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>pre<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>console<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Next, to run the app on Android, we can do:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ cordova platform <span class="token function">add</span> android
+$ cordova run android</code></pre></figure><p>Or on iOS:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ cordova platform <span class="token function">add</span> ios
+$ cordova run ios</code></pre></figure><p>If all goes well, you should see the following screens for Android and iOS:</p>
+<p>
+  <a href="/static/img/prebuilt.png" target="_blank">
+    <img class="img-responsive"  src="/static/img/prebuilt.png" alt="Prebuilt database app screenshot on iOS and Android" />
+  </a>
+</p>
+<p>The text in the background indicates that the database was preloaded and ready to go!</p>
+<div class="alert alert-info">
+<div class="alert-text">
+<p><strong>The full source code</strong> for this example is available <a href="https://github.com/nolanlawson/pouchdb-prebuilt-demo">on Github</a>.</p>
+</div></div>
+<h2>Loading from a dump file</h2>
+<p>On the web, we don't have the luxury of prebuilt SQLite files, because WebSQL
+isn't supported in every browser, and even those browsers that have WebSQL don't support prebuilt files.</p>
+<p>However, we can dump any PouchDB or CouchDB to a &quot;dump file&quot; using <a href="https://github.com/nolanlawson/pouchdb-dump-cli">pouchdb-dump-cli</a>.
+This is less efficient than the prebuilt database (since PouchDB has to process the
+file and write the data to IndexedDB/WebSQL), but it gets the job done.</p>
+<p>Going back to our &quot;turtles&quot; example, let's use <code>pouchdb-dump</code> to dump the contents
+of the database to a plaintext dump file. First, install <code>pouchdb-dump-cli</code>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> pouchdb-dump-cli</code></pre></figure><p>Then dump the database:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-bash">$ pouchdb-dump http://localhost:5984/turtles <span class="token operator">></span> turtles.txt</code></pre></figure><p>Now that we have a <code>turtles.txt</code> file, we can use the <a href="https://github.com/nolanlawson/pouchdb-load">pouchdb-load</a>
+plugin to load it into our database.</p>
+<div class="alert alert-info">
+<div class="alert-text">
+<p><strong>Note:</strong> if you'd like to make this dump file even smaller, you can use <a href="https://github.com/nolanlawson/short-revs">short-revs</a>
+to shorten all of the revision strings to <code>1-A</code>, <code>1-B</code>, <code>2-A</code>, etc. Be forewarned that this will
+make it incompatible with the source database, though, so you won't be able to replicate it back!</p>
+</div></div>
+<p>Assuming the dump file is hosted on our web site, we can then load it using <code>db.load()</code>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pre</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>display<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pre</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.load.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  <span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'turtles'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// check a local document to see if we've already preloaded</span>
+  db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'_local/preloaded'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">.</span>name <span class="token operator">!==</span> <span class="token string">'not_found'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> err<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// we got a 404, so the local document doesn't exist. so let's preload!</span>
+    <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">load</span><span class="token punctuation">(</span><span class="token string">'turtles.txt'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// create the local document to note that we've preloaded</span>
+      <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'_local/preloaded'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">include_docs</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    display<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>res<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token string">'  '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>console<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><p>This will fetch the <code>turtles.txt</code> file via AJAX and then load it into PouchDB. A special <code>_local</code> document
+lets us know if we've already loaded it, which means we can skip this step on subsequent views.</p>
+<p>If this works, you should see the four turtle documents printed to the screen, since they
+were successfully loaded from the dump file.</p>
+<div class="alert alert-info">
+<div class="alert-text">
+<p><strong>The full source code</strong> for this example is available in <a href="https://gist.github.com/nolanlawson/5100ca90dc1028d811a2b5c73119e323">this Gist</a>. And here's <a href="http://bl.ocks.org/nolanlawson/5100ca90dc1028d811a2b5c73119e323">a live version</a>.</p>
+</div></div>
+<h2>Wrapping up</h2>
+<p>Prebuilding a database can be a nice way to speed up the initial load of your
+app or web site. However, it is an optimization, so it takes a little bit of
+extra work to get it up and running.</p>
+<p>For the average use case, if you can avoid any complicated prebuild steps and simply
+replicate between CouchDB and PouchDB via the normal <code>replicate()</code> and <code>sync()</code> APIs,
+you should. In fact, CouchDB's replication is slated to speed up dramatically
+with v2.0 and v1.7, thanks to the new <a href="https://issues.apache.org/jira/browse/COUCHDB-2310">_bulk_get endpoint</a>.</p>
+<p>When <code>_bulk_get</code> lands, you may find that <code>pouchdb-load</code> isn't significantly
+more performant than just replicating directly from CouchDB. (Prebuilt SQLite files, however, are likely
+to remain much more performant.) Also note that PouchDB's replicator will automatically switch to the
+faster algorithm if it detects that the server supports <code>_bulk_get</code>.</p>
+<p>Hopefully this tutorial was useful for anybody struggling to get preloaded PouchDB databases into their app.
+If not, feel free to <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">get in touch</a> anytime!</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

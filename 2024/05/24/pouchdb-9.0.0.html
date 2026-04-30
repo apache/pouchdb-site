@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PouchDB 9.0.0</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">PouchDB 9.0.0</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2024-05-24-pouchdb-9.0.0.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
+      <strong>Published:</strong> 24 May 2024<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <p>The PouchDB developers are <em>delighted</em> to announce the immediate availability of PouchDB 9.0.0. This is a <strong>major</strong> release with 202 PRs merged since the last version.</p>
+<p>For a full changelog from 8.0.1 to 9.0.0, please see <a href="https://github.com/pouchdb/pouchdb/releases">the releases page</a> or view the <a href="https://github.com/pouchdb/pouchdb/compare/8.0.1...9.0.0">latest commits</a>.</p>
+<p>The PouchDB developers would like to thank all contributors for their hard and diligent work.</p>
+<h2>Highlights</h2>
+<ul>
+<li>Massively improved the stability and performance of the <code>indexeddb</code> adapter. Special thanks to <a href="https://github.com/alxndrsn">@alxndrsn</a>, <a href="https://medic.org">Medic</a>, and the <a href="https://developer.chrome.com/blog/advanced-web-apps-fund-oct-22">Google Advanced Web Apps Fund</a>.</li>
+<li>Introduce a default limit (of <code>25</code>) to the <code>.find()</code> method. This constitutes a backwards incompatible change and is the reason for the major version bump.</li>
+<li>Streamline the automated test suites and move in-browser testing to <a href="https://playwright.dev">Playwright</a> resulting in much more reliable test runs.</li>
+<li>Continue to update the codebase to ES6.</li>
+</ul>
+<h2>Changelog</h2>
+<h3>Features</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c7c8afb15f466c4846cc24a55155fc80094a5043">c7c8afb1</a> chore: remove <code>clone-buffer polyfill</code> (#8957)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ef655ecc55d01eb8d9664065fcc82e6a8c43b092">ef655ecc</a> chore: remove <code>AbortController</code> dependency and polyfills</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9a9ff27d3020ef807aaa2ed13d1916b0b3ad5c61">9a9ff27d</a> chore: remove IE polyfill for <code>ArrayBuffer.slice()</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/8739f80f6ce06e158f688073ad6b8697cd8c1174">8739f80f</a> chore: remove <code>Set</code>/<code>Map</code> polyfill</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9c587a640b59aa79984a76f9b6d59a1051c26dd8">9c587a64</a> pouchdb-find: make <code>_design/</code> prefix removal more specific (#8946)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0297c6a6e047d9f1693f0aa03d2d8d1c50407fe0">0297c6a6</a> (#8927) - Set default limit on find queries to 25</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2e48ed7dd47977f3dc1a83e6b54c26aa94978236">2e48ed7d</a> pouchdb-utils/flatten: replace with <code>Array.flat()</code> built-in (#8929)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e5731faecba63814ae7425b3cea98e83fed590b8">e5731fae</a> Replace <code>lodash.flatten()</code> with <code>Array.flat()</code> built-in (#8928)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7505bedd5464bdce8aedd84fe2ded48ec431718a">7505bedd</a> <code>isValidRev()</code>: reject revs with more than one dash (#8933)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3c8520344c640e3a739b1ebfec49ae957dad9b37">3c852034</a> <code>db.post()</code>, <code>db.bulkDocs()</code>: throw <code>INVALID_REV</code> consistently (#8934)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4a765418b277ddcf7fa8b54900af30dba00bd6a4">4a765418</a> feat: migrate dev dep <code>watch-glob</code> with maintained <code>glob-watcher</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/06170b67ba0a1c0af6dad68852d533c74b753b08">06170b67</a> replace the last occurrence of <code>jsnext:main</code> (#8663)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/905dfdfb3c6c7b6707668e74d8ade12ca5bb881f">905dfdfb</a> <code>isValidRev()</code>: cache regex</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9afecb285ae9d240294219e96b6701716d169831">9afecb28</a> dev dependencies: replace individual lodash functions (#8907)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/41cc5687401fbcd88c5f8169e859447714825062">41cc5687</a> chore(PouchDB-find): purified promise flow (#8860)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/08649d9660263c2054f3676df0822a51a1b7f2fe">08649d96</a> adapter-indexeddb: replace var with let/const (#8926)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2789b704588049b0163aa986ad888cac468272af">2789b704</a> indexeddb: improve <code>allDocs()</code> perf with skip &amp; key ranges (#8603)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/95e8c1eef5559815958fc1ef8805f1977ae94ad9">95e8c1ee</a> chore(PouchDB-find): utils <code>oneSetIsSubArrayOfOther</code> loop update (#8921)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e69fe21036305e3988bb9a7ef1cf808992476165">e69fe210</a> chore(PouchDB-find): minor cleanup (#8920)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9ba277bd886054a29c89265d250f847ba56c9846">9ba277bd</a> chore(PouchDB-find): loop updates (#8918)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d0eee195e7c2c92d4bda3c9f18bcb86c3b254bd5">d0eee195</a> chore(pouchdb-find): var -&gt; const/let (#8917)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5bc8f319bc302f0087ea5bfdbed2caccef1af0a0">5bc8f319</a> chore: PouchDB-find abstract-mapper update (#8913)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3e3be0be92f751bde0014dfc1e962f7fc9e02d01">3e3be0be</a> chore: PouchDB-find adapters/local refactor to async/await (#8914)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f48c76f7eb6c1a89ea94e461812085f20f563f89">f48c76f7</a> chore: PouchDB-find validateSelector cleanup (#8915)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d30149598305a08f5d88046f05f19aa314ec74e5">d3014959</a> chore: PouchDB-find adapters/http update (#8912)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/acc12f69ffd5369468b75f52989c38d5c98c07f1">acc12f69</a> remove unused devDependency: query-string (#8909)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/36d042b9d62d859b233c6e6d25658aa889635bb0">36d042b9</a> update dev dep: marky (#8903)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/df7350242501e3f713e29466bb22ffcb6976fdf8">df735024</a> chore(abstract-mapreduce): cleanup taskqueue.js (#8891)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9aaba0c89d9f5057326a3e0f865d7f7387f939d0">9aaba0c8</a> chore(abstract-mapreduce): refactor to for <code>...</code> of loops (#8892)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/96037a7b9918f51a3c56fc35288917b13cc91f75">96037a7b</a> chore(abstract-mapreduce): reduce repetitive catch handlers (#8889)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5f647e52874ba94372d57cc53c8bc1d0feaf399d">5f647e52</a> Remove legacy polyfill: <code>Blob.slice()</code> (#8895)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/59ac0d3ed34fe81d3ff3e29ca68b6452f7c7e57b">59ac0d3e</a> Remove legacy util/polyfill: <code>Object.assign()</code> (#8896)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/94eccbb996c03af160e8001b96bb69d58bc90baa">94eccbb9</a> chore(abstract-mapreduce): replace <code>var</code> with <code>const</code> (#8880)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7b23c81e548b8b944a44dc8b310528286eef7d62">7b23c81e</a> adapter-indexeddb: use <code>isLocalId()</code> (#8883)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/86b6c5ecb84c1895fa3547074c339b275feb4ff7">86b6c5ec</a> Checkpointer shortcut (#8856)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0f08688ffa50f25cd34d629c25a31da0cda49026">0f08688f</a> remove isIE (#8867)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/281c3e1115d371166910e4b8e391ae119c2ad780">281c3e11</a> Set default opts for <code>CheckpointerInternal</code> (#8871)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7278ae4e42e0b152a5bef3d83ee0556e17b0adc6">7278ae4e</a> (#8607) - replace <code>immediate</code> with <code>queueMicrotask</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/def06b03adbf72413750d23911590a42f4d4119f">def06b03</a> (#8526): Upgrade leveldown from 5.6.0 to 6.1.1</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5ea26d55f41d236c4df65a58214ab73a222191d2">5ea26d55</a> (#8526) - remove outdated <code>bundle-collapser</code> and <code>es3ify</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/15cd6a03bc9888991b4904d2be793273aa50bdb7">15cd6a03</a> indexeddb: add c<code>heckBlobSupport()</code> (#8804)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/85ec16ca145a78f153b34759197432cbf7a966c5">85ec16ca</a> core/adapter: use <code>findIndex()</code> (#8791)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c91d5eae36e40a618f5cdbe3489a3f7912ed36a6">c91d5eae</a> Attempting to Make Database Version Staling Clearer (#8812)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/74d295079191c3928c49685b6a6d484d3079ea20">74d29507</a> <code>commonUtils.createDocId()</code>: simplify with <code>padStart()</code> (#8795)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2b6219afa9b75a036362ca6e1b00e3593e704b9e">2b6219af</a> <code>adapter.getAttachment()</code>: don't pass rev (#8792)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1e69c31b7c2dd434e60ab713c44883884c1bd0d8">1e69c31b</a> <code>indexeddb.bulkDocs()</code>: inline <code>parseBase64()</code> (#8793)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/10d9edc749129465b13b7a90384afaf20056ad4e">10d9edc7</a> adapter: use <code>forEach()</code> instead of <code>map()</code> when result not used (#8790)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9f01e63766299310d011b81298d0e84bfcae3cab">9f01e637</a> adapter: simplify <code>compareByIdThenRev() </code>(#8787)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/99f20e52016c311251ab1df2f3b58e503f7e3449">99f20e52</a> <code>indexeddb.getAttachment()</code>: don't open unnecessary transaction (#8786)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/caa8c9cf17592103cc848bf4312db45a31e2a3b1">caa8c9cf</a> <code>idb.allDocs()</code>: use seqStore.openKeyCursor() in place of openCursor() (#8764)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b0f2e57df165368deaffdc4a8765bff4555bdbea">b0f2e57d</a> <code>indexeddb.getAttachments()</code>: reduce selects from <code>N+1</code> (#8771)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/eafc0f148ea4cc4979f455c0dba198e5abaf8b9c">eafc0f14</a> indexeddb: rename main adapter fn (#8770)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1a6a18204b2f16098d98a161023760f1552f6dab">1a6a1820</a> bin/dev-server: simplify URL logging (#8772)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2305addfa87b8ffeea7a28c75102d6b90261f03d">2305addf</a> adapter-idb/allDocs: simplify <code>getMaxUpdateSeq()</code> (#8762)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/fc12d33f88cdec27e4beb8baeb83132effff1563">fc12d33f</a> <code>idb.info()</code>: use <code>seqStore.openKeyCursor()</code> in place of <code>openCursor()</code> (#8763)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1234036fbc81621bf7f0813e722321bedee5d308">1234036f</a> get-postfixed-pouchdb-build: show helpful error if version arg missing (#8743)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f1a9b8969f26a950756cbf8b5ef5e11e88335a2c">f1a9b896</a> Remove dependency - <code>promise-polyfill</code> (#8643)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e8680dde2f23a19014d8b5b285edbb8bd3730e58">e8680dde</a> (#8685) - <code>.gitignore</code>: remove lerna reference</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1b12b0d41db1421dfd460063d0ffa74654c1240c">1b12b0d4</a> prevent urls ending with empty <code>&quot;?&quot;</code> when no params present</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0fdd5a8bc73afe5fdb5b87f50b725692934c608a">0fdd5a8b</a> (#8612) - use <code>const</code> where possible</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e316c88c756435063cbd224ec2187f7e44da5d97">e316c88c</a> (#8627): Bump <code>node-fetch</code> to 2.6.9</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c5f931a66c6cde4d01bc49e202119d3950414fdb">c5f931a6</a> <code>idb.allDocs()</code>: reference keys consistently (#8578)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/102b303ca2f1de20841fd5d9dc549ee4f858b04e">102b303c</a> indexeddb: fix typo in comment (#8604)</li>
+</ul>
+<h3>Bugfixes</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/953f3b3ff0980abdfb75fa98f380a286f559f54d">953f3b3f</a> fix: docs/Gemfile &amp; docs/Gemfile.lock to reduce vulnerabilities</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/8ba73788dd5cd3e51c2c6b13ba78336cd4da58f6">8ba73788</a> <code>db.put()</code>: throw <code>INVALID_REV</code> for invalid revs (#8931)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/18669009d80fb654bc9815230310b970835e2274">18669009</a> fix: input isn't defined in array case (#8890)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e14c547471df732d06568775317678a9fa41a8f4">e14c5474</a> fix: upgrade <code>fetch-cookie</code> from 2.1.0 to 2.2.0 (#8859)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/34cb69117931d4b520ee8d7a6208eb0f33da8ec7">34cb6911</a> (#8525) - Fix compaction from the last <code>last_seq</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/14a566f2e7bb780c1af37fd468f419f029a0adc5">14a566f2</a> eslint: add rule: object-shorthand; fix violations (#8794)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d9ee8e0f502561937fd827de45fc3cdf06d2c63d">d9ee8e0f</a> indexeddb: prevent collisions in <code>find()</code> (#8807)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/04a1735cef289c2dd6f4dd05b6e65ae6bfac1267">04a1735c</a> indexeddb/rewrite: fix comment typo (#8809)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e28a62a9627d2e958582126f88b773b5203d5c16">e28a62a9</a> (#8706) - Handle null options in 'get' method</li>
+</ul>
+<h3>Documentation</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/51380f909b1af482d0a5c92e8fc3f4493ca8b808">51380f90</a> fix(docs): update testing docs to match reality after #8569</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d4dab681bb4f05c3c624b685cbff34c31c166bf3">d4dab681</a> Pat Helland's blog is no longer available</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d62526d3a77f44524f90c1430eeb630294c3bfb1">d62526d3</a> docs: replace <code>var</code> in with <code>let</code>/<code>const</code> (#8932)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/63c856fa912a4fd022dfd5bd305bee733883eb38">63c856fa</a> fix: remove dead <code>Debug mode</code> link (#8916)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/bdb56789985d5c9c042498536652ec37ee0f218f">bdb56789</a> README: update Getting Help links (#8888)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/230e9f6634ad2fbc1d529f7dca9404417ce5cf6b">230e9f66</a> README: Getting Help: remove glitch.com reference (#8887)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6d9d5e145de3bfcb486c0cfaef0363319fcdedcd">6d9d5e14</a> pouchdb-find/README: remove outdated links to old repo (#8875)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9757c0ba12fc5b0279caca67b41783496e7e7454">9757c0ba</a> ci: use minified plugins if using minified core (#8870)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/04e827147bfbc4d02921b4064d1e8d5bc972a50f">04e82714</a> fix assert in error handler results in out of bound exception (#8861)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/88527c3209fce7522e2c875c8f0d9a3415fd6bc4">88527c32</a> Clarify the semantics of <code>since</code> (#8624)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4a05b53659ea59a3e1167e8daeb18a44eb34b68a">4a05b536</a> spelling: update docs, comments (#8831)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/741fcc1e44b8c9c60c3b90232057892a9cc6affd">741fcc1e</a> docs: remove sentence (#8830)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c469b04203e93cc5e0165bfd97e15719aceda9ac">c469b042</a> spelling: dont -&gt; don't (#8829)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/dabd30ac84cf64b491026fa83e2b862a4106dce6">dabd30ac</a> spelling: comments &amp; docs (#8828)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6f3e8ab29e6c0c0107710e59b85a1bdd255d450c">6f3e8ab2</a> spelling: checkpoint (#8827)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a480a5253cfaa03fd62c948b0ee2cf73d473123b">a480a525</a> fix spelling(docs,comments): wtih -&gt; with (#8822)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/102a1e39efafa31ca1d21fc8f73ef2c950f4dd3b">102a1e39</a> immediate dependency: update documentation (#8815)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/bae22f1aa594e0f1c777d0f292d9fd1e5990d7ec">bae22f1a</a> docs: reflect CI move travis to GitHub actions (#8798)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1c697dc27ff5ebf1341a7e19eb2aa6cd68bc158f">1c697dc2</a> Remove Saucelabs references from docs (#8800)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c0565394ec4e98fa8fafa03452a12069dc5bd23b">c0565394</a> (#8748) - Fixing some non-function links in documentation + some http -&gt; https</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/afbcf0272a4571a3adcc65aae797541f35dbb4fe">afbcf027</a> Remvove Promise polyfill mention from docs (#8736)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d67ff0874d2727833a61783c958e00f9e1eecac7">d67ff087</a> docs: standardise docs.couchdb.org links (#8745)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c11c4358d6b186bf80064e064efb666390a2e41f">c11c4358</a> (#8742) - fix dead link in docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/43b77da075a7f7cd175d34d57e4259be4e0b4204">43b77da0</a> Remove TODO.md</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/babba217bd4b55704f4366fdca94386b9fcfcc19">babba217</a> (#8716) - update Committer guidelines</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/171f80ee9f2183beca849a8f463ea25ff4fa31de">171f80ee</a> (#8732) - guides/queries: make link consistent</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/180428291cd81e092588930f854216c860ba5bcb">18042829</a> chore(#8725): remove references to TonicDev</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/307dea3a72008b6e578c3783d7551b877329d871">307dea3a</a> docs(#8722): fix image baseurls</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4498dcdda1ed98c020ad0a4f87d90241864e34a5">4498dcdd</a> docs(#8721): include <code>baseurl</code> for favicon</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/58e408c5513b5ff251edc9ce2b02be4850ee9369">58e408c5</a> (#8668) - fix typo in attachments guide</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/33b5ffc315d6fe49a48c26992b8cc04b984e197c">33b5ffc3</a> (#8402) - add note to docs regarding <code>jwt</code> usage</li>
+</ul>
+<h3>Automated Tests &amp; Build System</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7d71f444e61cc6b4d5da14998a959bb62a0bfb09">7d71f444</a> update CI workflow node environments to 18 and 20</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1cfbadc3bf5a9964219b7d71a105becf2328da4d">1cfbadc3</a> build: harden <code>ci.yml</code> permissions</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f2401be4261e236725c00fcb0b03644fd530662b">f2401be4</a> chore(ci): remove PouchDB-Server</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/84b7afbbd72204d387c3d0315b2eb78b5333c6fc">84b7afbb</a> fix: remove out of date test and flakey mocking lib</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/bb10785bb47ac7349919cd08e830fb630612f6d6">bb10785b</a> fix: use universally portable shebang</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/20a5ccc3870a328a1cc3d4e91694b5301c120c1f">20a5ccc3</a> <code>NOT_AN_OBJECT</code>: throw for null; add additional tests (#8930)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/db193f5c1f9f531020f375c0422636948b4c8e5f">db193f5c</a> <code>test.slash_id</code>: assert <code>getAttachment()</code> result (#8923)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/43193de2489881b24efb24d50067d2c75c72586a">43193de2</a> Add tests for attachments on local docs (#8897)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/29d568e0643f5b98f9305ae5a1ee87089fdde5be">29d568e0</a> <code>test.slash_id</code>: fix test name (#8924)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3aa44a0c03e3e909bb29cc66e0e1e49af03e40a2">3aa44a0c</a> tests/perf: remove firefox bug workaround (#8904)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d8c79fe7e6b260f92e2d817af7bf2fb52b741bdc">d8c79fe7</a> repeat-perf-test: allow specifying adapters (#8911)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/032ac45e6a9c181c082646a11c900d4ebedba83a">032ac45e</a> ci: disable checkout.persist-credentials (#8882)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/799c564e1e9e996f31664c1e7f6b9db2ed4c36fc">799c564e</a> test-browser: improve unhandled error debugging (#8826)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3deef61f1d03572e97e68577151ba1e734447216">3deef61f</a> Reduce ci overhead (#8866)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/668520327ab1de81aa731498c5198264ffc96758">66852032</a> Add script: repeat-perf-test.sh (#8760)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1f5817390ddc91278e5182cfd434ed52a279fb12">1f581739</a> ci: don't rebuild when running dev-server (#8874)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c792a33c9ab9b10a4913408874440ec67ae046fc">c792a33c</a> tests: show unminified stacktraces for Errors (#8841)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5cd750f60ca5ba1bde7bd34ec8a93806e686fe79">5cd750f6</a> perf-tests: fix JSON reporter (#8876)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7e15d3b72cbef4582c1e45d1c72ff0e3b23d4f5b">7e15d3b7</a> chore(test): update playwright dep (#8821)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/99a642408cf7547eaa818e65e96f224389d46f2a">99a64240</a> chore(ci): upgrade node actions to node v20 (#8857)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1a064d83be300cbb52201b434b74f5285667d8d8">1a064d83</a> (#8863) - fix subsequent fails of <code>5007 sync 2 databases</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/340635f4fc52013eb511a355d206557510346b54">340635f4</a> (#8862): Fix timeout of <code>test.issue3179.js</code> conflicts synced live sync</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1d1a08e477b8abcfc8361875036219ea29fcda4a">1d1a08e4</a> test-browser: fix indentation (#8851)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d1f6cddabba2bf27a9a3165e4000d2f630e712c1">d1f6cdda</a> ci: run tests in webkit (#8805)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/366e86a4c77fad6623471faf1730b617172b861f">366e86a4</a> test-browser: add try/catch (#8824)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/75070d6c1cf67f04fc4aa5ebef810aa07af23138">75070d6c</a> test: remove whatwg-fetch polyfill (#8825)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/fe0905d1ee928e3ae460a5d4c72e5d3d8dfab48b">fe0905d1</a> ci: add shellcheck; fix violations (#8753)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5054bf8236a33d20533c6c811af51755768ed9af">5054bf82</a> tests: use <code>done()</code> when closing express servers (#8840)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c7054c294543b7db784d5f03bece9a8fabdd9be3">c7054c29</a> mocha v10: fix failure handling (#8844)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a6b47e291ff210c05d2e767b6ca70c2eb7467e66">a6b47e29</a> chore(test): update <code>mocha</code> from v3.5 to v10 (#8838)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/519e33168e27f8e44eb6e56a9facdcaae2d19cea">519e3316</a> playwright: handle <code>externally-triggered browser-close</code> event (#8836)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e90267b69a76e39c3675ddc770fdd6e6f09d5fc0">e90267b6</a> chore: upgrade <code>fetch-cookie</code> from 0.11.0 to 2.1.0</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b0879cb5945e67f05198f9e88f422aec3efec539">b0879cb5</a> test.migration: move <code>before()</code> above <code>beforeEach()</code> (#8832)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/dc97aedf449a94b87f074f3aa975b5412415706a">dc97aedf</a> test-browser: use native event handling (#8823)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a630555f9ab7164f4c442b11a016479f3cf9b20f">a630555f</a> test-browser: work around weird webkit behaviour (#8802)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/26e339609ad392e642dd921cdd4e93731d2f18ff">26e33960</a> eslint: set globals readonly (#8818)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9618a0429406b2742670b214451c8fe920a9e064">9618a042</a> eslint: separate test config from root config (#8817)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/24e6400bd705752189e7030afe58b1a0b270f2bf">24e6400b</a> tests/performance: fix use of <code>this.iterations</code> in setup/tearDown (#8777)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/154440f0889398c787ca0f0808e9f8c627da5973">154440f0</a> eslint: comma-dangle: only allow for multiline declarations (#8846)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b8a298528b0ecf179467c1cfe63863d631aa67a1">b8a29852</a> tests: remove commonUtils.Promise (#8776)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/60bf1021bb7725308291a9078c574f073b8d5dc9">60bf1021</a> test.changes: fix case ddoc without filters+key (#8775)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/70bd2afcdc908bc4cb964dde15544ca1eb1f1654">70bd2afc</a> tests/perf: fix doc creation in basic-gets (#8797)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/288714dcc3fea36466d934dfcabfa9a46b80cd2d">288714dc</a> tests/perf: document pull-replication-perf-skimdb (#8796)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/43e6160af35c94564056ea4ce0c7148f80bd0e22">43e6160a</a> tests/performance/utils: use <code>commonUtils.params()</code> (#8780)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2f5a5f668590f4518ac03266388f7d3ef825274f">2f5a5f66</a> test.browser.worker: use same PouchDB src as other tests (#8782)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4f45948f53bd100e7c3365eee1e9adb10ce993f5">4f45948f</a> tests/common-utils: parse query string w/ <code>URLSearchParams</code> (#8779)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/775b2e1aee3ec63c44db0eeac408737fd944eede">775b2e1a</a> test-browser: catch-and-fail on unhandled error (#8768)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5b9abdb463e0a0e67c8cb20029c716ab03f9b657">5b9abdb4</a> eslint: add rule: no-undef-init (#8758)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/48bef766b529a684b2c726f43a4f4164e36fe135">48bef766</a> tests/perf: support regex in GREP option (#8784)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/72a9b94c26c4bf41e4b8e7cb36941edf7e72f361">72a9b94c</a> tests/browser.worker: parse query string w/ <code>URLSearchParams</code> (#8781)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/105b735f66f566acbbb2515c541cc8227b71070b">105b735f</a> tests/browser.migration: test local docs with attachments (#8785)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2b05059497ff0e05b9cab7fd8765ac1432139177">2b050594</a> test-browser: simplify building query string (#8773)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c89f4079bdc25961357e01a47cf31914309bb5f9">c89f4079</a> test.retry: skip &quot;destroyed&quot; event listener leak test (chrome+indexeddb) (#8765)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d2f6bcf478f61e3c98bdfc974ff003958f2fd43a">d2f6bcf4</a> test.issue3179: fix: allow test to run in browsers (#8769)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6c5aa2b5110c6b275070c185036490947e28e040">6c5aa2b5</a> tests/browser.migration: compare version parts as numbers not strings (#8767)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2dfadd174b58f6fe439a97e62cf3dacea010198d">2dfadd17</a> tests/browser.migration: also run with indexeddb (#8766)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7d874a1f57aab1559632e9bbba2a623201b99e14">7d874a1f</a> perf-tests: add option to save benchmarks to file (#8759)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/cb5cd9521ff90cef6f20ac1f70f322cbbf8c5a73">cb5cd952</a> run-test: echo <code>COUCH_HOST</code> value when waiting (#8761)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ad98df00607755fe31cf72afa0444088e30c442b">ad98df00</a> tests/integration: move isSafari checks to testUtils.isSafari() (#8756)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/197fcc409b97208e1c1b4ecb50669402a1aeb17e">197fcc40</a> tests/integration: rename <code>leveldown.migration.js</code> (#8755)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/238dc24ddf2dbeb87a2c5f031d8d8ddfb7fcf690">238dc24d</a> tests/integration: use <code>asyncLoadScript()</code> (#8751)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/aa6d500eabe89b252613fa78c6685178a8ee136b">aa6d500e</a> test.migration: simplify scenario/constructor mapping (#8750)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6e705dfb7d52964e03017ea937e55e7a2ca53259">6e705dfb</a> test.migration: simplify version number checks (#8749)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a48c28f1f236beced9ad72ec6b933e2b67f7ff7e">a48c28f1</a> test/browser.migration: use <code>this.skip()</code> (#8744)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/02ca4e3c1dc356501703e8b098dcba5b2007485f">02ca4e3c</a> ci: test docs (#8747)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/642d3500f42c09583e6cb06d378b35f9284df4ab">642d3500</a> only build docs when triggered</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4f3a9260549d3312183d6cf59ad5beb1130df440">4f3a9260</a> (#8717) run-test.sh: always shut down server on exit</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/12974e07aa02de3baccf128a4808cda0614cb43f">12974e07</a> (#8569) - Switch browser tests to playwright</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2d78ed939636fb41164441a4fb6a63c1054f1d2b">2d78ed93</a> test.retry: clarify<code> event-listener-leak</code> test names</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/980970331b232969824df71df7bf0bf8cf19053f">98097033</a> Explicitly skip browser.worker tests (#8682)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/78d1787262e25446b864b569d7c9adec6bd8f902">78d17872</a> (#8703) - tests/integration: decrease default test timeout</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e6b8c9371a6e5682e35b368b2ababb4a288a17a5">e6b8c937</a> (#8688) - test.issue3179: assert that conflicts exist</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/27ab3b27a6673038b449313d9700b3a7977ac091">27ab3b27</a> (#8686) - tests: safely de-reference <code>PromiseRejectionEvent</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/28f4f76810fcb2f318569c455b2b130fe6d4bae8">28f4f768</a> (#8684) - remove cordova test references</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c8e532e4d817aa6d6122f7944967c0293c3a26a9">c8e532e4</a> (#8676) - browser.worker test: dereference globals safely</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4751ebdf0d6a153b3b330796aee57223834016c8">4751ebdf</a> (#8674) - jshint: remove legacy inline directives</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/74c49df395b3cc73e96b0ff4757cbc701f0c788d">74c49df3</a> (#8667) - test-webpack: fail if git working tree is dirty</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ba74ebe3e1ed73808836e3b7228e1bb79250b1f8">ba74ebe3</a> (#8670) - test-webpack: don't save new dependencies</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6daf0c0148137c24d28b31988ad6fd47384ca83e">6daf0c01</a> (#8672) - eslint: introduce rule: no-trailing-spaces</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2876834bd0860cf97bf2f451f06988753ad56da9">2876834b</a> (#8671) - eslint: introduce rule: eol-last</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3d4078921a614091da329575b54d2e72e9f01174">3d407892</a> (#8645) - test-webpack: don't rebuild node</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e1fbbb41911cf513a22e82568a1173a0d134fc0a">e1fbbb41</a> (#8651) - restructure async handling of test.viewadapter</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/080b8a930e03ac74c99fa821309b3cdcebe5ed3a">080b8a93</a> (#8655) - remove deprecated usage</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0ef150fa86b5e3d50e13d693878c27c057bc2892">0ef150fa</a> (#8652) - only run test.viewadapter for expected adapters</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/546c8bb696872f86816574d02d47131ace0b4d18">546c8bb6</a> (#5798) - set terser to minify with option <code>ascii_only=true</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/aca46756644b1a4786d41229e7db5d14fce1680c">aca46756</a> (#8656) - fix concurrent test-server errors</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4c92c946b1de8600ac338ff78c2c2bf4ef7910b7">4c92c946</a> (#8646) - standardise shell shebangs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/90ea8c17a332cc2a8e5b31824e8faae0d8c45e47">90ea8c17</a> (#8649) - fix build and test warnings</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5f59f2489ba6d9de2be96f0affe9d1b1b9cddfb5">5f59f248</a> ci: add NodeJS v16 to test matrix (#8616)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4f39bd25d855f6efbc7436631b53e950b2c9792f">4f39bd25</a> (#8602) - fix tests for local doc IDs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/8896707fbfb0ba0443bb53af08f59b353c88c427">8896707f</a> test/integration/deps: add script: <code>get-postfixed-pouchdb-build</code> (#8622)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/71501f893b6352d31d297f3a9fbca1832ca5c054">71501f89</a> perf-tests: allow running specific suite(s) (#8592)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ba0a10600403739c476fc42ab505d259521b9fe3">ba0a1060</a> Remove legacy script: <code>start_standalone_couch.sh</code> (#8635)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9d9c10000bb4f760c55a0e71edda0a44ad8e10a4">9d9c1000</a> Remove script: bundle-browserify-test.sh (#8634)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/30c49354d3005a4162cba54e6ae0846fba610d95">30c49354</a> Remove unused script: jenkins-deploy.sh (#8632)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9b481e5b3ca742b61c0e544dd288e4dfdd4d7d19">9b481e5b</a> Add migration tests for v7 &amp; v8 (#8625)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/44db15a45612fbd19b957d199ff0f72431dfc3ea">44db15a4</a> Remove unused script: baldrick-test.sh (#8633)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/81f22d6829e2fbbddf48670cd3040668294a3a18">81f22d68</a> Use shells specified in shebangs (#8572)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ccccfb83b89d2cd87181dfae626fe872441ff127">ccccfb83</a> browser-tests: remove saucelabs support (#8577)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9a41ca5894ca5a9daf3045f815271c807163431b">9a41ca58</a> perf tests: enable in-browser performance profiling (#8579)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9e307c3bb7fdf45d074ed057e74a477e21efa319">9e307c3b</a> Use shebang-defined shell for verify-bundle-size (#8644)</li>
+</ul>
+<h2>Get in touch</h2>
+<p>As always, we welcome feedback from the community. Please don't hesitate to <a href="https://github.com/pouchdb/pouchdb/issues">file issues</a>, <a href="https://github.com/pouchdb/pouchdb/discussions">open discussions</a> or <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">get in touch</a>. And of course, a big thanks to all of our <a href="https://github.com/pouchdb/pouchdb/graphs/contributors">new and existing contributors</a>!</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

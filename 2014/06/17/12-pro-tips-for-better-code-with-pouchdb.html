@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>12 pro tips for better code with PouchDB</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">12 pro tips for better code with PouchDB</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2014-06-17-12-pro-tips-for-better-code-with-pouchdb.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 17 June 2014<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <p>This is not a blog post per se, but more of a list of tips and tricks to get the most out of your PouchDB experience.</p>
+<p>There are a lot of PouchDB anti-patterns floating around out there on the Internet, and also some common pitfalls that can trip you up when you're new to the CouchDB API.  I see this stuff all the time on Stack Overflow, Twitter, and IRC, and it never ceases to amaze and horrify me. We need to do better.</p>
+<p>So consider this your 12-step program to becoming a better PouchDB coder. Let's put these bad habits to bed.</p>
+<h3>1. Use put(), not post()</h3>
+<p>Never use <code>post()</code>.  You don't need it, so just stop.</p>
+<p>Recall that <code>put()</code> requires you to supply your own doc ID, whereas <code>post()</code> generates a random one for you. However, this leads to inefficiencies, since you pay the cost of indexing a long ID like <code>'CB89021E-8439-392F-899C-054963FD0B9B'</code> without ever using it.</p>
+<p>Plus, you'll have to use <code>put()</code> anyway whenever you update or delete a document, so if you <code>post()</code>, you've got two APIs to learn instead of one. So remember: always <code>put()</code>, never <code>post()</code>.</p>
+<h3>2. Don't emit(doc.foo, doc)</h3>
+<p>Don't do:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>foo<span class="token punctuation">,</span> doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Do:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>foo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>This anti-pattern is everywhere. It seems to date back to pre-PouchDB days, since it shows up in a lot of blog posts and articles about CouchDB.</p>
+<p>Folks, you never need to <code>emit()</code> the full document in your map/reduce functions.  You can always just use <code>{include_docs: true}</code> when you query, and the freshest version of that document will be delivered right to your door.  Free of charge.</p>
+<p>Plus, if you emit the full doc, then it will actually <em>serialize and write out that entire document to disk</em>.  This is true in both PouchDB and CouchDB, and it's pure waste.</p>
+<p>So if you don't want big, inefficient map/reduce functions, then remember: only <code>emit()</code> what you need.</p>
+<h3>3. Don't emit(doc.foo, 1) and then _sum</h3>
+<p>Similar to the above, don't do:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+  <span class="token function-variable function">map</span><span class="token operator">:</span> 
+    <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>foo<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">reduce</span><span class="token operator">:</span> <span class="token string">'_sum'</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Do:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+  <span class="token function-variable function">map</span><span class="token operator">:</span> 
+    <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>foo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">reduce</span><span class="token operator">:</span> <span class="token string">'_count'</span>
+<span class="token punctuation">}</span></code></pre></figure><p>You don't need to use <code>_sum</code> when a simple <code>_count</code> will do.</p>
+<h3>4. Attachments are overrated</h3>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>Update:</strong> since this post was written, the stability and performance of attachments in PouchDB has greatly improved. Replicating large attachments is still not recommended, but attachments can be handy if used correctly. <a href='https://github.com/nolanlawson/blob-util'>blob-util</a> can help.</p>
+</div></div>
+<p>NPM has <a href="http://blog.npmjs.org/post/71267056460/fastly-manta-loggly-and-couchdb-attachments">moved away from storing attachments in CouchDB</a>. Nowadays they use a CDN for the binaries, and CouchDB just stores the metadata. In PouchDB, attachments have been <a href="https://github.com/pouchdb/pouchdb/issues/2098">one</a> <a href="https://github.com/pouchdb/pouchdb/pull/1078">of</a> <a href="https://github.com/pouchdb/pouchdb/issues/1992">the</a> <a href="https://github.com/pouchdb/pouchdb/issues/900">biggest</a> <a href="https://github.com/pouchdb/pouchdb/pull/2063">sources</a> <a href="https://github.com/pouchdb/pouchdb/pull/1210">of</a> <a href="https://github.com/pouchdb/pouchdb/pull/502">bugs</a>, since every browser seems to handle them differently. Plus, the <a href="https://github.com/pouchdb/pouchdb/issues/1251">attachment API is hard to understand</a>, you need <a href="https://gist.github.com/nolanlawson/10340255">a Blob shim</a> for older browsers, and let's not even talk about ArrayBuffers, ArrayBufferViews, Uint8Arrays, and browsers that don't even support any of the above.</p>
+<p>In general, both CouchDB and PouchDB are just poor fits for storing binary data.  (Databases rarely are.) Instead of attachments, try using a CDN or a simple fileserver, and store the URLs or checksums in the database if you need to.</p>
+<blockquote>
+<p>
+"One of the big things that everybody who's spent a lot of time with databases knows is that you should <em>never</em> put your binaries in the database.  It's a terrible idea.  It always goes wrong.  I have never met a database in 15 years of which it is not true, and it's definitely not true of CouchDB.
+</p>
+<p>
+You are taking this thing which is meant to sort and organize data, and you're giving it binary data, which it can neither sort nor organize.  It can't do anything with that data, other than get really fat."
+</p>
+<footer>
+<cite title="Source Title">
+  Laurie Voss, on <a href='http://javascriptjabber.com/099-jsj-npm-inc-with-isaac-schlueter-laurie-voss-and-rod-boothby/'>JavaScript Jabber</a>
+</cite>
+</footer>
+</blockquote>
+<h3>5. Use plugins</h3>
+<p><a href="/external.html">PouchDB has plugins</a>.  Use them, and if inspiration ever strikes, <a href="https://github.com/pouchdb/plugin-seed">write your own</a>!</p>
+<h3>6. Don't just update docs for the hell of it</h3>
+<p>Every time you modify a document, another revision is added to its revision history – think Git.  Except unlike Git, these revisions contain the full document data (not just the diffs), which can take up a lot of space on disk.  So if nothing changed in a document, don't bother <code>put()</code>ing it again.</p>
+<h3>7. Use and abuse your doc IDs</h3>
+<p>I already wrote <a href="/2014/05/01/secondary-indexes-have-landed-in-pouchdb.html">a blog post about this</a>, but basically, if you don't want bad performance from your secondary indexes, the best strategy is to avoid secondary indexes altogether. The primary index should be sufficient for sorting and searching in nearly all of your applications, or at least for the hot-path code.</p>
+<p>Also, if you really want to get fancy with your doc IDs, you can use <a href="https://github.com/pouchdb/collate/">PouchDB Collate</a> to serialize arbitrary data into strings that are sorted according to <a href="https://docs.couchdb.org/en/latest/ddocs/views/collation.html">CouchDB collation ordering</a>.  This allows you to index on arrays, objects, numbers – whatever you want:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> pouchCollate <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-collate'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> myDoc <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">firstName</span><span class="token operator">:</span> <span class="token string">'Scrooge'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">lastName</span><span class="token operator">:</span> <span class="token string">'McDuck'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">67</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">male</span><span class="token operator">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">// sort by age, then gender, then last name, then first name</span>
+myDoc<span class="token punctuation">.</span>_id <span class="token operator">=</span> pouchCollate<span class="token punctuation">.</span><span class="token function">toIndexableString</span><span class="token punctuation">(</span>
+  <span class="token punctuation">[</span>myDoc<span class="token punctuation">.</span>age<span class="token punctuation">,</span> myDoc<span class="token punctuation">.</span>male<span class="token punctuation">,</span> mydoc<span class="token punctuation">.</span>lastName<span class="token punctuation">,</span> mydoc<span class="token punctuation">.</span>firstName<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In the above example, the doc ID will be a strange string, which will sort correctly in both CouchDB and PouchDB:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token string">'5323256.70000000000000017764\u000021\u00004McDuck\u00004Scrooge\u0000\u0000'</span></code></pre></figure><p>This is actually what persistent map/reduce uses under the hood!</p>
+<p>And for cases where you only need to build complex IDs out of strings, there is also the fantastic <a href="https://github.com/jo/docuri">DocURI</a> project, which can build a more human-readable ID like this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token string">'movie/blade-runner/gallery-image/12/medium'</span></code></pre></figure><p>Choose whichever one fits your app better, or just concatenate the strings yourself.</p>
+<h3>8. Use Web SQL for better performance</h3>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>Update:</strong> since this post was written, IndexedDB performance has improved, and is often better than WebSQL in Chrome. Your mileage may vary, so try them both out on your target platform(s).</p>
+</div></div>
+<p>Our performance tests have shown it again and again: Web SQL is faster than IndexedDB. It's hard to tell if that's due to our implementation or the browser vendors', but in any case, if you feel the need for speed, then you'll want to prefer Web SQL to IndexedDB.</p>
+<p>So now that Android 4.4, iOS 8, and Safari 8 support IndexedDB in addition to Web SQL, it's more important than ever to consider using Web SQL instead of IndexedDB – at least, in apps where performance matters.  To do so, the code is simply:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'websql'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>pouch<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// websql not supported by this browser</span>
+  pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><div class="alert alert-info">
+<div class="alert-text">
+<p><em>If Web SQL is so fast, why does PouchDB fall back to Web SQL from IndexedDB instead of the other way around?</em> Because we're trying to move the web forward, not rely on deprecated technology. If browser vendors can rest on their laurels with Web SQL, then they won't work to make IndexedDB faster.</p>
+</div></div>
+<h3>9. Move logic from the map function to query()</h3>
+<p>If you only remember one thing from <a href="/2014/05/01/secondary-indexes-have-landed-in-pouchdb.html">my blog post about secondary indexes</a>, remember this: every <code>map</code> function you write has to be executed for every single document in your database.  No exceptions.</p>
+<p>On the other hand, the <code>query()</code> options like <code>startkey</code>, <code>endkey</code>, <code>key</code>, and <code>keys</code> have been optimized to hell, and they leverage the native indexes in the database to deliver the maximum possible performance.</p>
+<p>So if you find yourself writing something like this, you're doing it wrong:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">getPostsSince</span><span class="token punctuation">(</span><span class="token parameter">when</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function-variable function">map</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">doc<span class="token punctuation">,</span> emit</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>doc<span class="token punctuation">.</span>timestamp <span class="token operator">></span> when<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">// ...</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">getPostsBefore</span><span class="token punctuation">(</span><span class="token parameter">when</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function-variable function">map</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">doc<span class="token punctuation">,</span> emit</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>doc<span class="token punctuation">.</span>timestamp <span class="token operator">&lt;</span> when<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> 
+  <span class="token comment">// ...</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">getPostsBetween</span><span class="token punctuation">(</span><span class="token parameter">startTime<span class="token punctuation">,</span> endTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token function-variable function">map</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">doc<span class="token punctuation">,</span> emit</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>doc<span class="token punctuation">.</span>timestamp <span class="token operator">></span> startTime <span class="token operator">&amp;&amp;</span> doc<span class="token punctuation">.</span>timestamp <span class="token operator">&lt;</span> endTime<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> 
+  <span class="token comment">// ...</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Each of those <code>db.query()</code> calls represents a separate <em>temporary index</em>. I.e., all your docs are read in, run through the map function, spit out to an index, queried, and then the whole thing is thrown away.  For every query!  This code is based on a real question I got from a developer on Twitter (sorry to pick on ya), and he described it as &quot;crazy slow.&quot; No kidding.</p>
+<p>Since all of these map/reduce functions key off of <code>doc.timestamp</code>, a better approach (which I recommended to him) would be:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> ddoc <span class="token operator">=</span> <span class="token function">createDesignDoc</span><span class="token punctuation">(</span><span class="token string">'by_timestamp'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>timestamp<span class="token punctuation">,</span> doc<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>ddoc<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token comment">/* etc. */</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">getPostsSince</span><span class="token punctuation">(</span><span class="token parameter">when</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token string">'by_timestamp'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">endkey</span><span class="token operator">:</span> when<span class="token punctuation">,</span> <span class="token literal-property property">descending</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">getPostsBefore</span><span class="token punctuation">(</span><span class="token parameter">when</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token string">'by_timestamp'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">startkey</span><span class="token operator">:</span> when<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">getPostsBetween</span><span class="token punctuation">(</span><span class="token parameter">startTime<span class="token punctuation">,</span> endTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token string">'by_timestamp'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">startkey</span><span class="token operator">:</span> startTime<span class="token punctuation">,</span> <span class="token literal-property property">endkey</span><span class="token operator">:</span> endTime<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>(That <code>createDesignDoc()</code> helper function comes from <a href="/2014/05/01/secondary-indexes-have-landed-in-pouchdb.html">this blost post</a>.)</p>
+<p>Not only is the above code much simpler, but it's also faster and more tweakable. No need to completely rebuild the index when your query changes; just switch around <code>startkey</code>/<code>endkey</code>/<code>descending</code> and friends at query time to get the data you want.</p>
+<h3>10. You probably don't need reduce</h3>
+<p>In the previous example, the developer was also doing some fancy operations on the data using <code>'_count'</code> and <code>'_sum'</code>.  Now, these are fine shortcuts that can save you a lot of code, but unless you're running your queries against the server, they don't buy you any performance benefits.</p>
+<p>PouchDB runs in Node or the browser, meaning it's a single-threaded, single-process environment.  There's no massive parallelization of the map/reduce functions like you could get with CouchDB (or at least, BigCouch/Cloudant/Couchbase). So PouchDB takes a shortcut and just runs every <code>reduce</code> function in memory (there's no point in writing it to disk), meaning it's not doing anything you couldn't just do yourself.</p>
+<p>So if you find yourself writing three different design documents that all <code>emit</code> the same thing but have different <code>reduce</code> functions: don't bother.  You can get better performance and smaller code by just writing a single design document with no <code>reduce</code>, and then doing the reduce yourself.</p>
+<h3>11. Debug with the CouchDB UI</h3>
+<p>One common question is: How do I debug my database?  Well, that's easy: just replicate to CouchDB! Then you can browse your data in CouchDB's handy Futon interface.</p>
+<p>In your code or in the browser console, just run:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">replicate</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token string">'http://localhost:5984/mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Then open up <a href="http://localhost:5984/_utils">http://localhost:5984/_utils</a>. Or if you want to try the new Fauxton API in CouchDB 1.5: <a href="http://localhost:5984/_utils/fauxton/">http://localhost:5984/_utils/fauxton/</a>. You'll get a nice interface that looks like this:</p>
+<p>
+  <a href="/static/img/fauxton.png" target="_blank">
+    <img class="img-responsive"  src="/static/img/fauxton.png" alt="Fauxton UI in PouchDB Server" />
+  </a>
+</p>
+<p>And if you don't feel like installing CouchDB, you can install <a href="https://github.com/pouchdb/pouchdb-server">PouchDB Server</a> instead:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">$ npm install -g pouchdb-server
+$ pouchdb-server -p 5984</code></pre></figure><p>Then open up <a href="http://localhost:5984/_utils">http://localhost:5984/_utils</a>.</p>
+<h3>12. Contribute!</h3>
+<p>To paraphrase <a href="https://www.youtube.com/watch?v=qI_g07C_Q5I">Martin Fowler's famous talk</a>, part of the motivation behind the NoSQL movement was the collective realization by a generation of developers that, you know, this whole &quot;database&quot; thing? It isn't really that hard. Keys map to values, stuff's written to disk: it's a cinch once you learn the basics. And PouchDB occupies an even humbler niche in the NoSQL community, since our NoSQL database is actually built on other databases.</p>
+<p>So if you find a bug, or if there's a missing feature you'd like to request, then check out the code and open a pull request!  We've got a very handsomely documented <a href="https://github.com/pouchdb/pouchdb/raw/master/CONTRIBUTING.md">contributor's guide</a>, and we're always happy to answer questions on <a href="irc://freenode.net/#pouchdb">IRC</a>, <a href="http://twitter.com/pouchdb">Twitter</a>, and <a href="https://groups.google.com/forum/#!forum/pouchdb">the mailing list</a>.</p>
+<p>And even if you've committed the above errors (I know I have), we won't judge you too harshly.  If you've read this far, then you're already on the path to recovery.</p>
+<h3>More tips</h3>
+<p>For more CouchDB tips in easily-digestible list format, check out Joan Touzet's awesome presentation: <a href="http://youtu.be/BKQ9kXKoHS8">10 Common Misconceptions about CouchDB</a>. And to see what you can get away with if you bend these rules a bit, watch <a href="http://youtu.be/4QttTEbQ_1I">the talk that Nathan Vander Wilt gave</a> right after.</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

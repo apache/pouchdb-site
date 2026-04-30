@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PouchDB, the JavaScript Database that Syncs!</title>
+    <title>PouchDB 8.0.1</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
     <link rel="stylesheet" href="/static/css/pouchdb.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
@@ -65,85 +65,72 @@
 
     </header>
     
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">PouchDB 8.0.1</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2023-02-09-pouchdb-8.0.1.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
 
     <div role="main">
-      <div class="band band-inverse">
-  <div class="container">
-    <div class="row">
-      <div class='col-sm-6'>
-        <h1>The Database that Syncs!</h1>
-        <p>PouchDB is an open-source JavaScript database inspired by <a href="http://couchdb.apache.org/">Apache CouchDB</a> that is designed to run well within the browser.</p>
-        <p>PouchDB was created to help web developers build applications that work as well offline as they do online.<br>
-        <p>It enables applications to store data locally while offline, then synchronize it with CouchDB and compatible servers when the application is back online, keeping the user's data in sync no matter where they next login.</p>
-        <a href="/learn.html" class="btn btn-primary btn-lg btn-block-xs">Learn more</a>
-      </div>
-      <div class='col-sm-6'>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'dbname'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
 
-db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'dave@gmail.com'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'David'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">69</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Ch-Ch-Changes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span><span class="token string">'https://example.com/mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band">
-  <div class="container">
-    <div class='row'>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/node.svg"
-          alt=""
-        />
-        <h3>Cross Browser</h3>
-        <p class="margin-bottom-none-md">Works in Firefox, Chrome, Opera, Safari, IE and Node.js</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/light.svg"
-          alt=""
-        />
-        <h3>Lightweight</h3>
-        <p class="margin-bottom-none-md">PouchDB is just a script tag and 46KB (gzipped) away in the browser, or <code>$ npm install pouchdb</code> away
-        in Node.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/learn.svg"
-          alt=""
-        />
-        <h3>Easy to Learn</h3>
-        <p class="margin-bottom-none-md">Requires some programming knowledge, however PouchDB is a piece of cake to learn.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/open.svg"
-          alt=""
-        />
-        <h3>Open Source</h3>
-        <p class="margin-bottom-none-md">Everything is developed out in the open on GitHub, contributors always welcome!</p>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band band-inverse">
-  <div class="container">
-    <h3>Latest</h3>
-        <div class="row">
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2026/04/10/migration-to-nodesqlite.html'>PouchDB has a new adapter - nodesqlite</a></p>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+
+
+
 <div class="post">
   <div class="media">
     <a class="pull-left" href="#">
@@ -152,34 +139,47 @@ db<span class="token punctuation">.</span>replicate<span class="token punctuatio
     <div class="media-body">
     <p>
       <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 10 April 2026<br>
-<p>Hello everyone! PouchDB has a new available adapter for you to use, nodesqlite, that internally uses Node.js's native SQLite module as its persistence layer. This will be, in PouchDB's release
-<a href='/2026/04/10/migration-to-nodesqlite.html'>[...]</a></p>
-<p></p>
-</div></p>
+      <strong>Published:</strong> 09 February 2023<br>
+      
+    </p>
+    </div>
   </div>
 </div>
-  </div>
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2024/05/24/pouchdb-9.0.0.html'>PouchDB 9.0.0</a></p>
-<div class="post">
-  <div class="media">
-    <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
-    </a>
-    <div class="media-body">
-    <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 24 May 2024<br>
-<p>The PouchDB developers are delighted to announce the immediate availability of PouchDB 9.0.0. This is a major release with 202 PRs merged since the last version.
-<a href='/2024/05/24/pouchdb-9.0.0.html'>[...]</a></p>
-<p></p>
-</div></p>
-  </div>
-</div>
-  </div>
-   </div>
-<a class="btn btn-primary btn-lg" href="/blog/index.html">View more</a>
+
+
+      <p>The first release of the year! This is a patch release, it fixes a bug we introduced during a refactor made in the last release and sets Node 14 in our CI. For a full changelog from 8.0.0 to 8.0.1, please see <a href="https://github.com/pouchdb/pouchdb/releases">the releases page</a> or view the <a href="https://github.com/pouchdb/pouchdb/compare/8.0.0...8.0.1">latest commits</a>.</p>
+<h2>Fix <code>this</code> of <code>changesHandler</code></h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8583">#8583</a> <a href="https://github.com/pouchdb/pouchdb/issues/8581">#8581</a> We introduced a bug in the <a href="https://github.com/pouchdb/pouchdb/pull/8450">#8450</a> refactor that has been fixed now.</p>
+<h2>Use Node 14</h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8570">#8570</a> We were testing our CI in GHA against Node 12, which is EOL. Now we are testing against Node 14.</p>
+<h2>Changelog</h2>
+<h3>Bugfixes</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/da5069dfb2ba034857ec2c9516bf33db9f78e824">da5069df</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8581">pouchdb#8581</a>) - Fix this of changesHandler</li>
+</ul>
+<h3>Documentation</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4dcaac8211c3b3bcbf0df8e4fddecd80cefe856c">4dcaac82</a> docs: release post for 8.0.0</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0bdb3423acf0cc4fae8747c1bd2cea0b1cf23339">0bdb3423</a> feat: add mastodon verification link</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/40ac7a2639223845d04ca29f15d1525d4443f35c">40ac7a26</a> feat(site): faster website uploads, rsync skips files that are already on the server</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ae69d4fbd9bfe0455903ca1f04f6820de83243f0">ae69d4fb</a> fix(blog): title case</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3728f020bf4745fa19479d48a7d72832f01c3cf7">3728f020</a> Update 2022-12-14-pouchdb-8.0.0.md</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c90a02082c9bd00fc27ded56780a096009f62677">c90a0208</a> Update 2022-12-14-pouchdb-8.0.0.md</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e9bf059c7b0e6b8d9eb9257d1062fdd44bd78cc2">e9bf059c</a> docs: update to version 8.0.0</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7484e2451f88c25a3d6430aa0a91b7a84793a47a">7484e245</a> docs: update 2022-12-14-pouchdb-8.0.0.md</li>
+</ul>
+<h3>Testing</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/06bfe891be763d0c06b93c98714eb68ce5cad0cc">06bfe891</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8581">pouchdb#8581</a>) - Fix test - Reorder for confirming <code>equal(7)</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2c81da462265c50657d9763e1ae1662eebca7fac">2c81da46</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8581">pouchdb#8581</a>) - Fix test Fix format issues.</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3d36d2d86c6d6935ee9bcdb99f0f6a6f4b4357ae">3d36d2d8</a>  (<a href="https://github.com/pouchdb/pouchdb/issues/8581">pouchdb#8581</a>) - Fix test - Rewrite the function to callback-style. - Fix for timings.</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6a7fd466105daacd7205dd6efe8075831558460b">6a7fd466</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8581">pouchdb#8581</a>) - Fix test.</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ff81fa35be04454457afaa3bf99a2eeae99b5a18">ff81fa35</a> ci: use node 14</li>
+</ul>
+<h2>Get in touch</h2>
+<p>As always, we welcome feedback from the community. Please don't hesitate to <a href="https://github.com/pouchdb/pouchdb/issues">file issues</a>, <a href="https://github.com/pouchdb/pouchdb/discussions">open discussions</a> or <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">get in touch</a>. And of course, a big thanks to all of our <a href="https://github.com/pouchdb/pouchdb/graphs/contributors">new and existing contributors</a>!</p>
+
+    </article>
   </div>
 </div>
 

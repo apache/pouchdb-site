@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PouchDB 8.0.0 — Modernizing PouchDB</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">PouchDB 8.0.0 — Modernizing PouchDB</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2022-12-14-pouchdb-8.0.0.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
+      <strong>Published:</strong> 14 December 2022<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <p>We are thrilled to announce the release of PouchDB's new major version 8.0.0. For a full changelog from 7.3.1 to 8.0.0, please see <a href="https://github.com/pouchdb/pouchdb/releases">the releases page</a> or view the <a href="https://github.com/pouchdb/pouchdb/compare/7.3.1...8.0.0">latest commits</a>. Here are the highlights:</p>
+<h2>Embracing modern ES6+ JS syntax</h2>
+<p>We have started the process of moving to ES6+ syntax. We made refactors to use native JS classes instead of prototypes, deprecated some packages that implemented features that are now built in the language (<a href="https://github.com/pouchdb/pouchdb/commit/50d2c33a9c262b0d44c39abb5c40c6685e3fcd8e"><code>inherits</code></a>, <a href="https://github.com/pouchdb/pouchdb/commit/4974b64a67723fc8ec2d471c0590502dfe104760"><code>argsarray</code></a>), and started in packages such as <code>pouchdb-abstract-mapreduce</code> and <code>pouchdb-adapter-http</code>. We encourage you to embrace the syntax in your new contributions and, if you can, contribute to the refactoring effort.</p>
+<p>This might mean a <strong>potentially breaking change</strong>, therefore we bump the major version. If you need to support ES5 we recommend you use a transpiler.</p>
+<h2>Add <code>activeTasks</code></h2>
+<p><a href="https://github.com/pouchdb/pouchdb/issues/8422">#8422</a> <a href="https://github.com/pouchdb/pouchdb/issues/8441">#8441</a> Analogous to the <code>_active_tasks</code> feature in CouchDB, PouchDB now has <code>activeTasks</code>. With this functionality, PouchDB is able to list all active database tasks, like <code>database_compaction</code>, <code>view_indexing</code>, or <code>replication</code>. PouchDB will report the progress of these tasks to the active tasks API and remove tasks as soon as they are completed or have failed.</p>
+<p>Example usage:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> tasks <span class="token operator">=</span> PouchDB<span class="token punctuation">.</span>activeTasks<span class="token punctuation">.</span><span class="token function">list</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre></figure><p>Example result:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">[</span><span class="token punctuation">{</span>
+  <span class="token string-property property">"id"</span><span class="token operator">:</span> <span class="token string">"d81fea92-8ce4-42df-bb2b-89a4e67536c3"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token string">"database_compaction"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"created_at"</span><span class="token operator">:</span> <span class="token string">"2022-02-08T15:38:45.318Z"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"total_items"</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"completed_items"</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"updated_at"</span><span class="token operator">:</span> <span class="token string">"2022-02-08T15:38:45.821Z"</span>
+<span class="token punctuation">}</span><span class="token punctuation">]</span></code></pre></figure><h2>Add <code>purge</code> to the <code>indexeddb</code> adapter</h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8453">#8453</a> Similar to CouchDB's <code>purge</code>, PouchDB has now <code>purge</code> for its <code>indexeddb</code> adapter.</p>
+<p>Purge permanently removes data from the database. Normal deletion with <code>db.remove()</code> does not, it only marks the document as <code>_deleted=true</code> and creates a new revision. This behaviour ensures that deletes can be replicated across databases, and deleted documents don’t get undeleted by syncing with a database that still has this document.</p>
+<p><code>db.purge()</code> is not intended as a regular method for deleting documents, instead, it is meant as an admin function for cases where some secret was erroneously added to the database and must now be removed completely, eg. a credit card or social security number. Purge effectively puts the database in a state where the offending write never happened.</p>
+<p>Example usage:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">try</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">purge</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">,</span> <span class="token string">'6-3a24009a9525bde9e4bfa8a99046b00d'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// handle result</span>
+<span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle error</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Example result:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+  <span class="token string-property property">"ok"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"deletedRevs"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">"6-3a24009a9525bde9e4bfa8a99046b00d"</span><span class="token punctuation">,</span>
+    <span class="token string">"5-df4a81cd21c75c71974d96e88a68fc2f"</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"documentWasRemovedCompletely"</span><span class="token operator">:</span> <span class="token boolean">false</span>
+<span class="token punctuation">}</span></code></pre></figure><h2>Improving publishing packages</h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8576">#8576</a> Previously, if publishing packages failed part-way through, the release script halt and the remaining packages needed to be published by hand. With this improvement the script can be run again to publish the remaining packages.</p>
+<h2>Changelog</h2>
+<h3>New features</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0680c0acad8ba12bbe7af28ffef7e2de51f8d1d8">0680c0ac</a> feat(core): simple active tasks implementation</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c3fc43cc1264406e50bb701981a84e3f7bcae0f8">c3fc43cc</a> feat: use activeTasks error handling</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9a83c11f3f3d5905dfb2570bc9b6600a4b4bd96b">9a83c11f</a> feat(core): activeTasks remove reason argument</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/40dc6b37e273d08d27afa1a09759997d92d91aa9">40dc6b37</a> feat(replicate): track live replications in activeTasks</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f5b6d35ee3a3c4e036f9724543ec2cc0df8c692b">f5b6d35e</a> feat(core): view indexing use activeTasks API</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d784b49a956d82c4821ed675a51a0f053680e9c7">d784b49a</a> feat(replicate): replication uses activeTasks API</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/52a52495304ae810aac1f5bddb5af2a6d59457e7">52a52495</a> feat: database compaction use activeTasks API</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ed0db363f959eb866c94339efcfb0c9bab26456b">ed0db363</a> feat(core): make activeTasks.list() return array</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/eaf9d52fd50b37c1b75bc46d1ebdf0ffd16f0fd3">eaf9d52f</a> feat(core): active tasks <code>created_at/updated_at</code> naming</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/544eb77d1f2ca6fc33eebc2511920af5f6806b68">544eb77d</a> feat(purge): add purge to core</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ec1b7872264d850a10afb584e3afc147af76ac40">ec1b7872</a> chore(purge): remove only from purge tests</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3445a012d7d51de7afbaa2eea4c18e85a5fde992">3445a012</a> feat(indexeddb): proof-of-concept purge method</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e861d00fe0fc15137630fb238d0dd5668b0efe86">e861d00f</a> wip(indexeddb): stub <code>_purgeRev</code> method</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/972ae331dc731445a48f37de729bd5a1737a9864">972ae331</a> wip(merge): findPathToLeaf, removeLeafFromTree</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4e921ebdfa224e8ed850bc91d3cb0927bf4522b9">4e921ebd</a> feat(merge): removeLeafFromTree return empty trees</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3e3f7613cb34c2e09b936feddfda0ad5f42dfe29">3e3f7613</a> feat: make purge delete docs if tree is empty</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a8b5e00c046baf223f2d726bf43422e10a9c4fde">a8b5e00c</a> feat(indexeddb): attachment purging</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/693ea5c17d222ab2dce72131e4cd71005ef85541">693ea5c1</a> feat(purge): handle missing doc, return something</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/774976a02781c3953727244706adfb0d5cce420a">774976a0</a> feat: on-update view purging</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/94ec8932fd79a2993c82a5381ae34d64c286375f">94ec8932</a> feat(core): <code>purged_infos_limit</code> support</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ce8f8b308f4509def96272693f797deac05b55e0">ce8f8b30</a> [wip] Purge leaves from multiple roots</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4252a0f0ba71ab63f493709fe81e5e63baeb5dee">4252a0f0</a> docs(purge): show result object separately</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b856173b436c201d86c0c63319eaf0dc8396a772">b856173b</a> chore(purge): add code comments</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d5f4250a3539b62c430203441bcb02fa41e00ae2">d5f4250a</a> chore(purge): remove unneeded logs and comments</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2c0ddbb01e9d01ba2b4ccc754ff855a15173208c">2c0ddbb0</a> feat(purge): simplify implementation of removeLeafFromTree()</li>
+</ul>
+<h3>Bugfixes</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/34a797499b82df58c9005ee6dc4d5f179d4f6ebd">34a79749</a> fix: check replication currentBatch</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/8f33ff0a3b2042de51bc59bb570516fdc6a20d92">8f33ff0a</a> fix: add activeTask stub to mock replication database</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3fe71b036a37f3cf983f47937bd9ccd0788fead6">3fe71b03</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8491">#8491</a>) - Fix $regex and $ne within $or operator</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/86ccf4811b7d420d865f86fbef62280ff3c83d88">86ccf481</a> fix(core): active tasks object datastructure</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5f61b1fe128bb6091d28555ee8d44f185371923f">5f61b1fe</a> fix partial filter find on indexeddb adapter</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/759ea5a0c0c6a7518fb9efbc0404a81959127448">759ea5a0</a> fix: store <code>partial_filter_selector</code> in ddocs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9519c748c48cbac41451039765c758e5987bbc57">9519c748</a> fix: active tasks race condition</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/25a12e11682aaf462ec62727bfebe29c9c418a06">25a12e11</a> fix(merge): removeLeafFromTree to properly use branchings</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d5f29f7b73e7d0bea57dfa6398815c22cb5d6dff">d5f29f7b</a> fix(indexeddb): rev purging typo</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f0958b50273c0c16c5277c50069e2c9d2739115a">f0958b50</a> fix(purge): use callback in adapter</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b20139e176ea792bf22d263ddb62a646e2c7cd2f">b20139e1</a> fix(core): purge error values</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4d11ef51fc3c275c46d465678cf499e18371744c">4d11ef51</a> fix(a-m-r): purge check return value</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/203ae67030473285a3188df23dbfba7a088c4482">203ae670</a> fix: remove logging</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/24157fcf27ffa429c248770ee7997a46f3696117">24157fcf</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8513">#8513</a>) - Race condition for pouchdb hanging indefinitely when multiple instances are used</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/15092e8eefaac5604afe2155ed7d38872bea40be">15092e8e</a> chore: catch selenium errors earlier</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2eca392bfae8c76bfb8d25b75414e5b47381a653">2eca392b</a> fix: (<a href="https://github.com/pouchdb/pouchdb/pull/8471">#8471</a>) filterInclusiveStart for nested fields</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/45dc5ae81d67ef37f62b06463a0d3a1f03395b6e">45dc5ae8</a> Fix the implementation of _bulkDocs() in the http adapter without using adapterFun()</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/fcb71db4df332afa03c88112af928da6b9b15f52">fcb71db4</a> fix: active task total items calculation (<a href="https://github.com/pouchdb/pouchdb/pull/8508">#8508</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/76d35e44119cab340a40400e6dff55289cb744b3">76d35e44</a> fix: replication cancellation race condition (<a href="https://github.com/pouchdb/pouchdb/pull/8507">#8507</a>)</li>
+</ul>
+<h3>Documentation</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7c6753a6fd802191d51adcbcf153c5f646786f4d">7c6753a6</a> Mark a few words in the 7.3 post as code so that markdown does not italicise them</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/486076d2892a35562aed7804246a1efe70ced41f">486076d2</a> Fix formatting of 7.3 release post by adding blank lines</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c6719367d30234f407bb83729ebea9e1cd08e76d">c6719367</a> Add new author in the docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9cc72318806cdce5ef0b2916468f5226c1974fb6">9cc72318</a> Add 7.3.0 release post</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/140896cbdff064b5308cc3d55c481f4034855145">140896cb</a> feat: update site version to 7.3.0</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d9c191821eaaf46da1d7b39ed643247d6160cf93">d9c19182</a> docs: update PouchDB on page</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2afc29f7778696d69f8801e32ca3c126f5e5dd1b">2afc29f7</a> docs: release script note</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/861003adecaab343ca7f10ae476638dc4f5fb9e3">861003ad</a> docs: clarify release process</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/47cb987cecbddb72058a7891e23aebb0f2cd57ca">47cb987c</a> Add 7.3.1 release post</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f00d1193ac7df78b44db8302c01f02b585875f00">f00d1193</a> feat: update site version to 7.3.1</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0140bfa57c7100ad72cff65797e953e7bf80b417">0140bfa5</a> docs: active tasks API</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2de982e557cca2216e874aec36848cfb7d4d0eea">2de982e5</a> add performance warning for indexeddb</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5faa060c01b8b6e4a753a90b73fc493ef800334e">5faa060c</a> docs(purge): add first draft of purge docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3cfb4af4c03eb275675f216bcc74db4f23224aab">3cfb4af4</a> docs(purge): update docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d1c04dd5d96582d8361aed54ab463b8464147ea9">d1c04dd5</a> Update attachments.md : outdated external link</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0200eea4d61c44fa426c81946d230540bc5bc332">0200eea4</a> Update 2022-04-13-pouchdb-7.3.0.md</li>
+</ul>
+<h3>Testing</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a3bf8ff0862c5918ae2a1a06ef2851bbbc9a0c40">a3bf8ff0</a> test(<a href="https://github.com/pouchdb/pouchdb/issues/8522">#8522</a>): add failing test for partial index</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/69ce67ad7409d544f23ce71fe09c482df58490b8">69ce67ad</a> chore(core): lint activetasks code and tests</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5fd15227832f02818be445dab94feab4b0426f24">5fd15227</a> test(purge): unit tests for findPathToLeaf util</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/621cf0a14234869893b08c64626b099a8b6bf5c2">621cf0a1</a> wip: multi-root tree purge tests</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f28b4ad5aebf7f34eff6d8ae164b48cb32472125">f28b4ad5</a> [wip] failing test showing bug in tracking node position in removeLeafFromTree()</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/868937d8ae47151d39fb5acaa979c4112eed5b73">868937d8</a> tests(purge): fix tests for fixed multi-root removals</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/63026167572f4066643882866c961c7539ce97bc">63026167</a> chore(purge): lint</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/8e83728ba43463dc075c3c121744f46289c44331">8e83728b</a> perf-tests: make wording clearer for multiple adapters</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/34a8cf525010c7b498dd2f61096c6c36326c9be5">34a8cf52</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8568">#8568</a>) - use eslint cache</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2b9b7fac7ee3148b8037a37b41f87f6eb3ef5138">2b9b7fac</a> fix(tests): reformat tree fixtures</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/581c104883968ad2d03336068be632021560cad6">581c1048</a> feat(tests): purge integration tests</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/df77ecbfb7dc04ff5c8c765a1858c5ba2bf016ab">df77ecbf</a> refactor a test that timeout to use async</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/404346bba500c357c0276ad15762e985fb143eea">404346bb</a> chore: upgrade webpack for testing</li>
+</ul>
+<h3>Dependency updates</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/50d2c33a9c262b0d44c39abb5c40c6685e3fcd8e">50d2c33a</a> Remove inherits package dependency</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4974b64a67723fc8ec2d471c0590502dfe104760">4974b64a</a> refactor: remove argsarray dependency</li>
+</ul>
+<h3>Refactor</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7350a701458bf77fca989ad9103cea1ed787544a">7350a701</a> refactor: use es6 classes</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/08e4600203b8938bdc40180d9fbec28ff724373c">08e46002</a> refactor: deprecate inherits in pouchdb-core</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/99ebea32f39adc3f5feb47d1b3c57414c8ad0872">99ebea32</a> refactor: use class in sublevel-pouchdb</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d4ff99b4282c60f8ebdc48f245ef510a7287c807">d4ff99b4</a> refactor: use classes instead of prototypes</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/21d7975c57b8dbaa3598ff7a0fc36f3a76c1fd37">21d7975c</a> feat(core): refactor ActiveTasks with ES6 classes</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/07d055ae8a375366281ff12cec5519d3a42d120f">07d055ae</a> refactor: use rest parameters in find utils</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d02eaaf0a445a388d522052f3e2147c55881ebcd">d02eaaf0</a> refactor: remove argsarray usage</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/701f96dc7c4ba2a598f46381b645a5c4c399b154">701f96dc</a> refactor: use await in abstract-mapreduce</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/74a6d6fdbff0b0b0ade148562794107f25581091">74a6d6fd</a> refactor: remove unnecessary async</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/73e0199cd1116352cc714266a4490d1f121f268a">73e0199c</a> refactor: use ES6 syntax in http adapter</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/133978fe771ff669a1855bf51910bce86f8777d6">133978fe</a> refactor: use ES6 syntax in abstract-mapreduce</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/27128d6df5059db263dcab8f7d4292321e2f975b">27128d6d</a> chore: remove obsolete replication revision-one optimization (<a href="https://github.com/pouchdb/pouchdb/pull/8499">#8499</a>)</li>
+</ul>
+<h3>Other changes</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/8e08a14cb2706ca8ebbd587aa43b055d670b9383">8e08a14c</a> chore: delete stale bot</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/55c2743e4b17a85b21f4f888ff8f02a2b31beaaa">55c2743e</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8571">#8571</a>) - set executable mode on scripts</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/fec3c1639e2ed83a31ed530e832a1f4c171b378e">fec3c163</a> Make bin/publish-packages.sh exit with non-zero status on failure</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5b07d18d28fb8472fc35d914b911786e671cc08f">5b07d18d</a> Recover if publishing packages fails part-way through</li>
+</ul>
+<h2>Get in touch</h2>
+<p>As always, we welcome feedback from the community and would love to hear what you think of this release as well as PouchDB's future direction. Please don't hesitate to <a href="https://github.com/pouchdb/pouchdb/issues">file issues</a>, <a href="https://github.com/pouchdb/pouchdb/discussions">open discussions</a> or <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">get in touch</a>. And of course, a big thanks to all of our <a href="https://github.com/pouchdb/pouchdb/graphs/contributors">new and existing contributors</a>!</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

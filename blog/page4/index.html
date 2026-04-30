@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PouchDB, the JavaScript Database that Syncs!</title>
+    <title>Blog</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
     <link rel="stylesheet" href="/static/css/pouchdb.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
@@ -65,122 +65,392 @@
 
     </header>
     
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Blog</h1>
+          
+          
+
+        </div>
+
+      </div>
+    
 
     <div role="main">
-      <div class="band band-inverse">
-  <div class="container">
-    <div class="row">
-      <div class='col-sm-6'>
-        <h1>The Database that Syncs!</h1>
-        <p>PouchDB is an open-source JavaScript database inspired by <a href="http://couchdb.apache.org/">Apache CouchDB</a> that is designed to run well within the browser.</p>
-        <p>PouchDB was created to help web developers build applications that work as well offline as they do online.<br>
-        <p>It enables applications to store data locally while offline, then synchronize it with CouchDB and compatible servers when the application is back online, keeping the user's data in sync no matter where they next login.</p>
-        <a href="/learn.html" class="btn btn-primary btn-lg btn-block-xs">Learn more</a>
-      </div>
-      <div class='col-sm-6'>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'dbname'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'dave@gmail.com'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'David'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">69</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Ch-Ch-Changes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-db<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span><span class="token string">'https://example.com/mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
-      </div>
-    </div>
-  </div>
-</div>
+      
 <div class="band">
-  <div class="container">
-    <div class='row'>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/node.svg"
-          alt=""
-        />
-        <h3>Cross Browser</h3>
-        <p class="margin-bottom-none-md">Works in Firefox, Chrome, Opera, Safari, IE and Node.js</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/light.svg"
-          alt=""
-        />
-        <h3>Lightweight</h3>
-        <p class="margin-bottom-none-md">PouchDB is just a script tag and 46KB (gzipped) away in the browser, or <code>$ npm install pouchdb</code> away
-        in Node.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/learn.svg"
-          alt=""
-        />
-        <h3>Easy to Learn</h3>
-        <p class="margin-bottom-none-md">Requires some programming knowledge, however PouchDB is a piece of cake to learn.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/open.svg"
-          alt=""
-        />
-        <h3>Open Source</h3>
-        <p class="margin-bottom-none-md">Everything is developed out in the open on GitHub, contributors always welcome!</p>
-      </div>
+<article class='container'>
+<div class='row'>
+<div class='col-md-8'>
+
+
+<a class='h3' href='/2016/09/05/pouchdb-6.0.0.html'>PouchDB 6.0.0&#58; Labour Day</a>
+
+  
+  
+  
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/030451d8cfc268d666bae9a7fe8d10ec' alt='Dale Harvey'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/daleharvey">Dale Harvey</a><br>
+      <strong>Published:</strong> 05 September 2016<br>
+      
+        
+          To celebrate the USA and Canada's Labo(u)r Day, we have decided to work extra hard to bring you PouchDB 6.0.0. This release brings early retirement to those features that have
+        <a href='/2016/09/05/pouchdb-6.0.0.html'>[...]</a>
+      
+    </p>
     </div>
   </div>
 </div>
-<div class="band band-inverse">
-  <div class="container">
-    <h3>Latest</h3>
-        <div class="row">
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2026/04/10/migration-to-nodesqlite.html'>PouchDB has a new adapter - nodesqlite</a></p>
+
+
+
+
+<a class='h3' href='/2016/06/06/pouchdb-5.4.0.html'>PouchDB 5.4.0</a>
+
+  
+  
+  
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
 <div class="post">
   <div class="media">
     <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
     </a>
     <div class="media-body">
     <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 10 April 2026<br>
-<p>Hello everyone! PouchDB has a new available adapter for you to use, nodesqlite, that internally uses Node.js's native SQLite module as its persistence layer. This will be, in PouchDB's release
-<a href='/2026/04/10/migration-to-nodesqlite.html'>[...]</a></p>
-<p></p>
-</div></p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 06 June 2016<br>
+      
+        
+          I'm happy to announce PouchDB 5.4.0, which is a minor release with a few new features, many bugfixes, and a handful of deprecations.
+        <a href='/2016/06/06/pouchdb-5.4.0.html'>[...]</a>
+      
+    </p>
+    </div>
   </div>
 </div>
-  </div>
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2024/05/24/pouchdb-9.0.0.html'>PouchDB 9.0.0</a></p>
+
+
+
+
+<a class='h3' href='/2016/06/06/introducing-pouchdb-custom-builds.html'>Introducing PouchDB custom builds</a>
+
+  
+  
+  
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
 <div class="post">
   <div class="media">
     <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
     </a>
     <div class="media-body">
     <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 24 May 2024<br>
-<p>The PouchDB developers are delighted to announce the immediate availability of PouchDB 9.0.0. This is a major release with 202 PRs merged since the last version.
-<a href='/2024/05/24/pouchdb-9.0.0.html'>[...]</a></p>
-<p></p>
-</div></p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 06 June 2016<br>
+      
+        
+           &quot;Hold the pickles, hold the lettuce; special orders don't upset us.&quot;
+        <a href='/2016/06/06/introducing-pouchdb-custom-builds.html'>[...]</a>
+      
+    </p>
+    </div>
   </div>
 </div>
+
+
+
+
+<a class='h3' href='/2016/04/28/prebuilt-databases-with-pouchdb.html'>Prebuilt databases with PouchDB</a>
+
+  
+  
+  
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 28 April 2016<br>
+      
+        
+          A common scenario when writing an app is that you have some data in a database, and you want it to be immediately available when the app starts up. Your
+        <a href='/2016/04/28/prebuilt-databases-with-pouchdb.html'>[...]</a>
+      
+    </p>
+    </div>
   </div>
-   </div>
-<a class="btn btn-primary btn-lg" href="/blog/index.html">View more</a>
+</div>
+
+
+
+
+<a class='h3' href='/2016/03/04/pouchdb-5.3.0-sqlite-support-in-node.html'>PouchDB 5.3.0&#58; SQLite support in Node</a>
+
+  
+  
+  
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 04 March 2016<br>
+      
+        
+          PouchDB 5.3.0 is released today, with a new feature: SQLite support in Node, using node-websql. This means that, in addition to the LevelDB-based LevelDOWN (or any other *DOWN adapter), you
+        <a href='/2016/03/04/pouchdb-5.3.0-sqlite-support-in-node.html'>[...]</a>
+      
+    </p>
+    </div>
   </div>
+</div>
+
+
+
+<ul class='pagination'>
+  <li ><a href='/blog/page3//'>&laquo;</a></li>
+  
+    
+    <li><a href='/blog/'>1</a></li>
+    
+  
+    
+    <li><a href='/blog/page2/'>2</a></li>
+    
+  
+    
+    <li><a href='/blog/page3/'>3</a></li>
+    
+  
+    
+    <li class='active'><a>4</a></li>
+    
+  
+    
+    <li><a href='/blog/page5/'>5</a></li>
+    
+  
+    
+    <li><a href='/blog/page6/'>6</a></li>
+    
+  
+    
+    <li><a href='/blog/page7/'>7</a></li>
+    
+  
+    
+    <li><a href='/blog/page8/'>8</a></li>
+    
+  
+    
+    <li><a href='/blog/page9/'>9</a></li>
+    
+  
+    
+    <li><a href='/blog/page10/'>10</a></li>
+    
+  
+    
+    <li><a href='/blog/page11/'>11</a></li>
+    
+  
+    
+    <li><a href='/blog/page12/'>12</a></li>
+    
+  
+  <li ><a href='/blog/page5//'>&raquo;</a></li>
+</ul>
+</div>
+</div>
+</article>
 </div>
 
     </div>

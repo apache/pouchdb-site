@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PouchDB 6.1.0</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">PouchDB 6.1.0</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2016-12-12-pouchdb-6.1.0.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 12 December 2016<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <p>PouchDB 6.1.0 adds a new feature, <code>{latest: true}</code>, as well as several bug fixes and performance improvements. For a full changelog since 6.0.0, including several patch releases up to 6.0.7, please see <a href="https://github.com/pouchdb/pouchdb/releases">the releases page</a>.</p>
+<h2>latest: true</h2>
+<p>CouchDB has an option on <a href="http://docs.couchdb.org/en/2.0.0/api/document/common.html">the document endpoint</a> called <code>latest=true</code>, which will fetch the latest revision of a document in the case where the requested revision has been updated.</p>
+<p>For instance, let's say we have a document:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'foo'</span><span class="token punctuation">,</span> <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'1-x'</span><span class="token punctuation">}</span></code></pre></figure><p>And we update it, so its revision increments:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'foo'</span><span class="token punctuation">,</span> <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'2-y'</span><span class="token punctuation">}</span></code></pre></figure><p>Now, if were were to fetch it using <code>db.get('foo', {rev: '1-x'})</code>, that would give us the <em>old</em> revision. However, by doing <code>db.get('foo', {rev: '1-x', latest: true})</code>, we'll get the <code>2-y</code> revision instead.</p>
+<p>This might seem like a niche use case, but this parameter is used by the CouchDB replicator to avoid race conditions where a document is updated right at the moment that it's being synced. This feature has now been added to PouchDB's replication algorithm, meaning that with 6.1.0 onward, replication should be much more robust.</p>
+<p>Many thanks to <a href="https://github.com/willholley">Will Holley</a> for implementing both <code>{latest: true}</code> and the replication fixes! See <a href="https://github.com/pouchdb/pouchdb/issues/5857">this PR</a> for more details.</p>
+<h2>Better fetch() implementation</h2>
+<p>When using PouchDB inside of a Service Worker, the <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest">XMLHttpRequest</a> API is unavailable and hence PouchDB uses the new <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">fetch</a> API instead. However, this implementation was not previously tested, and feedback from <a href="http://hospitalrun.io/">HospitalRun.io</a> developer <a href="https://github.com/jkleinsc/">John Kleinschmidt</a> suggested that PouchDB's <code>fetch()</code>-based implementation was less robust than its XHR-based implementation.</p>
+<p>In 6.1.0, we have added CI testing for the <code>fetch()</code> implementation and also <a href="https://github.com/pouchdb/pouchdb/issues/5902">fixed all outstanding bugs</a> such that it passes the test suite at 100%. Therefore the new <code>fetch()</code> implementation is now just as reliable as the XHR implementation, improving PouchDB's Service Worker support.</p>
+<p>In a future release, PouchDB will drop the XHR implementation entirely and use <code>fetch()</code> only, with a polyfill for non-<code>fetch()</code> browsers.</p>
+<h2>Better warnings</h2>
+<p>When using plugins, we found that folks would often make a mistake like this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Whereas the proper form is:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Before 6.1.0 this error message was hard to diagnose. As of 6.1.0, though, this will now provide <a href="https://github.com/pouchdb/pouchdb/pull/5904">a more helpful error</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">Invalid plugin: got "pouchdb-find", expected an object or a function</code></pre></figure><p>We also found it common to forget to include a <code>content_type</code> when inserting attachments, which can lead to hard-to-debug errors later on. Now, an attachment without a <code>content_type</code> <a href="https://github.com/pouchdb/pouchdb/pull/5826">will emit a warning</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">Attachment foo.txt on document mydoc is missing content_type</code></pre></figure><p>Thanks to <a href="https://github.com/andymorris">Andy Morris</a> for the <code>content_type</code> fix!</p>
+<h2>Remove peerDependency on pouchdb-core</h2>
+<p>Because of the way PouchDB is structured, it's possible to use PouchDB plugins without technically including the <code>pouchdb-core</code> package. The reason for this is that packages like <code>pouchdb</code>, <code>pouchdb-browser</code>, and <code>pouchdb-node</code> are aggressively bundled to improve the installation, download, and execution time. So rather than explicitly depend on <code>pouchdb-core</code>, they inline it.</p>
+<p>Previously, this would generate a warning during <code>npm install</code>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">npm WARN pouchdb-adapter-memory@6.0.7 requires a peer of pouchdb-core@6.0.7 but none was installed.</code></pre></figure><p>This warning has been removed in 6.1.0 because it caused confusion more often than it helped.</p>
+<p>Unfortunately npm offers no way to emit a <code>peerDependency</code> warning only if <em>any one of</em> possible peers (e.g. <code>pouchdb-core</code>, <code>pouchdb</code>, <code>pouchdb-browser</code>, or <code>pouchdb-node</code>) are not installed or have the wrong version, so we removed the <code>peerDependency</code> entirely.</p>
+<p>If you're wondering how to correctly use PouchDB plugins with core PouchDB packages, the answer is fairly simple: first-party plugins should always have the same version as the other core PouchDB packages. These packages are published at the same time with the same versions, so you just need to be sure to keep them synchronized. For instance:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"dependencies"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+     <span class="token property">"pouchdb-core"</span><span class="token operator">:</span> <span class="token string">"6.1.0"</span><span class="token punctuation">,</span>
+     <span class="token property">"pouchdb-promise"</span><span class="token operator">:</span> <span class="token string">"6.1.0"</span><span class="token punctuation">,</span>
+     <span class="token property">"pouchdb-replication"</span><span class="token operator">:</span> <span class="token string">"6.1.0"</span><span class="token punctuation">,</span>
+     <span class="token property">"pouchdb-adapter-memory"</span><span class="token operator">:</span> <span class="token string">"6.1.0"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></figure><p>If these versions do not exactly match (e.g. &quot;6.1.0&quot; and &quot;6.0.7&quot;) then PouchDB <a href="https://github.com/pouchdb/pouchdb/pull/5925">will no longer warn you</a>, however the behavior is undefined and could lead to bugs.</p>
+<p>Note that third-party dependencies (such as <code>pouchdb-find</code>, <code>worker-pouch</code>, and <code>pouchdb-server</code>) have their own versioning schemes and therefore do not need to be kept in sync.</p>
+<h2>Smaller code, fewer dependencies</h2>
+<p>Like any codebase, PouchDB's has accumulated some cruft over time. As part of <a href="https://github.com/pouchdb/pouchdb/pull/5930">an</a> <a href="https://github.com/pouchdb/pouchdb/pull/5898">effort</a> <a href="https://github.com/pouchdb/pouchdb/pull/5905">to</a> <a href="https://github.com/pouchdb/pouchdb/pull/5899">simplify</a> the codebase, PouchDB 6.1.0 now has one less dependency (<a href="https://github.com/timdp/es6-promise-pool">es6-promise-pool</a>, replaced with a smaller custom implementation) and actually has a slightly smaller bundle size than 6.0.7 (45337 bytes min+gz to 45299).</p>
+<p>Furthermore, PouchDB's internal timer system has been vastly simplified, relying on the built-in browser <code>setTimeout()</code> rather than <code>process.nextTick()</code> (thus avoiding <a href="https://github.com/defunctzombie/node-process/blob/7d8c3702a8bbc43fa55f4bab74b150aef37001dd/browser.js">a rather large Browserify/Webpack dependency</a>), as well as eliminating timeouts entirely where they were found to be unnecessary. This will actually result in a performance boost to most PouchDB operations in terms of latency, since PouchDB is no longer yielding to the event loop so frequently.</p>
+<p>However, the tradeoff is that this change may also give fewer opportunities for the browser to accept input, hence possibly leading to blocked UIs or slower scrolling. In such cases, if you do experience a sluggish UI on account of PouchDB, we recommend moving PouchDB into a web worker or using <a href="https://github.com/nolanlawson/worker-pouch">worker-pouch</a> to avoid <a href="http://nolanlawson.com/2015/09/29/indexeddb-websql-localstorage-what-blocks-the-dom/">blocking the browser UI</a>.</p>
+<h2>Full changelog</h2>
+<h3>New features</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5857">#5857</a> - add latest:true</li>
+</ul>
+<h3>Bug fixes and performance improvements</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5857">#5857</a> - use latest:true during replication</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5904">#5904</a> - more helpful error message for invalid plugin</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5736">#5736</a> - warn about attachments without content_type</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5925">#5925</a> - remove peerDependency on pouchdb-core</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5922">#5922</a> - transitive default</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5930">#5930</a> <a href="https://github.com/pouchdb/pouchdb/pull/5898">#5898</a> - simplify timeouts</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5934">#5934</a> - simplify parseAdapter</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5905">#5905</a> - remove es6-promise-pool</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5899">#5899</a> - simplify PouchError code</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5902">#5902</a> - fix fetch() implementation</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5886">#5886</a> - fix bulkGet() with reserved _id</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5855">#5855</a> - fix JSON.parse() overflows</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5883">#5883</a> - retrieve appropriate _revisions when there are duplicate rev hashes</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5832">#5832</a> - return correct revision after doc update</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5479">#5479</a> - ensure sync events are called the correct number of times</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5812">#5812</a> - fix memory leaks in pouchdb-core</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5793">#5793</a> - fixes for Couchbase Sync Gateway</li>
+<li><a href="https://github.com/pouchdb/pouchdb/pull/5988">#5988</a> - remove unsafe <code>new Buffer()</code> usages</li>
+</ul>
+<h2>Get in touch</h2>
+<p>As always, we welcome feedback from the community and would love to hear what you think of this release as well as PouchDB's future direction. Please don't hesitate to <a href="https://github.com/pouchdb/pouchdb/issues">file issues</a> or <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">get in touch</a>. And of course, a big thanks to all of our <a href="https://github.com/pouchdb/pouchdb/graphs/contributors">new and existing contributors</a>!</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

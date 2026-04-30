@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PouchDB 5.0.0 - Five years of PouchDB</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">PouchDB 5.0.0 - Five years of PouchDB</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2015-10-06-pouchdb-5.0.0-five-years-of-pouchdb.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 06 October 2015<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <p>Fitting with the fact that <a href="https://github.com/pouchdb/pouchdb/commit/d600081962d3f54b410e5cfcf78cd413ad94abb9">PouchDB turned five years old this year</a>, we're proud to announce PouchDB 5.0.0. This release contains the usual number of bugfixes and improvements, as well as several deprecations, since it is a major version bump.</p>
+<p>The biggest news in terms of features is support for <a href="https://mail-archives.apache.org/mod_mbox/couchdb-dev/201509.mbox/%3CCA%2BvSmEYjimR3emsgHOTkNqdBcN_Rvh-V9gQZtDBVAEEcMO1TQQ%40mail.gmail.com%3E">_bulk_get</a>, which is a new CouchDB API that enables vastly faster replication, set to be debuted in CouchDB 2.0. This API is also shipped in the newly-released PouchDB Server 1.0.0, meaning you can test out the faster replication now.</p>
+<h3>Deprecations</h3>
+<ul>
+<li>Remove <code>PouchDB.destroy()</code> (<a href="http://github.com/pouchdb/pouchdb/issues/4223">#4223</a>)</li>
+</ul>
+<p>Having a <code>destroy()</code> function on the <code>PouchDB</code> object was always a little awkward, which is why we introduced the <code>db.destroy()</code> alternative. So now that <code>PouchDB.destroy()</code> is out, upgrading your code should look like this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>becomes:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Keep in mind that the <code>PouchDB</code> object is no longer usable after you <code>destroy()</code> it. So you should call <code>new PouchDB()</code> again if you want to re-use it.</p>
+<ul>
+<li>Remove CRUD events (<a href="http://github.com/pouchdb/pouchdb/issues/4224">#4224</a>)</li>
+</ul>
+<p>These events (<code>'create'</code>, <code>'update'</code>, and <code>'delete'</code>) were intended to make the <code>changes()</code> API easier to work with, but they ended up being too ambitious and confusing, so 5.0.0 removes them.</p>
+<p>If you are relying on these events, then you can upgrade like so:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'create'</span><span class="token punctuation">,</span> createListener<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'update'</span><span class="token punctuation">,</span> updateListener<span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'delete'</span><span class="token punctuation">,</span> deleteListener<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>becomes:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">change</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>change<span class="token punctuation">.</span>deleted<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">deleteListener</span><span class="token punctuation">(</span>change<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>change<span class="token punctuation">.</span>changes<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span>
+               <span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">^1-</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>change<span class="token punctuation">.</span>changes<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>rev<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">createListener</span><span class="token punctuation">(</span>change<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token function">updateListener</span><span class="token punctuation">(</span>change<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Keep in mind that this &quot;update vs. create&quot; test is not foolproof (what happens if a <code>2-</code> document is the first version that gets synced? what happens if two conflicting <code>1-</code> revisions are synced?), but it will match the old behavior.</p>
+<p>Most of the time, your UI should be able to handle document &quot;updates&quot; or &quot;creates&quot; equivalently, so <code>change.deleted</code> becomes the only special case. See <a href="/2015/02/28/efficiently-managing-ui-state-in-pouchdb.html">Efficiently managing UI state with PouchDB</a> for some details about how to do this.</p>
+<ul>
+<li>Remove <code>idb-alt</code> plugin (<a href="http://github.com/pouchdb/pouchdb/issues/4222">#4222</a>)</li>
+</ul>
+<p>This was an alternative IndexedDB adapter based on <a href="https://github.com/maxogden/level.js">Level.js</a>, which was experimental and probably unused by anyone except the PouchDB developers themselves.</p>
+<h3>New features</h3>
+<ul>
+<li>Implement <code>bulkGet()</code> (<a href="http://github.com/pouchdb/pouchdb/issues/3424">#3424</a>)</li>
+<li>Add <a href="https://github.com/nolanlawson/fruitdown">FruitDOWN</a> as a supported adapter (<a href="http://github.com/pouchdb/pouchdb/issues/4329">#4329</a>)</li>
+<li>Allow user to specify Firefox persistent storage (<a href="http://github.com/pouchdb/pouchdb/issues/4315">#4315</a>)</li>
+<li>Allow setting http options per request (<a href="http://github.com/pouchdb/pouchdb/issues/3941">#3941</a>)</li>
+</ul>
+<h3>Bugfixes</h3>
+<ul>
+<li>Maintain canceled state in replicator better (<a href="http://github.com/pouchdb/pouchdb/issues/4276">#4276</a>)</li>
+<li>Don't mutate binary objects provided by the user (<a href="http://github.com/pouchdb/pouchdb/issues/3955">#3955</a> <a href="http://github.com/pouchdb/pouchdb/issues/4273">#4273</a>)</li>
+<li>Fire events on sync, ensure we only fire one active event (<a href="http://github.com/pouchdb/pouchdb/issues/4251">#4251</a>)</li>
+<li>Catch errors from WebSQL <code>openDatabase()</code> (<a href="http://github.com/pouchdb/pouchdb/issues/4018">#4018</a>)</li>
+<li>Ensure setup errors propagate to the API (<a href="http://github.com/pouchdb/pouchdb/issues/4358">#4358</a>)</li>
+<li>Prevent replication firing extra events (<a href="http://github.com/pouchdb/pouchdb/issues/4293">#4293</a>)</li>
+<li>Proper propagation of quota exceeded errors (<a href="http://github.com/pouchdb/pouchdb/issues/4018">#4018</a>)</li>
+<li>Remove <code>'use strict'</code> from <code>eval()</code> (<a href="http://github.com/pouchdb/pouchdb/issues/4344">#4344</a>)</li>
+<li>Alias <code>skip_setup</code> to <code>skipSetup</code> (<a href="http://github.com/pouchdb/pouchdb/issues/3535">#3535</a>)</li>
+<li>Fix options usage within http adapter (<a href="http://github.com/pouchdb/pouchdb/issues/4313">#4313</a>)</li>
+<li>Fix Firefox <code>FileReader</code> usage in a web worker (<a href="http://github.com/pouchdb/pouchdb/issues/4402">#4402</a>)</li>
+</ul>
+<h3>Get in touch</h3>
+<p>Please <a href="https://github.com/pouchdb/pouchdb/issues">file issues</a> or <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">tell us what you think</a>. And as always, a big thanks to all of our <a href="https://github.com/pouchdb/pouchdb/graphs/contributors">new and existing contributors</a>!</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

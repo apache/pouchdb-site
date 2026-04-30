@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PouchDB, the JavaScript Database that Syncs!</title>
+    <title>How we test PouchDB</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
     <link rel="stylesheet" href="/static/css/pouchdb.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
@@ -65,121 +65,123 @@
 
     </header>
     
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">How we test PouchDB</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2014-11-27-testing-pouchdb.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
 
     <div role="main">
-      <div class="band band-inverse">
-  <div class="container">
-    <div class="row">
-      <div class='col-sm-6'>
-        <h1>The Database that Syncs!</h1>
-        <p>PouchDB is an open-source JavaScript database inspired by <a href="http://couchdb.apache.org/">Apache CouchDB</a> that is designed to run well within the browser.</p>
-        <p>PouchDB was created to help web developers build applications that work as well offline as they do online.<br>
-        <p>It enables applications to store data locally while offline, then synchronize it with CouchDB and compatible servers when the application is back online, keeping the user's data in sync no matter where they next login.</p>
-        <a href="/learn.html" class="btn btn-primary btn-lg btn-block-xs">Learn more</a>
-      </div>
-      <div class='col-sm-6'>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'dbname'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
 
-db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'dave@gmail.com'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'David'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">69</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Ch-Ch-Changes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span><span class="token string">'https://example.com/mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band">
-  <div class="container">
-    <div class='row'>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/node.svg"
-          alt=""
-        />
-        <h3>Cross Browser</h3>
-        <p class="margin-bottom-none-md">Works in Firefox, Chrome, Opera, Safari, IE and Node.js</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/light.svg"
-          alt=""
-        />
-        <h3>Lightweight</h3>
-        <p class="margin-bottom-none-md">PouchDB is just a script tag and 46KB (gzipped) away in the browser, or <code>$ npm install pouchdb</code> away
-        in Node.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/learn.svg"
-          alt=""
-        />
-        <h3>Easy to Learn</h3>
-        <p class="margin-bottom-none-md">Requires some programming knowledge, however PouchDB is a piece of cake to learn.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/open.svg"
-          alt=""
-        />
-        <h3>Open Source</h3>
-        <p class="margin-bottom-none-md">Everything is developed out in the open on GitHub, contributors always welcome!</p>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band band-inverse">
-  <div class="container">
-    <h3>Latest</h3>
-        <div class="row">
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2026/04/10/migration-to-nodesqlite.html'>PouchDB has a new adapter - nodesqlite</a></p>
+
+
+
+  
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
 <div class="post">
   <div class="media">
     <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/030451d8cfc268d666bae9a7fe8d10ec' alt='Dale Harvey'>
     </a>
     <div class="media-body">
     <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 10 April 2026<br>
-<p>Hello everyone! PouchDB has a new available adapter for you to use, nodesqlite, that internally uses Node.js's native SQLite module as its persistence layer. This will be, in PouchDB's release
-<a href='/2026/04/10/migration-to-nodesqlite.html'>[...]</a></p>
-<p></p>
-</div></p>
+      <strong>By:</strong> <a href="https://twitter.com/daleharvey">Dale Harvey</a><br>
+      <strong>Published:</strong> 27 November 2014<br>
+      
+    </p>
+    </div>
   </div>
 </div>
-  </div>
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2024/05/24/pouchdb-9.0.0.html'>PouchDB 9.0.0</a></p>
-<div class="post">
-  <div class="media">
-    <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
-    </a>
-    <div class="media-body">
-    <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 24 May 2024<br>
-<p>The PouchDB developers are delighted to announce the immediate availability of PouchDB 9.0.0. This is a major release with 202 PRs merged since the last version.
-<a href='/2024/05/24/pouchdb-9.0.0.html'>[...]</a></p>
-<p></p>
-</div></p>
-  </div>
-</div>
-  </div>
-   </div>
-<a class="btn btn-primary btn-lg" href="/blog/index.html">View more</a>
+
+
+      <p>While working on and researching improvements for automated testing in PouchDB, I found a lack of blog posts and general information about how open-source libraries test themselves. With PouchDB, a huge amount of effort has gone into testing, but we haven't talked about it much outside the project. So I wanted to explain a little about our approach.</p>
+<h3>How do we test PouchDB?</h3>
+<p>Every pull request and check-in to the PouchDB repository goes through the following test run:</p>
+<p>
+  <a href="https://travis-ci.org/pouchdb/pouchdb/builds/40528881" target="_blank">
+    <img class="img-responsive"  src="/static/img/travis-screenshot.png" alt="Travis Passing Screenshot" />
+  </a>
+</p>
+<p>This combination of tests takes around 6 hours running time and covers the minimal options we have found to be confident in not introducing regressions. We test PouchDB against plain CouchDB 1.6.0 on the most popular modern browsers and Node.js, as well as testing alternative backends, servers and options (LocalStorage, PouchDB Server, auto-compaction, etc.). Ideally we would run a full matrix of configurations, however we are hitting the upper limit on how long our tests take to run, so we have picked the ones most likely to surface regressions.</p>
+<h3>Why care?</h3>
+<p>Hopefully I don't need to espouse most of the virtues of testing; things that change and aren't tested are usually broken. PouchDB is fairly complex, so we rely on a comprehensive test suite, primarily to ensure we don't introduce regressions as we work on the code.</p>
+<p>With PouchDB, however, I have found an added benefit is enabling contributors. By improving our test infrastructure, we make it easier for contributors to have a clear process for verifying behaviour as bugs, writing a failing test and then confirming a fix.</p>
+<p>Being confident in your test suite's ability to catch regressions enables us to accept contributions in a reasonable time frame. If we are ever unsure of whether a contribution may break a particular feature, then we use that as an indication to improve the tests in that area, not as a reason to avoid merging the contribution.</p>
+<h3>Test library</h3>
+<p>We use <a href="http://mochajs.org/">Mocha</a> to write almost all of our tests. Mocha has become pretty much the de-facto library for testing JavaScript, and it has worked really well for us.</p>
+<p>If I had one complaint about Mocha, it would be I often find myself seeing <code>does not equal [object Object]</code> as its output too often. Some assertion libraries are better than others, but I rarely remember which. We previously used <a href="http://qunitjs.com/">QUnit</a>, but its Node support was sub-par. I experimented with <a href="https://www.npmjs.org/package/tape">Tape</a> and it was by far the <a href="http://substack.net/how_I_write_tests_for_node_and_the_browser">easiest to get setup to run in the browser and Node</a>, however it is opinionated, and if you deviate from the expected workflow, we found it got in the way more than it helped.</p>
+<h3>Test platform</h3>
+<p>Our tests run on every check-in and PR on <a href="travis-ci.org">Travis CI</a>. Travis an amazing platform; it was easy to get up and running and has been incredibly stable. PouchDB would be nowhere near the state it is today without it.</p>
+<p>However, we are beginning to outgrow Travis's free open-source capacity, and the paid options are prohibitively expensive. So we are beginning to look around for self-hosted alternatives, albeit without a lot of options.</p>
+<p><a href="https://github.com/travis-ci/travis-ci">Travis is open-source</a>, however it is not a well-setup project for self-hosting – there isn't so much as a README to get started with. We previously used <a href="http://jenkins-ci.org/">Jenkins</a>, however I found it a huge maintenance burden. It's very possible someone with more experience in Jenkins could do a better job, though, and I am also keeping an eye on <a href="http://stridercd.com/">Strider</a> as a possible alternative.</p>
+<h3>Test runner</h3>
+<p>We use <a href="http://www.seleniumhq.org/">Selenium</a> to drive tests in the browser, and <a href="https://saucelabs.com/">Saucelabs</a> to run the browsers that we can't run locally. Saucelabs is great, however due to the nature of our tests, we generate a lot of HTTP traffic that needs to be proxied back to Travis, which has been a common point of failure.</p>
+<p>We are also finding some platforms (particularly iPhone and Internet Explorer) will become unstable on Saucelabs. The errors almost always come from our code, but it is hard to maintain a reliable test suite when the underlying platform changes and you have little control over it.</p>
+<p>Before settling on Selenium, I had previously tried out <a href="https://ci.testling.com/">Testling</a>, and similarly to Tape it was very easy to get started but opinionated. It was also broken on OSX with pull requests containing fixes that hadn't been touched for months. Selenium had the advantage that it was very widely used, and new frameworks or platforms are likely to have WebDriver support early on.</p>
+<p>I have however found Selenium as a project frustrating to use, from the first time visiting <a href="http://www.seleniumhq.org/">http://www.seleniumhq.org/</a> to understanding what I needed to download and write a first test that started a browser, it was an unclear and confusing process. Even today getting ChromeDriver started correctly gets me confused, also the download cost of 30MB for what is mostly a proxy server is an annoyance.</p>
+<p>I would love to see a project wrap up Selenium / ChromeDriver and possibly Cordova / Appium into a nice, well-documented module that installs and boots your browser(ish) platform of choice, ready to be driven by Selenium tests.</p>
+<h3>Performance tests</h3>
+<p>Performance testing has been troublesome for PouchDB. We have a performance test suite, but it has been hard to integrate it into our CI process, which means it is not comprehensive and often forgotten.</p>
+<p>The issue with running in CI is that Travis is set up to run one test per commit, and every time there is a change to the test suite, its data needs to be backfilled in order to properly compare versions. There is also the fact that Saucelabs and Travis may change their running environment at any time, which makes comparisons over time useless.</p>
+<p>I expect that to fix this, we will need to run the tests on dedicated hardware and give performance tests some ability to choose which version of PouchDB to test, along with some helper scripts to backfill the performance data.</p>
+<h3>And done.</h3>
+<p>Hopefully that gives a little insight into the process and issues we have with testing. It's a long and ongoing process, and I am hoping that the work we do to improve our testing infrastructure can be reused by other projects.</p>
+<p>We would love to hear more about the tools, techniques and issues that other similar projects have come across while working on their tests. If you have anything to share, please send it along to <a href="https://twitter.com/pouchdb">@pouchdb</a>.</p>
+
+    </article>
   </div>
 </div>
 

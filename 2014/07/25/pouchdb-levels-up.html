@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PouchDB, the JavaScript Database that Syncs!</title>
+    <title>PouchDB levels up</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
     <link rel="stylesheet" href="/static/css/pouchdb.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
@@ -65,121 +65,135 @@
 
     </header>
     
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">PouchDB levels up</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2014-07-25-pouchdb-levels-up.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
 
     <div role="main">
-      <div class="band band-inverse">
-  <div class="container">
-    <div class="row">
-      <div class='col-sm-6'>
-        <h1>The Database that Syncs!</h1>
-        <p>PouchDB is an open-source JavaScript database inspired by <a href="http://couchdb.apache.org/">Apache CouchDB</a> that is designed to run well within the browser.</p>
-        <p>PouchDB was created to help web developers build applications that work as well offline as they do online.<br>
-        <p>It enables applications to store data locally while offline, then synchronize it with CouchDB and compatible servers when the application is back online, keeping the user's data in sync no matter where they next login.</p>
-        <a href="/learn.html" class="btn btn-primary btn-lg btn-block-xs">Learn more</a>
-      </div>
-      <div class='col-sm-6'>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'dbname'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
 
-db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'dave@gmail.com'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'David'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">69</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Ch-Ch-Changes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span><span class="token string">'https://example.com/mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band">
-  <div class="container">
-    <div class='row'>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/node.svg"
-          alt=""
-        />
-        <h3>Cross Browser</h3>
-        <p class="margin-bottom-none-md">Works in Firefox, Chrome, Opera, Safari, IE and Node.js</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/light.svg"
-          alt=""
-        />
-        <h3>Lightweight</h3>
-        <p class="margin-bottom-none-md">PouchDB is just a script tag and 46KB (gzipped) away in the browser, or <code>$ npm install pouchdb</code> away
-        in Node.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/learn.svg"
-          alt=""
-        />
-        <h3>Easy to Learn</h3>
-        <p class="margin-bottom-none-md">Requires some programming knowledge, however PouchDB is a piece of cake to learn.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/open.svg"
-          alt=""
-        />
-        <h3>Open Source</h3>
-        <p class="margin-bottom-none-md">Everything is developed out in the open on GitHub, contributors always welcome!</p>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band band-inverse">
-  <div class="container">
-    <h3>Latest</h3>
-        <div class="row">
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2026/04/10/migration-to-nodesqlite.html'>PouchDB has a new adapter - nodesqlite</a></p>
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
 <div class="post">
   <div class="media">
     <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
     </a>
     <div class="media-body">
     <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 10 April 2026<br>
-<p>Hello everyone! PouchDB has a new available adapter for you to use, nodesqlite, that internally uses Node.js's native SQLite module as its persistence layer. This will be, in PouchDB's release
-<a href='/2026/04/10/migration-to-nodesqlite.html'>[...]</a></p>
-<p></p>
-</div></p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 25 July 2014<br>
+      
+    </p>
+    </div>
   </div>
 </div>
-  </div>
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2024/05/24/pouchdb-9.0.0.html'>PouchDB 9.0.0</a></p>
-<div class="post">
-  <div class="media">
-    <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
-    </a>
-    <div class="media-body">
-    <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 24 May 2024<br>
-<p>The PouchDB developers are delighted to announce the immediate availability of PouchDB 9.0.0. This is a major release with 202 PRs merged since the last version.
-<a href='/2024/05/24/pouchdb-9.0.0.html'>[...]</a></p>
-<p></p>
-</div></p>
-  </div>
-</div>
-  </div>
-   </div>
-<a class="btn btn-primary btn-lg" href="/blog/index.html">View more</a>
+
+
+      <p>You might not have noticed it, but PouchDB underwent a quiet revolution over the past few months. The catalyzing moment was <a href="https://github.com/pouchdb/pouchdb/issues/1250">the LevelUP proposal</a> posted by Nick Thompson back in January 2014, which slowly led to a rewrite of the PouchDB adapter for LevelDB to support arbitrary LevelUP backends.  If that looks like word soup, let me explain why this is such a big deal.</p>
+<h3>LevelDB</h3>
+<p>In 2011, Google invented <a href="https://en.wikipedia.org/wiki/LevelDB">LevelDB</a> as their answer to the <a href="http://www.w3.org/TR/IndexedDB/">IndexedDB spec</a> designed by Nikunj Mehta. Like IndexedDB, it's quite a low-level abstraction that provides only the bare bones of what you'd need to qualify as a database – key-value storage, iteration, batch operations, and little else. Indeed, this was one of the big selling points of IndexedDB: it was low-level and unimposing enough that all the browser vendors could agree on it.</p>
+<p>As it turned out, though, Google's implementation was really good.  Due to <a href="http://dailyjs.com/2013/04/19/leveldb-and-node-1/">its unique design</a> inspired by BigTable, it scales well for anything from small application stores to huge multi-cluster databases. And thanks to its limited scope, it's been adopted as a core building block for more feature-rich databases, most notably Basho's <a href="http://basho.com/riak/">Riak</a>, Facebook's <a href="http://rocksdb.org/">RocksDB</a>, and <a href="http://hyperdex.org/">Hyperdex</a>.</p>
+<h3>LevelDB comes to Node</h3>
+<p>In Node.js, LevelDB took an especially interesting turn when Rod Vagg started the <a href="https://github.com/rvagg/node-levelup">LevelUP project</a>. LevelUP aimed not only to provide a fluent, Node-friendly API for LevelDB, but also to create a new lingua franca for persistent datastores. With LevelUP, the team managed to separate the API from the underlying storage engine (cheekily named LevelDOWN), therefore allowing any database that exposes a LevelUP-compliant API to be swapped in under the hood.</p>
+<p>Since the LevelUP project began, the number of compatible datastores has exploded, and today you're spoiled for choice if you write your app to the LevelUP API. As a developer, you can start with LevelDOWN, but if you later decide LevelDB itself isn't to your tastes, you can swap it out for any one of:</p>
+<ul>
+<li><a href="https://github.com/Level/level-rocksdb">level-rocksdb</a>, Facebook's fork for RocksDB</li>
+<li><a href="https://github.com/maxogden/level.js">Level.js</a>, a browser-based store built on IndexedDB</li>
+<li><a href="https://github.com/nlf/riakdown">RiakDOWN</a>, a Riak-based store</li>
+<li><a href="https://github.com/rvagg/memdown">MemDOWN</a>, an in-memory store</li>
+<li>and <a href="https://github.com/rvagg/node-levelup/wiki/Modules#storage-back-ends">many others</a>.</li>
+</ul>
+<p>What this means in practice is that you could, for instance, use:</p>
+<ul>
+<li>MemDOWN for your unit tests,</li>
+<li>Level.js when your app runs in a browser,</li>
+<li>LevelDOWN on your dev server,</li>
+<li>and Riak in your production server.</li>
+</ul>
+<p>In a sense, LevelUP brings to the NoSQL world the same benefits of interoperability that the SQL world enjoyed for so long.  SQL databases share the SQL language, and the LevelUP-compliant databases share the LevelUP API.</p>
+<h3>Enter PouchDB</h3>
+<p>This brings us back to Nick Thompson's <a href="https://github.com/pouchdb/pouchdb/issues/1250">LevelUP proposal</a>. At the time he wrote it, PouchDB had three supported backends – LevelDB, Web SQL, and IndexedDB.  All three were written as separate adapters tailored to PouchDB's API, but he pointed out that if we integrated with LevelUP, we could piggyback on LevelUP's success and potentially get lots of new backends for free.</p>
+<p>For instance, there was <a href="https://github.com/pouchdb/pouchdb/issues/44">a longstanding issue</a> to add LocalStorage support for older browsers like IE 8 and 9. With LevelUP, we could avoid writing an entirely new, fourth adapter and simply plug into <a href="https://github.com/No9/localstorage-down">localstorage-down</a>. And it certainly wouldn't hurt to have Riak, Redis, or an in-memory database as potential backends.</p>
+<p>There was some hemming and hawing (mostly from me), but in the end we decided to cruise ahead with the proposal. (And ultimately, I was happily proven wrong.) Calvin Metcalf deserves the primary credit for integrating <a href="https://github.com/dominictarr/level-sublevel">Sublevel</a> into the LevelDB adapter, while Adam Shih jumped in to get the new adapter browserified with three different backends: localstorage-down, level-js, and MemDOWN. I put the finishing touches to build them as separate plugins, and as of 2.2.3 they're fully passing the test suite and <a href="/adapters.html#pouchdb_in_the_browser">ready to use</a>.</p>
+<p>Additionally, <a href="https://github.com/pouchdb/pouchdb-server">PouchDB Server</a> has been updated to allow the use of alternate backends via the <code>--level-backend</code> option. This provides an instant CouchDB REST API to any LevelUP-compliant datastore – Redis, Riak, MySQL, you name it. There's also a new <code>--in-memory</code> option, courtesy of MemDOWN, of course.</p>
+<h3>Community dynamics</h3>
+<p>Besides getting some new backends, another cool change was that PouchDB started to take a more active role in the LevelUP community. Calvin Metcalf wrote <a href="https://github.com/calvinmetcalf/SQLdown">SQLdown</a>, Adam Shih and I became maintainers of localstorage-down, and all three of us submitted patches to level-js, MemDOWN, <a href="https://github.com/rvagg/abstract-leveldown">abstract-leveldown</a>, and even LevelUP itself. The PouchDB test suite <a href="https://github.com/rvagg/abstract-leveldown/issues/26">has been offered</a> as an additional means of testing for *DOWN authors, and it's already been used to fix bugs in <a href="https://github.com/nlf/riakdown">RiakDOWN</a> and <a href="https://github.com/hmalphettes/redisdown">RedisDOWN</a>.</p>
+<p>So in a sense, we didn't really get these new adapters &quot;for free.&quot; PouchDB is complex enough, and our unit tests are thorough enough, that we ended up pushing the LevelUP folks' code to the limit, discovering many new bugs in the process.</p>
+<p>But in a more positive sense, we've actually achieved Nick Thompson's goal of more deeply integrating with the LevelUP community, thereby reducing redundancy and putting more effort into a smaller codebase. And in the future, positive changes in PouchDB will spill over into the LevelUP universe, and vice-versa.</p>
+<p>The only original aim that we haven't achieved is to consolidate our three adapters (LevelDB, Web SQL, and IndexedDB) into one. We have a few reasons for this: our custom IndexedDB adapter is currently faster than Level.js, SQLdown is still a work in progress, and we're wary of the inevitable schema migration.</p>
+<p>However, the fact that we can have dozens of PouchDB backends, while only maintaining three parallel adapters, is still a huge boon and was well worth the effort.</p>
+<h3>Conclusion</h3>
+<p>PouchDB has a bright future as part of the LevelUP ecosystem. What would have sounded like a dream half a year ago is now a verifiable reality, with unit tests to boot.  Today you can write an app that:</p>
+<ul>
+<li>Syncs from CouchDB to an in-memory <a href="https://github.com/pouchdb/pouchdb-server">PouchDB Server</a>,</li>
+<li>Then syncs to LocalStorage on IE 8,</li>
+<li>Then syncs to <a href="https://cloudant.com/">Cloudant</a>,</li>
+<li>Then syncs to a PhoneGap app using the <a href="https://github.com/brodysoft/Cordova-SQLitePlugin">SQLite Plugin</a>,</li>
+<li>Then syncs to any one of Redis, Riak, SQLite, LevelDB, MySQL, PostgreSQL, and potentially <a href="https://github.com/rvagg/node-levelup/wiki/Modules#storage-back-ends">many more</a>.</li>
+</ul>
+<p>Or whatever other combination you can cook up!</p>
+<p>The marriage of PouchDB and LevelUP has essentially resulted in a marriage of the CouchDB sync protocol to the LevelUP API. Any database that exposes a LevelUP interface is now a full-fledged CouchDB replication target, which is a huge win for application developers.</p>
+<p>Which database do you want to sync to?  Well, which database do you feel like today?</p>
+
+    </article>
   </div>
 </div>
 

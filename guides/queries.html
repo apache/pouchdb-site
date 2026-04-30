@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Map/reduce queries</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Map/reduce queries</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/guides/queries.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      
+<article class="band">
+  <div class="container">
+    <div class="row">
+        <div id="sidebar" class="col-sm-3 nav-sidebar-wrapper">
+          <ul class="nav nav-silent nav-sidebar" role="navigation">
+            
+    
+    
+        
+    
+    <li >
+    <a href="/guides/">Intro</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/setup-couchdb.html">Setting up CouchDB</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/setup-pouchdb.html">Setting up PouchDB</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/databases.html">Working with databases</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/documents.html">Working with documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/async-code.html">Asynchronous code</a>
+</li>
+
+
+    
+    
+        
+    
+    <li >
+    <a href="/guides/updating-deleting.html">Updating/deleting documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/bulk-operations.html">Bulk operations</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/attachments.html">Working with attachments</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/replication.html">Replication</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/conflicts.html">Conflicts</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/changes.html">Changes feed</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/mango-queries.html">Mango queries</a>
+</li>
+
+
+    
+    
+    <li  class="active" >
+    <a href="/guides/queries.html">Map/reduce queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/compact-and-destroy.html">Compacting and destroying</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/local-documents.html">Local documents</a>
+</li>
+
+
+
+          </ul>
+        </div>
+
+        <div class="col-sm-9" role="main">
+          
+<p>Map/reduce queries, also known as the <code>query()</code> API, are one of the most powerful features in PouchDB. However, they can be quite tricky to use, and so this guide is designed to dispell some of the mysteries around them.</p>
+<p>The first thing to understand is that you don't need map/reduce queries if you merely want to look up documents by <code>_id</code> or sort them by <code>_id</code>. The <code>allDocs()</code> API already does this, using an efficient built-in index (see <a href="bulk-operations.html">&quot;bulk operations&quot;</a> for details).</p>
+<p>The second thing to know is that map/reduce is also unnecessary if you want to sort documents by their update time – this is exactly what the <a href="changes.html">changes feed</a> does! Again, this is a built-in index that you get for free.</p>
+<p>Finally, it's important to understand that <a href="mango-queries.html">Mango queries</a> are much easier to use than map/reduce queries, and they can usually satisfy 99% of use cases. The point of map/reduce is to provide an <em>extremely advanced</em> API for building secondary indexes, suitable for those with specific querying needs.</p>
+<p>So now that you've read the fine print, let's talk about how map/reduce queries actually work!</p>
+<div class='h2'><div class='anchor-id' id='mappin-and-reducin'></div><a class='anchor' href='#mappin-and-reducin' name='mappin-and-reducin'>Mappin' and reducin'</a></div>
+<p>The PouchDB <code>query()</code> API (which corresponds to the <code>_view</code> API in CouchDB) has two modes: temporary queries and persistent queries.</p>
+<h3>Temporary queries</h3>
+<p><strong>Temporary queries</strong> are very slow, and we only recommend them for quick debugging during development. To use a temporary query, you simply pass in a <code>map</code> function:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc<span class="token punctuation">,</span> emit</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">key</span><span class="token operator">:</span> <span class="token string">'foo'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">result</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// found docs with name === 'foo'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle any errors</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In the above example, the <code>result</code> object will contain stubs of documents where the <code>name</code> attribute is equal to <code>'foo'</code>. To include the document in each row of results, use the <code>include_docs</code> option.</p>
+<div class="alert alert-info">
+<div class="alert-text">
+<p>The <code>emit</code> pattern is part of the standard <a href='http://couchdb.readthedocs.org/en/latest/couchapp/views/intro.html'>CouchDB map/reduce API</a>.  What the function basically says is, &quot;for each document, emit <code>doc.name</code> as a key.&quot;</p>
+</div></div>
+<h3>Persistent queries</h3>
+<p><strong>Persistent queries</strong> are much faster, and are the intended way to use the <code>query()</code> API in your production apps. To use persistent queries, there are two steps.</p>
+<p>First, you create a <strong>design document</strong>, which describes the <code>map</code> function you would like to use:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// document that tells PouchDB/CouchDB</span>
+<span class="token comment">// to build up an index on doc.name</span>
+<span class="token keyword">const</span> ddoc <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'_design/my_index'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">views</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">by_name</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token function-variable function">map</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">// save it</span>
+pouch<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>ddoc<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// success!</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// some error (maybe a 409, because it already exists?)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class="alert alert-info">
+<div class="alert-text">
+<p>The <code>.toString()</code> at the end of the map function is necessary to prep the
+object for becoming valid JSON.</p>
+</div></div>
+<div class="alert alert-info">
+<div class="alert-text">
+<p>The <code>emit</code> function will be available in scope when the map function is
+run, so don't pass it in as a parameter.</p>
+</div></div>
+<p>Then you actually query it, by using the name you gave the design document when you saved it:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token string">'my_index/by_name'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// got the query results</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// some error</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Note that, the first time you query, it will be quite slow because the index isn't
+built until you query it. To get around this, you can do an empty query to kick
+off a new build:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token string">'my_index/by_name'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">limit</span><span class="token operator">:</span> <span class="token number">0</span> <span class="token comment">// don't return any results</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// index was built!</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// some error</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>After this, your queries will be much faster.</p>
+<div class="alert alert-info">
+<div class="alert-text">
+<p>CouchDB builds indexes in exactly the same way as PouchDB. So you may want to familiarize yourself with the <a href='/api.html#query_database'>&quot;stale&quot; option</a> in order to get the best possible performance for your app.</p>
+</div></div>
+<div class='h2'><div class='anchor-id' id='more-about-map-reduce'></div><a class='anchor' href='#more-about-map-reduce' name='more-about-map-reduce'>More about map/reduce</a></div>
+<p>That was a fairly whirlwind tour of the <code>query()</code> API, so let's get into more detail about how to write your map/reduce functions.</p>
+<h4>Indexes in SQL databases</h4>
+<p>Quick refresher on how indexes work: in relational databases like MySQL and PostgreSQL, you can usually query whatever field you want:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-sql"><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> pokemon <span class="token keyword">WHERE</span> name <span class="token operator">=</span> <span class="token string">'Pikachu'</span><span class="token punctuation">;</span></code></pre></figure><p>But if you don't want your performance to be terrible, you first add an index:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-sql"><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> pokemon <span class="token keyword">ADD</span> <span class="token keyword">INDEX</span> myIndex <span class="token keyword">ON</span> <span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>The job of the index is to ensure the field is stored in a B-tree within the database, so your queries run in <em>O(log(n))</em> time instead of <em>O(n)</em> time.</p>
+<h4>Indexes in NoSQL databases</h4>
+<p>All of the above is also true in document stores like CouchDB and MongoDB, but conceptually it's a little different. By default, documents are assumed to be schemaless blobs with one primary key (called <code>_id</code> in both Mongo and Couch), and any other keys need to be specified separately.  The concepts are largely the same; it's mostly just the vocabulary that's different.</p>
+<p>In CouchDB, queries are called <em>map/reduce functions</em>.  This is because, like most NoSQL databases, CouchDB is designed to scale well across multiple computers, and to perform efficient query operations in parallel. Basically, the idea is that you divide your query into a <em>map</em> function and a <em>reduce</em> function, each of which may be executed in parallel in a multi-node cluster.</p>
+<h4>Map functions</h4>
+<p>It may sound daunting at first, but in the simplest (and most common) case, you only need the <em>map</em> function.  A basic map function might look like this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">myMapFunction</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>This is functionally equivalent to the SQL index given above.  What it essentially says is: &quot;for each document in the database, emit its name as a key.&quot;</p>
+<p>And since it's just JavaScript, you're allowed to get as fancy as you want here:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">myMapFunction</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>doc<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">'pokemon'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name <span class="token operator">===</span> <span class="token string">'Pikachu'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">emit</span><span class="token punctuation">(</span><span class="token string">'Pika pi!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Then you can query it:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// find pokemon with name === 'Pika pi!'</span>
+pouch<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span>myMapFunction<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">key</span>          <span class="token operator">:</span> <span class="token string">'Pika pi!'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">include_docs</span> <span class="token operator">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">result</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle result</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle errors</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// find the first 5 pokemon whose name starts with 'P'</span>
+pouch<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span>myMapFunction<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">startkey</span>     <span class="token operator">:</span> <span class="token string">'P'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">endkey</span>       <span class="token operator">:</span> <span class="token string">'P\ufff0'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">limit</span>        <span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">include_docs</span> <span class="token operator">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">result</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle result</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle errors</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class="alert alert-info">
+<div class="alert-text">
+<p>The pagination options for <code>query()</code> – i.e., <code>startkey</code>/<code>endkey</code>/<code>key</code>/<code>keys</code>/<code>skip</code>/<code>limit</code>/<code>descending</code> – are exactly the same as with <code>allDocs()</code>. For a guide to pagination, read the <a href="/guides/bulk-operations.html">Bulk operations guide</a> or <a href='/2014/04/14/pagination-strategies-with-pouchdb.html'>Pagination strategies with PouchDB</a>.</p>
+</div></div>
+<h4>Reduce functions</h4>
+<p>As for <em>reduce</em> functions, there are a few handy built-ins that do aggregate operations (<code>'_sum'</code>, <code>'_count'</code>, and <code>'_stats'</code>), and you can typically steer clear of trying to write your own:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// emit the first letter of each pokemon's name</span>
+<span class="token keyword">const</span> myMapReduceFun <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">map</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">emit</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>name<span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">reduce</span><span class="token operator">:</span> <span class="token string">'_count'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">// count the pokemon whose names start with 'P'</span>
+pouch<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span>myMapReduceFun<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">key</span><span class="token operator">:</span> <span class="token string">'P'</span><span class="token punctuation">,</span> <span class="token literal-property property">reduce</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token literal-property property">group</span><span class="token operator">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">result</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle result</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle errors</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If you're adventurous, though, you should check out the <a href="http://couchdb.readthedocs.org/en/latest/couchapp/views/intro.html">CouchDB documentation</a> or the <a href="/api.html#query_database">PouchDB documentation</a> for details on reduce functions.</p>
+<div class='h2'><div class='anchor-id' id='avoiding-map-reduce'></div><a class='anchor' href='#avoiding-map-reduce' name='avoiding-map-reduce'>Avoiding map/reduce</a></div>
+<p>The map/reduce API is complex, and it can be computationally expensive because it requires building up an entirely new index. Therefore, it's good to know some tricks for avoiding the map/reduce API when you don't need it:</p>
+<ol>
+<li>If you can use <code>allDocs()</code> or <code>changes()</code> instead of the <code>query()</code> API, do it!</li>
+<li>If your query is simple enough that you can use <code>find()</code>, use that instead.</li>
+<li>Read the <a href="/2014/06/17/12-pro-tips-for-better-code-with-pouchdb.html">12 tips for better code with PouchDB</a>, especially the tip to &quot;use and abuse your doc <code>_id</code>s.&quot;</li>
+<li>If your data is highly relational, try the <a href="https://github.com/nolanlawson/relational-pouch">relational-pouch</a> plugin, which follows this advice, and only uses <code>_id</code> and <code>allDocs()</code> under the hood.</li>
+</ol>
+<div class='h2'><div class='anchor-id' id='related-api-documentation'></div><a class='anchor' href='#related-api-documentation' name='related-api-documentation'>Related API documentation</a></div>
+<ul>
+<li><a href="/api.html#query_database">query()</a></li>
+<li><a href="/api.html#view_cleanup">viewCleanup()</a></li>
+</ul>
+<div class='h2'><div class='anchor-id' id='next'></div><a class='anchor' href='#next' name='next'>Next</a></div>
+<p>Now that we've learned how to map reduce, map reuse, and map recycle, let's move on to <code>destroy()</code> and <code>compact()</code>.</p>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+        
+
+        <ul class="pager">
+            
+                <li class="previous">
+                    <a href="/guides/mango-queries.html">&larr; Mango queries</a>
+                </li>
+            
+            
+                <li class="next">
+                    <a href="/guides/compact-and-destroy.html">Compacting and destroying &rarr;</a>
+                </li>
+            
+        </ul>
+    
+
+    
+
+    
+
+
+        <div>
+
+    </div>
+
+  </div>
+</article>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

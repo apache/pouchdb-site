@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>10 things I learned from reading (and writing) the PouchDB source</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">10 things I learned from reading (and writing) the PouchDB source</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2014-10-26-10-things-i-learned-from-reading-and-writing-the-pouchdb-source.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 26 October 2014<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <p>In the spirit of <a href="http://www.paulirish.com/2010/10-things-i-learned-from-the-jquery-source/">Paul Irish</a>, here's a list of some surprising things I learned while reading (and writing) the PouchDB source code.</p>
+<p>To set the stage: I first joined the project around December of last year, at which point PouchDB was already fairly mature. (The <a href="https://github.com/pouchdb/pouchdb/commit/d600081962d3f54b410e5cfcf78cd413ad94abb9">first commit from Mikeal Rodgers</a> is already 4 years old!) My own background was mostly in Android development, but I had some knowledge of Web SQL thanks to <a href="http://www.kaahe.org/app/support_en.html">a PhoneGap app</a> I had worked on.</p>
+<p>The main goals I had with PouchDB were to increase its performance and browser compatibility.  And having dealt with that ugly F-word that haunts the Android ecosystem (&quot;fragmentation&quot;), I figured compatibility in the web dev world couldn't be much worse. Could it?</p>
+<p><strong>Warning: graphic content ahead.</strong> If you've ever been a soldier on the front lines of the browser compatibility war, the following may make you relive some of those past horrors. Be prepared to weep.</p>
+<p>Also, if you're not familiar with <a href="http://www.w3.org/TR/webstorage/">LocalStorage</a>, <a href="http://www.w3.org/TR/webdatabase/">Web SQL</a>, or <a href="http://www.w3.org/TR/IndexedDB/">IndexedDB</a>, you may want to read up on those first.</p>
+<h3>1. Nobody can agree on what the Web SQL &quot;estimated size&quot; means</h3>
+<p>When you open a Web SQL database, you use <a href="http://www.w3.org/TR/webdatabase/#dom-opendatabase">openDatabase()</a>, e.g.:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token function">openDatabase</span><span class="token punctuation">(</span><span class="token string">'documents'</span><span class="token punctuation">,</span> <span class="token string">'1.0'</span><span class="token punctuation">,</span> <span class="token string">'some description'</span><span class="token punctuation">,</span> <span class="token number">5000000</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>That last parameter is the so-called <em>estimated size</em>. And <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/websql.js#L118-L132">here's</a> how we set it in PouchDB:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">getSize</span><span class="token punctuation">(</span><span class="token parameter">opts</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">/* ... */</span>
+  <span class="token keyword">var</span> isAndroid <span class="token operator">=</span> <span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">Android</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>window<span class="token punctuation">.</span>navigator<span class="token punctuation">.</span>userAgent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> isAndroid <span class="token operator">?</span> <span class="token number">5000000</span> <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>User agent sniffing! Yes, we should be ashamed of ourselves. But here's why we do it:</p>
+<ul>
+<li>In modern <strong>Chrome</strong> and <strong>Android 4.4+</strong>, the size is simply ignored. The browser calculates the remaining size on disk and sets a limit based on that.</li>
+<li>Aha, but in <strong>Android &lt; 4.4</strong>, this is actually a hard limit! So if you ask for 5000000, you'll only ever get 5 MB.</li>
+<li>Oh, but in <strong>Safari/iOS</strong>, it gets trickier. If you ask for &gt; 5000000, then it will show an <a href="/errors.html#not_enough_space">annoying popup</a> when the app is first loaded, which is a great way to spook your users. But if you ask for less, then there's another popup when the database reaches 5MB, and  beyond that there's a bug in iOS 7.1 where the browser will no longer show any more popups, so you're forever capped at 10MB. To store more than 10MB, you need to ask for more than 10MB up-front.</li>
+<li>Additionally, if you specify anywhere between 0 and 5000000, Safari and iOS will use that size as a hint for when, precisely, to show the popup. And in the case of PouchDB, we need to avoid the popup in our automated tests, because Selenium doesn't give us a way to press the &quot;OK&quot; button, meaning our tests would just fail if we request too much. So the ideal size to request is 0.</li>
+<li>However, in <strong>PhantomJS</strong> and older WebKit (Safari ~5), if you request 0, then it will blow up.</li>
+</ul>
+<p>For the record, here's what the dreaded Safari popup looks like:</p>
+<p>
+  <a href="/static/img/safari_popup.png" target="_blank">
+    <img class="img-responsive"  src="/static/img/safari_popup.png" alt="annoying Safari popup" />
+  </a>
+</p>
+<p>So that's why we sniff for Android and only bump the size to 5000000 in those cases. In all other cases, we set it to 1.</p>
+<p>Additionally, the W3C has done everyone a disservice by using <code>5*1024*1024</code> in <a href="http://www.w3.org/TR/webdatabase/#introduction">their sample code</a>, because this has no relation to the 5MB limit in iOS/Safari. The actual cutoff to avoid the popup is 5000000 (i.e. 5 megabytes, aka 5MB), not <code>5*1024*1024</code> (5 <em>mebibytes</em>, aka 5MiB). And yet, if you read blog posts and Stack Overflow comments about Web SQL, you'll see the mistaken <code>1024*1024</code> repeated all over the place.</p>
+<h3>2. IE has race conditions in IndexedDB</h3>
+<p>Microsoft has a very fast implementation of IndexedDB – it's a bit slower than Chrome's, but much faster than Firefox's (<a href="https://gist.github.com/nolanlawson/11100235">here are some tests</a>). However, to get that speed, they must have taken some shortcuts, because both IE10 and IE11 have some <a href="https://connect.microsoft.com/IE/feedbackdetail/view/1009247">nasty</a> <a href="https://connect.microsoft.com/IE/feedbackdetail/view/866489">race</a> <a href="https://connect.microsoft.com/IE/feedbackdetail/view/866495">conditions</a>.</p>
+<p>Due to that, you'll often see PouchDB code <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L1369-L1372">like this</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">//Close open request for "name" database to fix ie delay.</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>IdbPouch<span class="token punctuation">.</span>openReqList<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> IdbPouch<span class="token punctuation">.</span>openReqList<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">.</span>result<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  IdbPouch<span class="token punctuation">.</span>openReqList<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">.</span>result<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Or code <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L1390-L1398">like this</a>, where we ensure all &quot;open&quot; and &quot;destroy&quot; operations on the databases are done sequentially:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">taskQueue<span class="token punctuation">.</span>queue<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token function-variable function">action</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">thisCallback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">destroy</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> opts<span class="token punctuation">,</span> thisCallback<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">callback</span><span class="token operator">:</span> callback
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Or code <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L1215-L1226">like this</a>, where we keep a cache of all databases by name, since IE will not allow us to open two databases with the same name at the same time:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> cached <span class="token operator">=</span> cachedDBs<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>cached<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  idb <span class="token operator">=</span> cached<span class="token punctuation">.</span>idb<span class="token punctuation">;</span>
+  <span class="token comment">/* ... */</span>
+<span class="token punctuation">}</span></code></pre></figure><p>To their credit, though, the IE team has been <a href="https://twitter.com/jacobrossi/status/525715434838827009">very responsive</a> to our bug reports, so this might be fixed soon.</p>
+<h3>3. Binary data in Web SQL is a mess</h3>
+<p>At the time the Web SQL spec was hammered out, nothing like <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob">Blobs</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffers</a> had been standardized. SQLite of course has support for the <a href="https://www.sqlite.org/datatype3.html">binary BLOB type</a>, but in order to store binary data in WebSQL, you need to do it the old-fashioned way, and pass in a JavaScript binary string.</p>
+<p>This produces two interesting problems:</p>
+<ul>
+<li>There is a bug in both <a href="https://bugs.webkit.org/show_bug.cgi?id=137637">WebKit</a> and <a href="https://code.google.com/p/chromium/issues/detail?id=422690">Chromium</a>, where the <code>\u0000</code> character is treated as a null terminator, and although you can insert and sort on the full string, when you retrieve it, it will be truncated. And since BLOBs must be inserted as binary strings, this means <em>any binary data containing the 0 byte will be truncated</em>. The only workaround is to use <code>SELECT HEX(columnName)</code>, which returns the full binary data in hexadecimal format.</li>
+<li>However, <code>HEX()</code> presents its own problems, because Safari &lt; 7.1 and iOS &lt; 8 <a href="https://github.com/pouchdb/pouchdb/pull/1733#issuecomment-38723096">coerce all strings to UTF-16</a>, meaning that the hexadecimal format must be parsed differently in UTF-8 browsers (Chrome/Opera/Android as well as modern Safari/iOS) vs. UTF-16 browsers (early Safari/iOS).</li>
+</ul>
+<p>Thus you will see fun code <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/websql.js#L89-L101">like this</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">parseHexString</span><span class="token punctuation">(</span><span class="token parameter">str<span class="token punctuation">,</span> encoding</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> result <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> charWidth <span class="token operator">=</span> encoding <span class="token operator">===</span> <span class="token string">'UTF-8'</span> <span class="token operator">?</span> <span class="token number">2</span> <span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> len <span class="token operator">=</span> str<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i <span class="token operator">+=</span> charWidth<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> substring <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> i <span class="token operator">+</span> charWidth<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>charWidth <span class="token operator">===</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// UTF-16, twiddle the bits</span>
+      substring <span class="token operator">=</span> substring<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token operator">+</span> substring<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    result <span class="token operator">+=</span> String<span class="token punctuation">.</span><span class="token function">fromCharCode</span><span class="token punctuation">(</span><span class="token function">parseInt</span><span class="token punctuation">(</span>substring<span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  result <span class="token operator">=</span> encoding <span class="token operator">===</span> <span class="token string">'UTF-8'</span> <span class="token operator">?</span> <span class="token function">decodeUtf8</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token operator">:</span> result<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>(That &quot;twiddle the bits&quot; comment is a bit inaccurate; the technical term is, of course, <a href="http://grepcode.com/file/repository.grepcode.com/java/ext/com.google.android/android/2.2_r1.1/com/android/internal/telephony/IccUtils.java#IccUtils.bcdToString%28byte%5B%5D%2Cint%2Cint%29">nibble-swizzling</a>. In the future we will correct this gross oversight by finding some way to work the word &quot;swizzle&quot; into the source code.)</p>
+<p>You'll also see us detect UTF-8 vs. UTF-16 encoding <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/websql.js#L306-L315">like this</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">checkDbEncoding</span><span class="token punctuation">(</span><span class="token parameter">tx</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// check db encoding - utf-8 (chrome, opera) or utf-16 (safari)?</span>
+  tx<span class="token punctuation">.</span><span class="token function">executeSql</span><span class="token punctuation">(</span><span class="token string">'SELECT dbid, hex(dbid) AS hexId FROM '</span> <span class="token operator">+</span> <span class="token constant">META_STORE</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">tx<span class="token punctuation">,</span> result</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> id <span class="token operator">=</span> result<span class="token punctuation">.</span>rows<span class="token punctuation">.</span><span class="token function">item</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>dbid<span class="token punctuation">;</span>
+      <span class="token keyword">var</span> hexId <span class="token operator">=</span> result<span class="token punctuation">.</span>rows<span class="token punctuation">.</span><span class="token function">item</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>hexId<span class="token punctuation">;</span>
+      encoding <span class="token operator">=</span> <span class="token punctuation">(</span>hexId<span class="token punctuation">.</span>length <span class="token operator">===</span> id<span class="token punctuation">.</span>length <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token string">'UTF-8'</span> <span class="token operator">:</span> <span class="token string">'UTF-16'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>In this code, we know based on the length of the hexadecimal string returned whether the database is UTF-16 or not. So thankfully, because it's feature-detected, this &quot;just works&quot; in Safari 7.1+ and iOS 8+.</p>
+<p>As of PouchDB 3.1.0, we will also <a href="https://github.com/pouchdb/pouchdb/pull/2900">avoid hexing entirely</a> for large binary attachments, because it causes performance problems. The new workaround will be to just remove <code>\u0000</code> characters while preserving enough information to put them back in later.</p>
+<h3>4. Binary data in IndexedDB is a mess too</h3>
+<p>IndexedDB, as Web SQL's younger, hipper sibling, is supposed to have native support for Blob objects. In practice, though, Blobs <a href="https://code.google.com/p/chromium/issues/detail?id=108012">were not supported in Chrome until v37</a>, and assuming Apple fixes <a href="http://www.raymondcamden.com/2014/9/25/IndexedDB-on-iOS-8--Broken-Bad">the more fundamental problems in IndexedDB</a>, they also apparently <a href="http://html5test.com/s/9b895f1cfb68b0d5.html">will not support them</a>.</p>
+<p>In those cases, PouchDB falls back to storing Blobs as base64-encoded strings. And we use <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L1303-L1344">feature detection to test it</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">try</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> blob <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">createBlob</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">''</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'image/png'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  txn<span class="token punctuation">.</span><span class="token function">objectStore</span><span class="token punctuation">(</span><span class="token constant">DETECT_BLOB_SUPPORT_STORE</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>blob<span class="token punctuation">,</span> <span class="token string">'key'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  txn<span class="token punctuation">.</span><span class="token function-variable function">oncomplete</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">/* ... */</span>
+    blobSupport <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token comment">/* ... */</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  blobSupport <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token comment">/* ... */</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Ah, but if only it were so easy! It turns out that Chrome v37 also <a href="https://code.google.com/p/chromium/issues/detail?id=408120">implemented Blob support incorrectly</a>, returning the wrong MIME type when you fetch it. So in Chrome v37, we need to detect the broken blob support, whereas in v38 we can finally start treating it like the other browsers:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> storedBlob <span class="token operator">=</span> e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+<span class="token keyword">var</span> url <span class="token operator">=</span> <span class="token constant">URL</span><span class="token punctuation">.</span><span class="token function">createObjectURL</span><span class="token punctuation">(</span>storedBlob<span class="token punctuation">)</span><span class="token punctuation">;</span>
+utils<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">url</span><span class="token operator">:</span> url<span class="token punctuation">,</span>
+  <span class="token literal-property property">cache</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">binary</span><span class="token operator">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> res</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">&amp;&amp;</span> err<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">405</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// firefox won't let us do that. but firefox doesn't</span>
+    <span class="token comment">// have the blob type bug that Chrome does, so that's ok</span>
+    blobSupport <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    blobSupport <span class="token operator">=</span> <span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>res <span class="token operator">&amp;&amp;</span> res<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">'image/png'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>And yes, Firefox has <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1081668">a tiny bug here</a> as well! Luckily, it's fixed in the nightly build.</p>
+<p>So for those keeping score, PouchDB has three different strategies for each of Chrome v36, v37, and v38. And since Android represents different versions of Chromium frozen in amber, all three variations will be out there in the wild for the near future.</p>
+<h3>5. IE doesn't support complex keys</h3>
+<p>CouchDB is one of the grandaddies of NoSQL databases, so unsurprisingly it influenced IndexedDB's design. One of the more useful but tricky features of CouchDB is <em>complex keys</em>, <a href="https://connect.microsoft.com/IE/feedbackdetail/view/866474">best described by Christopher Lenz</a>:</p>
+<blockquote>
+<p>Obvious to Damien [Katz, creator of CouchDB], but not at all obvious to the rest of us: it's fairly simple to make a view that includes both the content of the blog post document, and the content of all the comments associated with that post. The way you do that is by using <em>complex keys</em>. Until now we've been using simple string values for the view keys, but in fact they can be arbitrary JSON values, so let's make some use of that:</p>
+</blockquote>
+<p>The example given is:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>doc<span class="token punctuation">.</span>type <span class="token operator">==</span> <span class="token string">"post"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">[</span>doc<span class="token punctuation">.</span>_id<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>doc<span class="token punctuation">.</span>type <span class="token operator">==</span> <span class="token string">"comment"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">[</span>doc<span class="token punctuation">.</span>post<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></figure><p>See that? The key is actually an array containing a string and an integer, meaning it would sort first by the string, then by the integer. Cool, right?</p>
+<p>This feature <a href="http://www.w3.org/TR/IndexedDB/#key-construct">is in the IndexedDB spec</a>, and would be a great fit for PouchDB, since we're basically trying to rewrite CouchDB on top of IndexedDB. However, in the source code you will see <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L512-L514">pseudo-complex keys like this</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">docInfo<span class="token punctuation">.</span>data<span class="token punctuation">.</span>_doc_id_rev <span class="token operator">=</span> docInfo<span class="token punctuation">.</span>data<span class="token punctuation">.</span>_id <span class="token operator">+</span> <span class="token string">"::"</span> <span class="token operator">+</span> docInfo<span class="token punctuation">.</span>data<span class="token punctuation">.</span>_rev<span class="token punctuation">;</span>
+<span class="token keyword">var</span> seqStore <span class="token operator">=</span> txn<span class="token punctuation">.</span><span class="token function">objectStore</span><span class="token punctuation">(</span><span class="token constant">BY_SEQ_STORE</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> index <span class="token operator">=</span> seqStore<span class="token punctuation">.</span><span class="token function">index</span><span class="token punctuation">(</span><span class="token string">'_doc_id_rev'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Leading to <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L174-L179">gnarly queries like this</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> start <span class="token operator">=</span> docId <span class="token operator">+</span> <span class="token string">"::"</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> end <span class="token operator">=</span> docId <span class="token operator">+</span> <span class="token string">"::~"</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> index <span class="token operator">=</span> seqStore<span class="token punctuation">.</span><span class="token function">index</span><span class="token punctuation">(</span><span class="token string">'_doc_id_rev'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> range <span class="token operator">=</span> global<span class="token punctuation">.</span>IDBKeyRange<span class="token punctuation">.</span><span class="token function">bound</span><span class="token punctuation">(</span>start<span class="token punctuation">,</span> end<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> seqCursor <span class="token operator">=</span> index<span class="token punctuation">.</span><span class="token function">openCursor</span><span class="token punctuation">(</span>range<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Did we mess up? Nope, it's intentional: we concatenate the strings together, because <a href="https://connect.microsoft.com/IE/feedbackdetail/view/866474">IE does not support complex keys</a>.</p>
+<p>This also heavily influenced our design for <a href="/2014/05/01/secondary-indexes-have-landed-in-pouchdb.html">persistent map/reduce</a>, because instead of assuming the underlying database can sort by more than one value, we invented <a href="https://github.com/pouchdb/collate/blob/0e22e6e833e24ee5d677d73df2620c20b58aba1f/lib/index.js#L116-L165">a toIndexableString() function</a> that converts any JSON object into a big CouchDB-collation-ordered string. Yeah, we went there.</p>
+<h3>6. IndexedDB throws an error if you try to iterate backwards with start/end keys</h3>
+<div class="alert alert-info">
+<div class="alert-text">
+<p><strong>Update:</strong> it turned out I just misunderstood the IndexedDB spec. You can actually swap the start and end in the <code>IDBKeyRange</code>, and that allows you to iterate backwards in all browsers. <a href="https://github.com/pouchdb/pouchdb/issues/3488">We updated PouchDB accordingly</a>.</p>
+</div></div>
+<p>This is one of those wonderful &quot;bugs&quot; that is actually part of the IndexedDB spec, so it's faithfully reproduced in all three of Firefox, IE, and Chrome. I guess we should be thankful?</p>
+<p>Anyway, <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L746-L776">here's the code</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">try</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>start <span class="token operator">&amp;&amp;</span> end<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    keyRange <span class="token operator">=</span> global<span class="token punctuation">.</span>IDBKeyRange<span class="token punctuation">.</span><span class="token function">bound</span><span class="token punctuation">(</span>start<span class="token punctuation">,</span> end<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token operator">!</span>inclusiveEnd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>start<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">/* ... */</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>e<span class="token punctuation">.</span>name <span class="token operator">===</span> <span class="token string">"DataError"</span> <span class="token operator">&amp;&amp;</span> e<span class="token punctuation">.</span>code <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// data error, start is less than end</span>
+    <span class="token keyword">return</span> <span class="token function">callback</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">total_rows</span> <span class="token operator">:</span> totalRows<span class="token punctuation">,</span>
+      <span class="token literal-property property">offset</span> <span class="token operator">:</span> opts<span class="token punctuation">.</span>skip<span class="token punctuation">,</span>
+      <span class="token literal-property property">rows</span> <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token function">callback</span><span class="token punctuation">(</span>errors<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>errors<span class="token punctuation">.</span><span class="token constant">IDB_ERROR</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span>name<span class="token punctuation">,</span> e<span class="token punctuation">.</span>message<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></figure><p>In IndexedDB, an error will be thrown for any <code>IDBKeyRange</code> where the start is greater than the end, even if you're iterating backwards. We work around this by <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L832-L838">manually checking for the end key</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span>manualDescEnd<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>inclusiveEnd <span class="token operator">&amp;&amp;</span> doc<span class="token punctuation">.</span>key <span class="token operator">&lt;</span> manualDescEnd<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>inclusiveEnd <span class="token operator">&amp;&amp;</span> doc<span class="token punctuation">.</span>key <span class="token operator">&lt;=</span> manualDescEnd<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Luckily, this doesn't really have a big performance impact, except that we fetch one more key than necessary.</p>
+<h3>7. IndexedDB and Web SQL are jealous of other callbacks</h3>
+<p>In both IndexedDB and Web SQL, you can forget about using <a href="https://promisesaplus.com/">Promises</a> or even invoking another callback within a transaction. Whenever control is returned to the event loop, <a href="https://twitter.com/nolanlawson/status/515893338474831872">the transaction auto-closes</a>.</p>
+<p>So although your own PouchDB-using code can be elegant and Promisey (thanks especially to Calvin Metcalf's work on <a href="https://github.com/calvinmetcalf/lie">lie</a>), under the hood, PouchDB's own code is pure callback hell.</p>
+<p>Here's a taste of <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L209-L635">our IndexedDB code</a> and <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/websql.js#L456-L899">our WebSQL code</a>. We party like it's 2009, because you'll see lots of callback patterns like this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token function">verifyAttachments</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token function">callback</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">/* ... */</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Or this wannabe <code>Promise.all()</code>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">checkDoneWritingDocs</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">++</span>numDocsWritten <span class="token operator">===</span> docInfos<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">complete</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></figure><p>And if we need to use some other callback API, such as <a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader">FileReader</a>, we need to be careful to do it outside of the transaction. Hence you'll see functions like <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/websql.js#L886-L898">preprocessAttachments()</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token function">preprocessAttachments</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  db<span class="token punctuation">.</span><span class="token function">transaction</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">txn</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">/* ... */</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Suffice it to say, if we didn't have extensive integration tests, we'd barely be sure the code worked at all.</p>
+<h3>8. Recursion is a double-edged sword</h3>
+<p>Consider <a href="https://github.com/pouchdb/pouchdb/blob/c32597564160dcaad7b3e715ddf1c0dc923b59cd/lib/adapters/idb.js#L45-L58">this code</a>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// Unfortunately, the metadata has to be stringified</span>
+<span class="token comment">// when it is put into the database, because otherwise</span>
+<span class="token comment">// IndexedDB can throw errors for deeply-nested objects.</span>
+<span class="token comment">// Originally we just used JSON.parse/JSON.stringify; now</span>
+<span class="token comment">// we use this custom vuvuzela library that avoids recursion.</span>
+<span class="token comment">// If we could do it all over again, we'd probably use a</span>
+<span class="token comment">// format for the revision trees other than JSON.</span>
+<span class="token keyword">function</span> <span class="token function">encodeMetadata</span><span class="token punctuation">(</span><span class="token parameter">metadata<span class="token punctuation">,</span> winningRev<span class="token punctuation">,</span> deleted</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> storedObject <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token literal-property property">data</span><span class="token operator">:</span> vuvuzela<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>metadata<span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  storedObject<span class="token punctuation">.</span>winningRev <span class="token operator">=</span> winningRev<span class="token punctuation">;</span>
+  storedObject<span class="token punctuation">.</span>deletedOrLocal <span class="token operator">=</span> deleted <span class="token operator">?</span> <span class="token string">'1'</span> <span class="token operator">:</span> <span class="token string">'0'</span><span class="token punctuation">;</span>
+  storedObject<span class="token punctuation">.</span>id <span class="token operator">=</span> metadata<span class="token punctuation">.</span>id<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> storedObject<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre></figure><p>As it turns out, this is <a href="https://github.com/pouchdb/pouchdb/issues/2543">a very tricky bug</a> that ended up affecting all browsers, and even Node.js.</p>
+<p>The gist is that any native JavaScript function that takes an object as input, such as <code>JSON.stringify()</code> or IndexedDB's <code>put()</code>, has a maximum limit on the depth of the object  you can pass in. By depth I mean:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> object <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">enhance</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">enhance</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">enhance</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token comment">/* and so on */</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></figure><p>The limit itself will vary based on the available memory, but in any case, if you hit that limit, you get a &quot;too much recursion&quot; or &quot;maximum call stack&quot; error. As well as an unhappy PouchDB user.</p>
+<p>Calvin and I solved this by writing <a href="https://github.com/nolanlawson/vuvuzela">a non-recursive JSON library with a silly name</a>. It's slower than the native methods, but in cases where we can't afford to have a crash, this code turned out to be a lifesaver.</p>
+<h3>9. In IndexedDB, unique indexes throw constraint errors, but keyPaths don't</h3>
+<p>This is one of those counter-intuitive things that probably made sense to IndexedDB creator <a href="http://blog.o-micron.com/">Nikunj Mehta</a>, but surprised the hell out of me.</p>
+<p>In SQLite and Web SQL, you can create a table with a primary key:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> employees <span class="token punctuation">(</span>id <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token keyword">UNIQUE</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>And you can also add a unique index:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-sql"><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> employees <span class="token punctuation">(</span>id<span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">UNIQUE</span> <span class="token keyword">INDEX</span> id_index <span class="token keyword">ON</span> employees <span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>And these two are essentially equivalent, because if you try to <code>INSERT</code> a row with an <code>id</code> that already exists, you'll get a constraint error.</p>
+<p>In IndexedDB, however, object stores with primary keys will <em>not</em> throw an error upon insertion, but instead silently overwrite the existing object. In other words, the <code>put()</code> is an <a href="http://en.wiktionary.org/wiki/upsert">upsert</a>. Unique indexes, however, behave totally differently and will indeed throw.</p>
+<p>Here's <a href="http://bl.ocks.org/nolanlawson/1afe3b5e98e4111c67c4">a live example</a>. The big takeaway is that the following two examples are <em>not</em> equivalent:</p>
+<p>With a primary key:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createObjectStore</span><span class="token punctuation">(</span><span class="token string">'employees'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">keyPath</span> <span class="token operator">:</span> <span class="token string">'id'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>With a unique index:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createObjectStore</span><span class="token punctuation">(</span><span class="token string">'employees'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token string">'id'</span><span class="token punctuation">,</span> <span class="token string">'id'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">unique</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Better hope you choose the right one the first time! Otherwise you may get a constraint error when you don't expect one, or vice versa.</p>
+<p><strong>Edit:</strong> As pointed out by <a href="https://twitter.com/paldepind/status/539012069061033984">Simon Friis Vindum</a>, you can use <code>add()</code> instead of <code>put()</code> to get a constraint error with keyPaths. Here's <a href="http://bl.ocks.org/nolanlawson/c9a4673830de2b185b8b">a live example</a>. Thanks for the tip!</p>
+<h3>10. CouchDB influenced IndexedDB influenced LevelDB influenced...</h3>
+<p>Databases are not designed in a vacuum, and the more I learn about this stuff, the more I find that everything is related somehow.</p>
+<p>Web SQL was originally inspired by <a href="http://gearsblog.blogspot.com/2011/03/stopping-gears.html">Google Gears</a>, which in 2008 <a href="https://code.google.com/p/gears/wiki/GearsHistory">was poised</a> to become the standard for storing data in mobile webapps. And of course neither would have been possible without SQLite, which, according to creator Richard Hipp, <a href="http://use-the-index-luke.com/blog/2014-05/what-i-learned-about-sqlite-at-a-postgresql-conference">was heavily influenced</a> by PostgreSQL. In fact, I find <a href="http://www.pgcon.org/2014/schedule/attachments/319_PGCon2014OpeningKeynote.pdf">his presentation</a> especially inspiring, because Hipp's process of using Postgres as a gold standard for building SQLite reminds me a lot of how PouchDB has been molded in CouchDB's image.</p>
+<p>And although <a href="http://nolanlawson.com/2014/04/26/web-sql-database-in-memoriam/">the Web SQL spec was eventually abandoned</a>, it certainly influenced its younger sibling IndexedDB. Among other family traits, they share the same asynchronous structure, auto-closing transactions, and security models. (Compare the &quot;security&quot; sections for <a href="http://www.w3.org/TR/webdatabase/">both</a> <a href="http://www.w3.org/TR/IndexedDB/">specs</a>, and note how much of the language is simply copied over).</p>
+<p>Web SQL also lives on indirectly in IndexedDB, given that both <a href="https://hacks.mozilla.org/2010/06/beyond-html5-database-apis-and-the-road-to-indexeddb/">Mozilla's</a> and <a href="https://bugs.webkit.org/show_bug.cgi?id=132176">Apple's</a> implementations are independently (!) implemented on top of SQLite.</p>
+<p>What's more intriguing is that you can even find <a href="http://lists.w3.org/Archives/Public/public-webapps/2009AprJun/0106.html">the influence of CouchDB</a> in early discussions of IndexedDB. This might explain features like complex keys, start/end key iteration, and the document-esque data model. Nikunj Mehta <a href="http://t.co/9N6O9qkn4S">even said way back in 2009</a>:</p>
+<blockquote>
+<p>Some people find [IndexedDB] good for a JavaScript CouchDB.</p>
+</blockquote>
+<p>In a sense, this statement may be the earliest expression of what eventually became PouchDB!</p>
+<p>Furthermore, Google went on to create LevelDB as their implementation of the IndexedDB spec, which is currently enjoying <a href="http://dailyjs.com/2013/04/19/leveldb-and-node-1/">enormous popularity in the Node.js ecosystem</a>, especially thanks to <a href="https://github.com/rvagg/node-levelup">the LevelUP project</a>. PouchDB itself <a href="/2014/07/25/pouchdb-levels-up.html">has hopped on the LevelUP bandwagon</a>, and today we have PouchDB Server, which is a nearly-complete implementation of CouchDB's HTTP API, but based on Node.js and LevelDB.</p>
+<p>So from the earliest discussions of IndexedDB, influenced as it was by CouchDB and Web SQL, through LevelDB and the LevelUP ecosystem, we now have a database that unites them all: PouchDB.</p>
+<p>When I look through the PouchDB source code, this enormous accomplishment still gives me chills. It's enough to make you overlook all the odd hacks, workarounds, and inelegancies. The fact that PouchDB works at all is a tiny miracle.</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

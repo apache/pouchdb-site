@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PouchDB, the JavaScript Database that Syncs!</title>
+    <title>PouchDB 4.0.2 - A Little Extra</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
     <link rel="stylesheet" href="/static/css/pouchdb.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
@@ -65,121 +65,112 @@
 
     </header>
     
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">PouchDB 4.0.2 - A Little Extra</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2015-09-12-pouchdb-4.0.2-a-little-extra.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
 
     <div role="main">
-      <div class="band band-inverse">
-  <div class="container">
-    <div class="row">
-      <div class='col-sm-6'>
-        <h1>The Database that Syncs!</h1>
-        <p>PouchDB is an open-source JavaScript database inspired by <a href="http://couchdb.apache.org/">Apache CouchDB</a> that is designed to run well within the browser.</p>
-        <p>PouchDB was created to help web developers build applications that work as well offline as they do online.<br>
-        <p>It enables applications to store data locally while offline, then synchronize it with CouchDB and compatible servers when the application is back online, keeping the user's data in sync no matter where they next login.</p>
-        <a href="/learn.html" class="btn btn-primary btn-lg btn-block-xs">Learn more</a>
-      </div>
-      <div class='col-sm-6'>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'dbname'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
 
-db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'dave@gmail.com'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'David'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">69</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Ch-Ch-Changes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span><span class="token string">'https://example.com/mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band">
-  <div class="container">
-    <div class='row'>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/node.svg"
-          alt=""
-        />
-        <h3>Cross Browser</h3>
-        <p class="margin-bottom-none-md">Works in Firefox, Chrome, Opera, Safari, IE and Node.js</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/light.svg"
-          alt=""
-        />
-        <h3>Lightweight</h3>
-        <p class="margin-bottom-none-md">PouchDB is just a script tag and 46KB (gzipped) away in the browser, or <code>$ npm install pouchdb</code> away
-        in Node.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/learn.svg"
-          alt=""
-        />
-        <h3>Easy to Learn</h3>
-        <p class="margin-bottom-none-md">Requires some programming knowledge, however PouchDB is a piece of cake to learn.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/open.svg"
-          alt=""
-        />
-        <h3>Open Source</h3>
-        <p class="margin-bottom-none-md">Everything is developed out in the open on GitHub, contributors always welcome!</p>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band band-inverse">
-  <div class="container">
-    <h3>Latest</h3>
-        <div class="row">
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2026/04/10/migration-to-nodesqlite.html'>PouchDB has a new adapter - nodesqlite</a></p>
+
+
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
 <div class="post">
   <div class="media">
     <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/c436dec61b906e27c963518d0ef1d972' alt='Nolan Lawson'>
     </a>
     <div class="media-body">
     <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 10 April 2026<br>
-<p>Hello everyone! PouchDB has a new available adapter for you to use, nodesqlite, that internally uses Node.js's native SQLite module as its persistence layer. This will be, in PouchDB's release
-<a href='/2026/04/10/migration-to-nodesqlite.html'>[...]</a></p>
-<p></p>
-</div></p>
+      <strong>By:</strong> <a href="https://twitter.com/nolanlawson">Nolan Lawson</a><br>
+      <strong>Published:</strong> 12 September 2015<br>
+      
+    </p>
+    </div>
   </div>
 </div>
-  </div>
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2024/05/24/pouchdb-9.0.0.html'>PouchDB 9.0.0</a></p>
-<div class="post">
-  <div class="media">
-    <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
-    </a>
-    <div class="media-body">
-    <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 24 May 2024<br>
-<p>The PouchDB developers are delighted to announce the immediate availability of PouchDB 9.0.0. This is a major release with 202 PRs merged since the last version.
-<a href='/2024/05/24/pouchdb-9.0.0.html'>[...]</a></p>
-<p></p>
-</div></p>
-  </div>
-</div>
-  </div>
-   </div>
-<a class="btn btn-primary btn-lg" href="/blog/index.html">View more</a>
+
+
+      <p>4.0.2 is a quick update to sneak in some important bugfixes in anticipation of the next monthly release.</p>
+<p>The most visible change in 4.0.2 is the long-awaited upgrade of <code>levelup</code> and <code>leveldown</code> to 1.x (<a href="https://github.com/pouchdb/pouchdb/issues/3873">#3873</a>), which contains some big improvements to how <code>leveldown</code> is installed. With 4.0.2, instead of needing to recompile <code>leveldown</code> every time PouchDB is <code>npm install</code>ed, it will simply be downloaded thanks to <a href="https://github.com/mafintosh/leveldown-prebuilt">leveldown-prebuilt</a>. So if you've ever groaned at the dreaded <code>node-gyp rebuild</code> console message, hop onto 4.0.2 and enjoy the faster install times!</p>
+<p>Also noteworthy is that the in-memory adapter is now fully tested and working in IE 10+, thanks to fixes in <a href="https://github.com/pouchdb/pouchdb/issues/4216">#4216</a>.</p>
+<p>Another big change is that PouchDB is more stable when replicating during intermittent connectivity, thanks to a new &quot;stateless constructor&quot; in the HTTP adapter (<a href="https://github.com/pouchdb/pouchdb/issues/4146">#4146</a>). Instead of kicking off HTTP requests immediately when you call <code>new PouchDB('http://example.com/db')</code>, the new version will wait for the first method call, such as <code>db.info()</code>.</p>
+<h3>Changelog</h3>
+<h4>Bugfixes</h4>
+<ul>
+<li>Handle errors thrown from <code>filter</code> functions (<a href="https://github.com/pouchdb/pouchdb/issues/3356">#3356</a>)</li>
+<li>Upgrade <code>levelup</code> to 1.2.1, <code>leveldown</code> to 1.4.1, and <code>level-sublevel</code> to 6.5.0 (<a href="https://github.com/pouchdb/pouchdb/issues/3873">#3873</a>)</li>
+<li>Stateless constructor for the HTTP adapter, fixes errors syncing while offline (<a href="https://github.com/pouchdb/pouchdb/issues/4146">#4146</a>)</li>
+<li>Ensure document properties are maintained, e.g. docs with keys like <code>hasOwnProperty</code> (<a href="https://github.com/pouchdb/pouchdb/issues/3968">#3968</a>)</li>
+<li>Validate attachment names don't start with <code>_</code> (<a href="https://github.com/pouchdb/pouchdb/issues/3357">#3357</a>)</li>
+<li>Correctly respect the <code>revs_limit</code> of 1000, trim revision trees (<a href="https://github.com/pouchdb/pouchdb/issues/4204">#4204</a>)</li>
+<li>Allow passing in opts to <code>destroy()</code> (<a href="https://github.com/pouchdb/pouchdb/issues/4219">#4219</a>)</li>
+<li>Update <code>request</code> to 2.61.0 (<a href="https://github.com/pouchdb/pouchdb/issues/4260">#4260</a>)</li>
+<li>Use <code>Function.prototype.name</code> shim consistently for IE (<a href="https://github.com/pouchdb/pouchdb/issues/4216">#4216</a>)</li>
+<li>Better CORS warning (<a href="https://github.com/pouchdb/pouchdb/issues/4256">#4256</a>)</li>
+</ul>
+<h3>Thank yous</h3>
+<p>A special thanks for this release goes to <a href="https://github.com/juliangruber">Julian Gruber</a> of the <a href="https://github.com/level">Level</a> community, without <a href="https://github.com/dominictarr/level-sublevel/pull/96">whose help</a> we wouldn't have been able to upgrade <code>levelup</code>/<code>leveldown</code>/<code>level-sublevel</code>. Thanks, Julian!</p>
+<h3>Get in touch</h3>
+<p>Please <a href="https://github.com/pouchdb/pouchdb/issues">file issues</a> or <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">tell us what you think</a>. And as always, a big thanks to all of our <a href="https://github.com/pouchdb/pouchdb/graphs/contributors">new and existing contributors</a>!</p>
+
+    </article>
   </div>
 </div>
 

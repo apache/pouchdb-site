@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mango queries</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Mango queries</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/guides/mango-queries.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      
+<article class="band">
+  <div class="container">
+    <div class="row">
+        <div id="sidebar" class="col-sm-3 nav-sidebar-wrapper">
+          <ul class="nav nav-silent nav-sidebar" role="navigation">
+            
+    
+    
+        
+    
+    <li >
+    <a href="/guides/">Intro</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/setup-couchdb.html">Setting up CouchDB</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/setup-pouchdb.html">Setting up PouchDB</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/databases.html">Working with databases</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/documents.html">Working with documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/async-code.html">Asynchronous code</a>
+</li>
+
+
+    
+    
+        
+    
+    <li >
+    <a href="/guides/updating-deleting.html">Updating/deleting documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/bulk-operations.html">Bulk operations</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/attachments.html">Working with attachments</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/replication.html">Replication</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/conflicts.html">Conflicts</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/changes.html">Changes feed</a>
+</li>
+
+
+    
+    
+    <li  class="active" >
+    <a href="/guides/mango-queries.html">Mango queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/queries.html">Map/reduce queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/compact-and-destroy.html">Compacting and destroying</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/local-documents.html">Local documents</a>
+</li>
+
+
+
+          </ul>
+        </div>
+
+        <div class="col-sm-9" role="main">
+          
+<p>Mango queries, also known as <code>pouchdb-find</code> or the <code>find()</code> API, are a structured query API that allows you to build <em>secondary indexes</em> beyond the built-in <code>allDocs()</code> and <code>changes()</code> indexes.</p>
+<p>This API is useful for answering questions like:</p>
+<ul>
+<li>find all documents where the <code>type</code> is <code>'user'</code></li>
+<li>find all users whose <code>age</code> is greater than <code>21</code></li>
+<li>find all Pokémon whose <code>name</code> starts with <code>'pika'</code></li>
+<li>etc.</li>
+</ul>
+<div class='h2'><div class='anchor-id' id='installation'></div><a class='anchor' href='#installation' name='installation'>Installation</a></div>
+<p>The <code>find()</code> API is currently offered as a separate plugin, meaning that you must install it on top of <code>pouchdb.js</code>. Here's how to do so:</p>
+<h3>Script tags</h3>
+<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.find.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><p>The <code>pouchdb.find.js</code> file is available in the <code>pouchdb</code> package in npm/Bower, on <a href="https://unpkg.com/pouchdb/dist/">unpkg</a>, or <a href="https://github.com/apache/pouchdb/releases/download/9.0.0/pouchdb.find.js">as a GitHub download</a>. Note it must be placed after <code>pouchdb.js</code>.</p>
+<h3>npm</h3>
+<p>If you are using Node, Browserify, Webpack, Rollup, etc., then you can install it like so:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">--save</span> pouchdb-find</code></pre></figure><p>Then in code:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='query-language'></div><a class='anchor' href='#query-language' name='query-language'>Query language</a></div>
+<p>The <a href="https://github.com/cloudant/mango">Mango query language</a> is a DSL inspired by MongoDB, which allows you to define an index that is then used for querying. One quick way to understand how this works is to use the <a href="https://nolanlawson.github.io/pouchdb-find/">live query demo</a>.</p>
+<p>At a basic level, there are two steps to running a query: <code>createIndex()</code> (to define which fields to index) and <code>find()</code> (to query the index).</p>
+<p>For instance, let's imagine a simple index to look up all documents whose <code>name</code> is <code>&quot;mario&quot;</code>. First we'll create it:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This returns a Promise that resolves once the index is created. At this point, we have an index based on the <code>&quot;name&quot;</code> field, so we can use it for lookup:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'mario'</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This returns a Promise containing an array of all documents that match this selector. Note that this is equivalent to using the <code>$eq</code> (equals) operator:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$eq</span><span class="token operator">:</span> <span class="token string">'mario'</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>The important thing to understand is that, for a typical database, <code>createIndex()</code> is the expensive operation, because it is looping through all documents in the database and building a <a href="https://en.wikipedia.org/wiki/B-tree">B-tree</a> based on the <code>name</code> value.</p>
+<p>Once the B-tree is built up, though, the <code>find()</code> is relatively cheap. (If this were <em>not</em> the case, then we would be better off just using <code>allDocs()</code> to iterate through the database ourselves!)</p>
+<p>Once we have an index on <code>name</code>, we can also sort all documents by <code>name</code>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gte</span><span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">sort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Note that we are specifying that the <code>name</code> must be greater than or equal to <code>null</code>, which is a workaround for the fact that the Mango query language requires us to have a selector. In <a href="https://docs.couchdb.org/en/stable/ddocs/views/collation.html">CouchDB collation order</a>, <code>null</code> is the &quot;lowest&quot; value, and so this will return all documents regardless of their <code>name</code> value.</p>
+<div class='h2'><div class='anchor-id' id='pagination'></div><a class='anchor' href='#pagination' name='pagination'>Pagination</a></div>
+<p>Reading all documents in the database and sorting them by a particular value is neat, but we could do this ourselves with <code>allDocs()</code>, and it would have the same performance impact. Where it gets more interesting is when we use <code>limit</code>:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gte</span><span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">sort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">limit</span><span class="token operator">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In this case, we only get 10 documents back, but they are the first 10 documents, sorted by name. This means that we have only read 10 documents out of the database into memory, which can be used for <a href="/2014/04/14/pagination-strategies-with-pouchdb.html">efficient pagination</a>.</p>
+<p>For instance, if we are displaying the first 10 results on a single page, and the user clicks &quot;next&quot; to see the next page, we can restructure our query based on the last result, to continue the pagination. Let's imagine the first 10 documents' <code>name</code>s are:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">[</span>
+  <span class="token string">'abby'</span><span class="token punctuation">,</span> <span class="token string">'bertrand'</span><span class="token punctuation">,</span> <span class="token string">'clarice'</span><span class="token punctuation">,</span> <span class="token string">'don'</span><span class="token punctuation">,</span> <span class="token string">'emily'</span><span class="token punctuation">,</span>
+  <span class="token string">'fumiko'</span><span class="token punctuation">,</span> <span class="token string">'gunther'</span><span class="token punctuation">,</span> <span class="token string">'horatio'</span><span class="token punctuation">,</span> <span class="token string">'ike'</span><span class="token punctuation">,</span> <span class="token string">'joy'</span>
+<span class="token punctuation">]</span></code></pre></figure><p>For our next 10 pages of results, the query becomes:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token string">'joy'</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">sort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">limit</span><span class="token operator">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Because we are now specifying that the <code>name</code> must be greater than <code>'joy'</code>, we are guaranteed to get the next-highest result after <code>'joy'</code>, which may (for instance) look like this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">[</span>
+  <span class="token string">'kim'</span><span class="token punctuation">,</span> <span class="token string">'lin'</span><span class="token punctuation">,</span> <span class="token string">'maria'</span><span class="token punctuation">,</span> <span class="token string">'nell'</span><span class="token punctuation">,</span> <span class="token string">'oliver'</span><span class="token punctuation">,</span>
+  <span class="token string">'pat'</span><span class="token punctuation">,</span> <span class="token string">'quincy'</span><span class="token punctuation">,</span> <span class="token string">'roy'</span><span class="token punctuation">,</span> <span class="token string">'sam'</span><span class="token punctuation">,</span> <span class="token string">'tanya'</span>
+<span class="token punctuation">]</span></code></pre></figure><p>In this way, we can continue paginating by using the last value as our next starting point. At any given point in time, there are only 10 documents stored in memory at once, which is great for performance.</p>
+<div class='h2'><div class='anchor-id' id='more-than-one-field'></div><a class='anchor' href='#more-than-one-field' name='more-than-one-field'>Indexing on more than one field</a></div>
+<p>Sometimes an index is not as simple as &quot;find all documents whose <code>name</code> is <code>&quot;mario&quot;</code>. Sometimes you want to do something fancy, such as &quot;find all documents whose <code>name</code> is <code>&quot;mario&quot;</code> and whose <code>age</code> is greater than <code>21</code>&quot;. In those cases, you can index on more than one field:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'age'</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'mario'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>One thing to note is that the order of these fields matters when creating your index. For instance, the following would <em>not</em> work:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">/* THIS WON'T WORK! */</span>
+db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'age'</span><span class="token punctuation">,</span> <span class="token string">'name'</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'mario'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>The reason for this is easy to understand if we imagine how this index would sort a hypothetical database:</p>
+<div class="table-responsive">
+<table class="table">
+<tr>
+  <th>name</th>
+  <th>age</th>
+</tr>
+<tr>
+  <td>Luigi</td>
+  <td>17</td>
+</tr>
+<tr>
+  <td>Luigi</td>
+  <td>28</td>
+</tr>
+<tr>
+  <td>Mario</td>
+  <td>18</td>
+</tr>
+<tr>
+  <td>Mario</td>
+  <td>21</td>
+</tr>
+<tr>
+  <td>Mario</td>
+  <td>22</td>
+</tr>
+<tr>
+  <td>Mario</td>
+  <td>26</td>
+</tr>
+<tr>
+  <td>Peach</td>
+  <td>17</td>
+</tr>
+<tr>
+  <td>Peach</td>
+  <td>21</td>
+</tr>
+<tr>
+  <td>Peach</td>
+  <td>25</td>
+</tr>
+</table>
+</div>
+<p>In the above table, the documents are sorted by <code>['name', 'age']</code>, and our &quot;Marios above the age of 21&quot; are very clearly grouped together.</p>
+<p>However, if we were to change the order, and sort them by <code>['age', 'name']</code>, it would look instead like this:</p>
+<div class="table-responsive">
+<table class="table">
+<tr>
+  <th>age</th>
+  <th>name</th>
+</tr>
+<tr>
+  <td>17</td>
+  <td>Luigi</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td>Peach</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td>Mario</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td>Mario</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td>Peach</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td>Mario</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td>Peach</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td>Mario</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td>Luigi</td>
+</tr>
+</table>
+</div>
+<p>If we imagine our <code>find()</code> query as a &quot;slice&quot; of the data, it's obvious that there's no slice that corresponds to &quot;all Marios whose age is greater than 21.&quot; Instead, our documents are sorted by <code>age</code>, and then documents with the same <code>age</code> are sorted by <code>name</code>.</p>
+<p>This index may be good for answering questions like &quot;find all 17-year-olds whose name starts with letters N-Z&quot;, but it's not very good for answering questions like &quot;find all people with a certain name, older than a certain age.&quot;</p>
+<p>This shows that it's important to carefully design an index before creating a query to use that index. Otherwise, the query planner may fall back to in-memory querying, which can be expensive.</p>
+<div class='h2'><div class='anchor-id' id='performance-notes'></div><a class='anchor' href='#performance-notes' name='performance-notes'>Performance notes</a></div>
+<p>The Mango query language is generally very permissive, and allows you to write queries that may not perform very well, but will run regardless. For instance, you may create an index with <code>createIndex()</code>, but then write a <code>find()</code> query that doesn't actually use that index. In general, the query planner tries to find the most appropriate index, but it may fall back to in-memory querying.</p>
+<p>As a straightforward example, if you query using the <code>_id</code> field, then the query planner will automatically map that directly to an <code>allDocs()</code> query. However, if you query for a field that isn't yet indexed, then it will simply use <code>allDocs()</code> to read in all documents from the database (!) and then filter in-memory. This can lead to poor performance, especially if your database is large.</p>
+<p>If you're ever wondering how the query planner is interpreting your query, you can use the explain endpoint:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">explain</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'mario'</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">explained</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// detailed explained info can be viewed</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In the console, the query planner will show a detailed explanation of how it has interpreted the query, whether it uses any indexes, and whether any parts of the query need to be executed in-memory.</p>
+<p>You may also want to pay attention to the <code>&quot;warning&quot;</code> value included in your results set, indicating that there was no index that matched the given query. For instance, the warning may look like this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+  <span class="token string-property property">"docs"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token comment">/* ... */</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"warning"</span><span class="token operator">:</span> <span class="token string">"No matching index found, create an index to optimize query time."</span>
+<span class="token punctuation">}</span></code></pre></figure><div class='h2'><div class='anchor-id' id='use_index'></div><a class='anchor' href='#use_index' name='use_index'>Set which index to use</a></div>
+<p>When creating a query, by settings the <code>use_index</code> field, it is possible to tell pouchdb-find which index to use.
+The below example shows how to do that.</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'age'</span><span class="token punctuation">,</span> <span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">ddoc</span><span class="token operator">:</span> <span class="token string">"my-index-design-doc"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'mario'</span><span class="token punctuation">,</span>
+      <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token literal-property property">use_index</span><span class="token operator">:</span> <span class="token string">'my-index-design-doc'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='further-reading'></div><a class='anchor' href='#further-reading' name='further-reading'>Further reading</a></div>
+<p>The Mango query language is quite large and supports many options. Some of the more common ones include:</p>
+<ul>
+<li><code>$eq</code>: equals</li>
+<li><code>$gt</code>: greater than</li>
+<li><code>$gte</code>: greater than or equal to</li>
+<li><code>$lt</code>: less than</li>
+<li><code>$lte</code>: less than or equal to</li>
+</ul>
+<p>There are many more options besides these, although note that not all of them can take advantage of indexes. For instance, <code>$regex</code>, <code>$ne</code>, and <code>$not</code> cannot use on-disk indexes, and must use in-memory filtering instead.</p>
+<p>The most complete documentation for selector options can be found in the <a href="https://docs.couchdb.org/en/stable/api/database/find.html">CouchDB <code>_find</code> documentation</a>. You might also look at the <a href="https://docs.cloudant.com/cloudant_query.html">Cloudant Query Language</a> documentation (which is nearly identical to Mango, other than <code>text</code> and other Cloudant-specific features). PouchDB uses CouchDB as the reference implementation; they ought to be functionally identical.</p>
+<p>It should be noted that, over HTTP, this API currently works with CouchDB 2.0+, Cloudant, and PouchDB Server.
+CouchDB 2.0 is the reference implementation, so the API should be the same. CouchDB 1.6.1 and below is not supported.</p>
+<div class='h2'><div class='anchor-id' id='related-api-documentation'></div><a class='anchor' href='#related-api-documentation' name='related-api-documentation'>Related API documentation</a></div>
+<ul>
+<li><a href="/api.html#create_index">createIndex()</a></li>
+<li><a href="/api.html#query_index">find()</a></li>
+<li><a href="/api.html#list_indexes">getIndexes()</a></li>
+<li><a href="/api.html#delete_index">deleteIndex()</a></li>
+</ul>
+<div class='h2'><div class='anchor-id' id='next'></div><a class='anchor' href='#next' name='next'>Next</a></div>
+<p>Now that we've learned how to do structured Mango queries, let's try some more advanced queries, using <em>map/reduce</em>.</p>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+        
+
+        <ul class="pager">
+            
+                <li class="previous">
+                    <a href="/guides/changes.html">&larr; Changes feed</a>
+                </li>
+            
+            
+                <li class="next">
+                    <a href="/guides/queries.html">Map/reduce queries &rarr;</a>
+                </li>
+            
+        </ul>
+    
+
+    
+
+    
+
+    
+
+
+        <div>
+
+    </div>
+
+  </div>
+</article>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

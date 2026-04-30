@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Working with databases</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Working with databases</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/guides/databases.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      
+<article class="band">
+  <div class="container">
+    <div class="row">
+        <div id="sidebar" class="col-sm-3 nav-sidebar-wrapper">
+          <ul class="nav nav-silent nav-sidebar" role="navigation">
+            
+    
+    
+        
+    
+    <li >
+    <a href="/guides/">Intro</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/setup-couchdb.html">Setting up CouchDB</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/setup-pouchdb.html">Setting up PouchDB</a>
+</li>
+
+
+    
+    
+    <li  class="active" >
+    <a href="/guides/databases.html">Working with databases</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/documents.html">Working with documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/async-code.html">Asynchronous code</a>
+</li>
+
+
+    
+    
+        
+    
+    <li >
+    <a href="/guides/updating-deleting.html">Updating/deleting documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/bulk-operations.html">Bulk operations</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/attachments.html">Working with attachments</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/replication.html">Replication</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/conflicts.html">Conflicts</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/changes.html">Changes feed</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/mango-queries.html">Mango queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/queries.html">Map/reduce queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/compact-and-destroy.html">Compacting and destroying</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/local-documents.html">Local documents</a>
+</li>
+
+
+
+          </ul>
+        </div>
+
+        <div class="col-sm-9" role="main">
+          
+<p>PouchDB databases come in two flavors: local and remote.</p>
+<div class='h2'><div class='anchor-id' id='local–databases'></div><a class='anchor' href='#local–databases' name='local–databases'>Local databases</a></div>
+<p>To create a local database, you simply call <code>new PouchDB</code> and give it a name:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'kittens'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/bddac54b92c2d8d39241">live example</a></strong> of this code.</p>
+<div class="alert alert-info">
+<div class="alert-text">
+<p><strong>Protip:</strong> whenever you see a live example in this guide, you can download it to follow along at home! For example, to run this example, just enter the following commands in your command prompt:</p>
+<p/>
+<code>
+<br/>git clone https://gist.github.com/bddac54b92c2d8d39241.git kittens
+<br/>cd kittens
+<br/>python -m SimpleHTTPServer # for Python 2
+<br/>python -m http.server      # for Python 3
+</code>
+<p/>
+Now the site is up and running at <a href='http://localhost:8000'>http://localhost:8000</a>. To find the correct <code>gist.github.com</code> URL, just click the "block" number at the top of the page.
+</div></div>
+<div class='h2'><div class='anchor-id' id='remote-databases'></div><a class='anchor' href='#remote-databases' name='remote-databases'>Remote databases</a></div>
+<p>To create a remote database, you call <code>new PouchDB</code> and give it a path to a database in CouchDB.</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://localhost:5984/kittens'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class="alert alert-info">
+<div class="alert-text">
+<p><strong>note:</strong> The remote database will not be created until you do an API call, e.g.: <code>db.info()</code>. The reason behind that is that the <code>PouchDB</code> constructor is completely
+synchronous, for ease of error handling (i.e. no asynchronous errors).</p>
+</div></div>
+<p>The structure of a CouchDB URL is very simple:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">http://     localhost:5984     /kittens
+⌞_____⌟     ⌞____________⌟      ⌞_____⌟
+   |              |                |
+Protocol     Where CouchDB       database
+(https if    itself is           name
+Cloudant)    hosted</code></pre></figure><p>If the remote database doesn't exist, then PouchDB will create it for you.</p>
+<p>You can verify that your database is working by visiting the URL  <a href="http://localhost:5984/kittens">http://localhost:5984/kittens</a>.  You should see something like this:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">,</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"doc_del_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"purge_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"compact_running"</span><span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token string-property property">"disk_size"</span><span class="token operator">:</span><span class="token number">79</span><span class="token punctuation">,</span><span class="token string-property property">"data_size"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"instance_start_time"</span><span class="token operator">:</span><span class="token string">"1410722558431975"</span><span class="token punctuation">,</span><span class="token string-property property">"disk_format_version"</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token string-property property">"committed_update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">}</span></code></pre></figure><p>If instead you see:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"error"</span><span class="token operator">:</span><span class="token string">"not_found"</span><span class="token punctuation">,</span><span class="token string-property property">"reason"</span><span class="token operator">:</span><span class="token string">"no_db_file"</span><span class="token punctuation">}</span></code></pre></figure><p>Then check to make sure that your remote CouchDB has started up correctly. Common errors (such as CORS) are <a href="/errors.html">listed here</a>.</p>
+<div class='h2'><div class='anchor-id' id='get-basic-info-about-the–database'></div><a class='anchor' href='#get-basic-info-about-the–database' name='get-basic-info-about-the–database'>Get basic info about the database</a></div>
+<p>You can see basic information about the database by using the <code>info()</code> method.</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">info</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>info<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></figure><p>The local database should show something like:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">}</span></code></pre></figure><p>The remote database may have a bit more information:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">,</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"doc_del_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"purge_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"compact_running"</span><span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token string-property property">"disk_size"</span><span class="token operator">:</span><span class="token number">79</span><span class="token punctuation">,</span><span class="token string-property property">"data_size"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"instance_start_time"</span><span class="token operator">:</span><span class="token string">"1410722558431975"</span><span class="token punctuation">,</span><span class="token string-property property">"disk_format_version"</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token string-property property">"committed_update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">}</span></code></pre></figure><p>The most important bits of information are:</p>
+<ul>
+<li><code>doc_count</code>: the number of undeleted documents in the database</li>
+<li><code>db_name</code>: the name of the database</li>
+</ul>
+<div class='h2'><div class='anchor-id' id='debugging'></div><a class='anchor' href='#debugging' name='debugging'>Debugging</a></div>
+<h3>IndexedDB/WebSQL inspectors</h3>
+<p>You can use the normal developer tools to see what your database looks like under the hood.</p>
+<p>In Chrome, just choose <em>Overflow icon</em> ☰ → <em>Tools</em> → <em>Developer Tools</em>. Then click the <em>Resources</em> tab, then <em>IndexedDB</em>, and you should see the following:</p>
+<p>
+  <a href="/static/img/dev_tools.png" target="_blank">
+    <img class="img-responsive"  src="/static/img/dev_tools.png" alt="Chrome Developer Tools" />
+  </a>
+</p>
+<p>This is the raw IndexedDB representation of your PouchDB, so it is very fine-grained. However, you may find it useful.</p>
+<p>In Safari, your database will be under <em>Develop</em> → <em>Show Web Inspector</em> → <em>Resources</em> → <em>Databases</em>.</p>
+<p>
+  <a href="/static/img/safari_inspector.png" target="_blank">
+    <img class="img-responsive"  src="/static/img/safari_inspector.png" alt="Web Inspector in Safari" />
+  </a>
+</p>
+<div class='h2'><div class='anchor-id' id='deleting-your-local-database'></div><a class='anchor' href='#deleting-your-local-database' name='deleting-your-local-database'>Deleting your local database</a></div>
+<p>During development, it's often useful to destroy the local database, so you can see what your users will experience when they visit your site for the first time. A page refresh is not enough, because the data will still be there!</p>
+<p>In Chrome, you can use the <a href="https://chrome.google.com/webstore/detail/clear-cache/cppjkneekbjaeellbfkmgnhonkkjfpdn">Clear Cache extension</a>, which will add a trashcan icon to your toolbar, which you can click to delete all local data (IndexedDB, WebSQL, LocalStorage, cookies, etc.).</p>
+<p>In Firefox, you can use the <a href="https://addons.mozilla.org/en-US/firefox/addon/clear-browsing-data/">Clear Browsing Data add-on</a>, which adds a toolbar button to delete your IndexedDB with one click.</p>
+<p>In Safari, you can simply click <em>Safari</em> → <em>Clear History and Website Data</em>.</p>
+<div class='h2'><div class='anchor-id' id='differences-between-the-local-and-remote-databases'></div><a class='anchor' href='#differences-between-the-local-and-remote-databases' name='differences-between-the-local-and-remote-databases'>Differences between the local and remote databases</a></div>
+<p>When you create a local PouchDB database, it uses whatever underlying datastore is available - IndexedDB in most browsers, WebSQL in older browsers, and LevelDB in Node.js.</p>
+<p>When you create a remote PouchDB database, it communicates directly with the remote database – CouchDB, Cloudant, Couchbase, etc.</p>
+<p>The goal of PouchDB is to allow you to seamlessly communicate with one or the other. You should not notice many differences between the two, except that of course the local one is much faster!</p>
+<div class='h2'><div class='anchor-id' id='related-api-documentation'></div><a class='anchor' href='#related-api-documentation' name='related-api-documentation'>Related API documentation</a></div>
+<ul>
+<li><a href="/api.html#create_database">new PouchDB() (constructor)</a></li>
+<li><a href="/api.html#debug_mode">Debug mode</a></li>
+</ul>
+<div class='h2'><div class='anchor-id' id='next'></div><a class='anchor' href='#next' name='next'>Next</a></div>
+<p>Now that you've created some databases, let's put some documents in 'em!</p>
+
+
+
+
+    
+
+    
+
+    
+
+    
+        
+        
+
+        <ul class="pager">
+            
+                <li class="previous">
+                    <a href="/guides/setup-pouchdb.html">&larr; Setting up PouchDB</a>
+                </li>
+            
+            
+                <li class="next">
+                    <a href="/guides/documents.html">Working with documents &rarr;</a>
+                </li>
+            
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+        <div>
+
+    </div>
+
+  </div>
+</article>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adapters</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Adapters</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/adapters.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      
+<article class="band">
+  <div class="container">
+    <div class="row">
+        <div id="sidebar" class="col-sm-3 nav-sidebar-wrapper">
+          <ul class="nav nav-silent nav-sidebar" role="navigation">
+            <li >
+    <a href="/learn.html">About</a>
+</li>
+
+<li >
+    <a href="/download.html">Download</a>
+</li>
+
+<li >
+    <a href="/users.html">Who's using PouchDB?</a>
+</li>
+
+<li >
+    <a href="/getting-started.html">Get Started Guide</a>
+</li>
+
+<li >
+    <a href="/api.html">API</a>
+</li>
+
+<li  class="active" >
+    <a href="/adapters.html">Adapters</a>
+</li>
+
+<li >
+    <a href="/custom.html">Custom Builds</a>
+</li>
+
+<li >
+    <a href="/external.html">Plugins</a>
+</li>
+
+<li >
+    <a href="/faq.html">FAQ</a>
+</li>
+
+<li >
+    <a href="/errors.html">Common Errors</a>
+</li>
+
+
+          </ul>
+        </div>
+
+        <div class="col-sm-9" role="main">
+          <p>PouchDB is not a self-contained database; it is a CouchDB-style abstraction layer over other databases. By default, PouchDB ships with the <a href="http://www.w3.org/TR/IndexedDB/">IndexedDB</a> adapter for the browser, and a <a href="https://code.google.com/p/leveldb/">LevelDB</a> adapter in Node.js. This can be visualized as so:</p>
+<object data="static/svg/pouchdb_adapters.svg" type="image/svg+xml">
+    <img src="static/img/pouchdb_adapters.png" alt="adapters">
+</object>
+<p>PouchDB attempts to provide a consistent API that &quot;just works&quot; across every browser and JavaScript environment, and in most cases, you can just use the defaults. However, if you're trying to reach the widest possible audience, or if you want the best performance, then you will sometimes want to tinker with the adapter settings.</p>
+<h4>Topics:</h4>
+<ul>
+<li><a href="#pouchdb_in_the_browser">PouchDB in the browser</a></li>
+<li><a href="#pouchdb_in_node_js">PouchDB in Node.js</a></li>
+<li><a href="#pouchdb_over_http">PouchDB over HTTP</a></li>
+<li><a href="#more_resources">More resources</a></li>
+</ul>
+<div class='h2'><div class='anchor-id' id='pouchdb_in_the_browser'></div><a class='anchor' href='#pouchdb_in_the_browser' name='pouchdb_in_the_browser'>PouchDB in the browser</a></div>
+<p>In the browser, PouchDB prefers IndexedDB.</p>
+<div class="alert alert-info">
+<div class="alert-text">
+<p>Prior to PouchDB 7.0.0, the WebSQL adapter was used for Safari/iOS. The WebSQL adapter no longer ships in PouchDB, but may be installed separately.</p>
+</div></div>
+<p>If you're ever curious which adapter is being used in a particular browser, you can use the following method:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'myDB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>pouch<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// prints 'idb'</span></code></pre></figure><h3>SQLite plugin for Cordova/PhoneGap</h3>
+<p>On Cordova/PhoneGap/Ionic, the native SQLite database is often a popular choice, because it allows unlimited storage (compared to <a href="http://www.html5rocks.com/en/tutorials/offline/quota-research">IndexedDB/WebSQL storage limits</a>). It also offers more flexibility in backing up and pre-loading databases, because the SQLite files are directly accessible to app developers.</p>
+<p>There are various Cordova plugins that can provide access to native SQLite, such as
+<a href="https://github.com/litehelpers/Cordova-sqlite-storage">Cordova-sqlite-storage</a>,<br>
+<a href="https://github.com/nolanlawson/cordova-plugin-sqlite-2">cordova-plugin-sqlite-2</a>, or
+<a href="https://github.com/Microsoft/cordova-plugin-websql">cordova-plugin-websql</a>.</p>
+<p>To use them, you must install them separately into your Cordova application, and then add a special third-party PouchDB adapter
+called <a href="https://github.com/nolanlawson/pouchdb-adapter-cordova-sqlite">pouchdb-adapter-cordova-sqlite</a>. Once you do
+that, you can use it via:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'myDB.db'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'cordova-sqlite'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class="alert alert-info">
+<div class="alert-text">
+<p>In PouchDB pre-6.0.0, Cordova SQLite support was available out-of-the-box, but it has been moved to a separate plugin
+to reduce confusion and to make it explicit whether you are using WebSQL or Cordova SQLite.</p>
+</div></div>
+<p>We recommend avoiding Cordova SQLite unless you are hitting the 50MB storage limit in iOS, you
+require native or preloaded access to the database files, or there's some other reason to go native.
+The built-in IndexedDB adapter is nearly always more performant and stable.</p>
+</div></div>
+<h3>Browser adapter plugins</h3>
+<p>PouchDB also offers separate browser plugins that use backends other than IndexedDB. These plugins fully pass the PouchDB test suite and are rigorously tested in our CI process.</p>
+<p><strong>Downloads:</strong></p>
+<ul>
+<li><a href="https://github.com/apache/pouchdb/releases/download/9.0.0/pouchdb.memory.js">pouchdb.memory.js</a> (Minified: <a href="https://github.com/apache/pouchdb/releases/download/9.0.0/pouchdb.memory.min.js">pouchdb.memory.min.js</a>)</li>
+<li><a href="https://github.com/apache/pouchdb/releases/download/9.0.0/pouchdb.localstorage.js">pouchdb.localstorage.js</a> (Minified: <a href="https://github.com/apache/pouchdb/releases/download/9.0.0/pouchdb.localstorage.min.js">pouchdb.localstorage.min.js</a>)</li>
+</ul>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p>These plugins add a hefty footprint due to external dependencies, so take them with a grain of salt.</p>
+</div></div>
+<h4>In-memory adapter</h4>
+<p>If you want a quick database for your unit tests, you can use the <code>pouchdb.memory.js</code> plugin, which offers a pure in-memory PouchDB:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.memory.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  <span class="token comment">// this pouch is ephemeral; it only exists in memory</span>
+  <span class="token keyword">const</span> pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><p>This pouch will act exactly like a normal one – replicating, storing attachments, pagination, etc. – but it will be deleted as soon as the user closes their browser. However, multiple <code>PouchDB</code> objects with the same database name will share the same data:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// pouch1 and pouch2 will share the same data</span>
+<span class="token keyword">const</span> pouch1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'myDB'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> pouch2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'myDB'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// pouch3 will have its own data</span>
+<span class="token keyword">const</span> pouch3 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'myOtherDB'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h4>LocalStorage adapter</h4>
+<p>If you need to support very old browsers, such as IE ≤ 9.0 and Opera Mini, you can use the <code>pouchdb.localstorage.js</code> plugin, which allows PouchDB to fall back to <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Storage">LocalStorage</a> on browsers that don't support either IndexedDB or WebSQL.  The <a href="https://github.com/es-shims/es5-shim">es5-shims</a> will also be necessary.</p>
+<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.localstorage.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+  <span class="token comment">// this pouch is backed by LocalStorage</span>
+  <span class="token keyword">const</span> pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'localstorage'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><div class="alert alert-warning">
+<div class="alert-text">
+<p>The LocalStorage plugin should be considered highly experimental, and the underlying structure may change in the future.  Currently it stores all document IDs in memory, which works fine on small databases but may crash on larger databases.  You can follow <a href='https://github.com/No9/localstorage-down'>localstorage-down</a> to track our progress.</p>
+</div></div>
+<div class='h2'><div class='anchor-id' id='pouchdb_in_node_js'></div><a class='anchor' href='#pouchdb_in_node_js' name='pouchdb_in_node_js'>PouchDB in Node.js</a></div>
+<h4>In-memory</h4>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>Warning: deprecation notice.</strong> The <code>memory</code> adapter will be deprecated in PouchDB version 10.0.0 and removed in version 11.0.0. You can read <a href="https://pouchdb.com/2026/04/10/migration-to-nodesqlite.html">the migration guide here</a> and more about the topic in <a href="https://github.com/apache/pouchdb/issues/9163">this link</a>.</p>
+</div></div>
+<p>Just as in the browser, you can also create a pure in-memory PouchDB:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">$ npm install pouchdb-adapter-memory</code></pre></figure><p>then:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-memory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'myDB'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This implementation is based on <a href="https://github.com/level/memdown">MemDOWN</a>, and will not write any changes to disk.</p>
+<h4>Node SQLite adapter</h4>
+<p>You can also use PouchDB in Node.js' <a href="https://nodejs.org/api/sqlite.html">native SQLite module</a>, when using Node.js' <code>&gt;22.5.0</code> version.</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-node-sqlite'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydatabase.db'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'nodesqlite'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h4>Other LevelDOWN adapters</h4>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>Warning: deprecation notice.</strong> The <code>leveldb</code> adapter will be deprecated in PouchDB version 10.0.0 and removed in version 11.0.0. You can read <a href="https://pouchdb.com/2026/04/10/migration-to-nodesqlite.html">the migration guide here</a> and more about the topic in <a href="https://github.com/apache/pouchdb/issues/9163">this link</a>.</p>
+</div></div>
+<p>Technically you are free to use
+<a href="https://github.com/rvagg/node-levelup/wiki/Modules#storage-back-ends">any LevelDOWN-based implementation</a> in either Node or the browser.
+However this should be considered <strong>extremely experimental</strong> and not designed for production use.</p>
+<p>See <a href="https://www.npmjs.com/package/pouchdb-adapter-leveldb-core">pouchdb-adapter-leveldb-core</a> for details.</p>
+<div class='h2'><div class='anchor-id' id='pouchdb_over_http'></div><a class='anchor' href='#pouchdb_over_http' name='pouchdb_over_http'>PouchDB over HTTP</a></div>
+<p>In both the browser and in Node.js, PouchDB can also function as a straightforward API on top of any <a href="https://couchdb.apache.org/">CouchDB</a>-compliant database:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://my-site.com:5984/my-db'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> securePouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'https://my-secure-site.com:5984/my-secure-db'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can also sync to and from these databases to your local PouchDB.</p>
+<p>Currently PouchDB has full support for:</p>
+<ul>
+<li>CouchDB 1.x</li>
+<li><a href="https://www.smileupps.com/">Smileupps</a> (same as 1.x)</li>
+<li>CouchDB 2.x (<a href="https://github.com/apache/pouchdb/actions">tested in CI</a>)</li>
+<li>CouchDB 3.x (<a href="https://github.com/apache/pouchdb/actions">tested in CI</a>)</li>
+<li><a href="https://cloudant.com/">Cloudant</a> (roughly the same as 2.x)</li>
+<li><a href="https://github.com/pouchdb/pouchdb-server">PouchDB Server</a> (<a href="https://github.com/apache/pouchdb/actions">tested in CI</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb-server">PouchDB Server --in-memory mode</a></li>
+</ul>
+<p><a href="http://wearepropeople.com/blog/a-content-staging-solution-for-drupal-8-and-more">Drupal 8</a> has also announced support for PouchDB, and there is <a href="https://github.com/rcouch/rcouch">rcouch</a> as well, but these are both untested by PouchDB.</p>
+<p>If you are ever unsure about a server, consider replicating from PouchDB to CouchDB, then from that CouchDB to the other server.</p>
+<h4>PouchDB Server</h4>
+<p><a href="https://github.com/pouchdb/pouchdb-server">PouchDB Server</a> is a standalone REST server that implements the CouchDB API, while using a LevelDB-based PouchDB under the hood. It also supports an <code>--in-memory</code> mode and any <a href="https://github.com/rvagg/node-leveldown">LevelDOWN</a> adapter, which you may find handy.</p>
+<p>PouchDB Server passes the PouchDB test suite at 100%, but be aware that it is not as full-featured or battle-tested as CouchDB.</p>
+<h4>PouchDB Express</h4>
+<p>The underlying module for PouchDB Server, <a href="https://github.com/pouchdb/express-pouchdb">Express PouchDB</a> is an Express submodule that mimics most of the CouchDB API within your Express application.</p>
+<div class='h2'><div class='anchor-id' id='more_resources'></div><a class='anchor' href='#more_resources' name='more_resources'>More resources</a></div>
+<p>The best place to look for information on which browsers support which databases is <a href="http://caniuse.com">caniuse.com</a>.  You can consult their tables on browser support for various backends:</p>
+<ul>
+<li><a href="http://caniuse.com/indexeddb">IndexedDB</a></li>
+<li><a href="http://caniuse.com/sql-storage">WebSQL</a></li>
+<li><a href="http://caniuse.com/namevalue-storage">LocalStorage</a></li>
+</ul>
+
+        <div>
+
+    </div>
+
+  </div>
+</article>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

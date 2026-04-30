@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conflicts</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Conflicts</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/guides/conflicts.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      
+<article class="band">
+  <div class="container">
+    <div class="row">
+        <div id="sidebar" class="col-sm-3 nav-sidebar-wrapper">
+          <ul class="nav nav-silent nav-sidebar" role="navigation">
+            
+    
+    
+        
+    
+    <li >
+    <a href="/guides/">Intro</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/setup-couchdb.html">Setting up CouchDB</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/setup-pouchdb.html">Setting up PouchDB</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/databases.html">Working with databases</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/documents.html">Working with documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/async-code.html">Asynchronous code</a>
+</li>
+
+
+    
+    
+        
+    
+    <li >
+    <a href="/guides/updating-deleting.html">Updating/deleting documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/bulk-operations.html">Bulk operations</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/attachments.html">Working with attachments</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/replication.html">Replication</a>
+</li>
+
+
+    
+    
+    <li  class="active" >
+    <a href="/guides/conflicts.html">Conflicts</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/changes.html">Changes feed</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/mango-queries.html">Mango queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/queries.html">Map/reduce queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/compact-and-destroy.html">Compacting and destroying</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/local-documents.html">Local documents</a>
+</li>
+
+
+
+          </ul>
+        </div>
+
+        <div class="col-sm-9" role="main">
+          
+<p>Conflicts are an unavoidable reality when dealing with distributed systems. And make no mistake: client-server <em>is</em> a distributed system.</p>
+<p>CouchDB and PouchDB differ from many other sync solutions, because they bring the issue of conflicts front-and-center. With PouchDB, conflict resolution is entirely under your control.</p>
+<div class="alert alert-info">
+<div class="alert-text">
+<p>PouchDB exactly implements CouchDB's replication algorithm, so conflict resolution works the same in both. For the purposes of this article, &quot;CouchDB&quot; and &quot;PouchDB&quot; may be used interchangeably.</p>
+</div></div>
+<div class='h2'><div class='anchor-id' id='two-types-of-conflicts'></div><a class='anchor' href='#two-types-of-conflicts' name='two-types-of-conflicts'>Two types of conflicts</a></div>
+<p>In CouchDB, conflicts can occur in two places: immediately, when you try to commit a new revision, or later, when two peers have committed changes to the same document. Let's call these <strong>immediate conflicts</strong> and <strong>eventual conflicts</strong>.</p>
+<h3>Immediate conflicts</h3>
+<p><strong>Immediate conflicts</strong> can occur with any API that takes a <code>rev</code> or a document with <code>_rev</code> as input – <code>put()</code>, <code>post()</code>, <code>remove()</code>, <code>bulkDocs()</code>, and <code>putAttachment()</code>. They manifest as a <code>409</code> (conflict) error:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> myDoc <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'someid'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'1-somerev'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>myDoc<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// success</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">.</span>name <span class="token operator">===</span> <span class="token string">'conflict'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// conflict!</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// some other error</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In your code, <em>you should always be handling conflicts</em>. No matter how unlikely it may seem, 409s can and do occur.</p>
+<p>For instance, if you are doing live replication, a document may be modified by somebody else while the user is working on it. If the remote changes are replicated to the local database before the user tries to commit their changes, then they will receive the above 409 error.</p>
+<h4>Upsert</h4>
+<p>In many cases, the most practical solution to the 409 problem is to retry the <code>put()</code> until it succeeds. If the user's intended change can be expressed as a <strong>delta</strong> (i.e. a change that doesn't depend on the current revision), then this is very easy to achieve.</p>
+<p>Borrowing a phrase from traditional databases, let's call this an <strong>upsert</strong> (&quot;update or insert&quot;), and use the <a href="https://github.com/pouchdb/pouchdb-upsert">pouchdb-upsert</a> plugin to implement it:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">myDeltaFunction</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  doc<span class="token punctuation">.</span>counter <span class="token operator">=</span> doc<span class="token punctuation">.</span>counter <span class="token operator">||</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  doc<span class="token punctuation">.</span>counter<span class="token operator">++</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> doc<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+db<span class="token punctuation">.</span><span class="token function">upsert</span><span class="token punctuation">(</span><span class="token string">'my_id'</span><span class="token punctuation">,</span> myDeltaFunction<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// success!</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// error (not a 404 or 409)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This <code>upsert()</code> function takes a <code>docId</code> and <code>deltaFunction</code>, where the <code>deltaFunction</code> is just a function that takes a document and outputs a new document. (If the document does not exist, then an empty document is provided.)</p>
+<p><code>pouchdb-upsert</code> also offers a <code>putIfNotExists()</code> function, which will create a document if it doesn't exist already. For more details, see <a href="https://github.com/pouchdb/pouchdb-upsert#readme">the plugin's documentation</a>.</p>
+<h3>Eventual conflicts</h3>
+<p>Now, let's move on to the second type: <strong>eventual conflicts</strong>.</p>
+<p>Imagine two PouchDB databases have both gone offline. The two separate users each make modifications to the same document, and then they come back online at a later time.</p>
+<p>Both users committed changes to the same version of the document, and their local databases did not throw 409 errors. What happens then?</p>
+<p>This is the classic &quot;conflict&quot; scenario, and CouchDB handles it very elegantly. By default, CouchDB will choose an arbitrary winner based on a deterministic algorithm, which means both users will see the same winner once they're back online. However, since the replication history is stored, you can always go back in time to resolve the conflict.</p>
+<p>To detect if a document is in conflict, you use the <code>{conflicts: true}</code> option when you <code>get()</code> it.</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">conflicts</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// do something with the doc</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle any errors</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If the document has conflicts, then the <code>doc</code> will be returned with a <code>_conflicts</code> attribute, which may contain the revision IDs of conflicting revisions.</p>
+<p>For instance, imagine the <code>doc</code> returned is the following:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+  <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"docid"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"_rev"</span><span class="token operator">:</span> <span class="token string">"2-x"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"_conflicts"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"2-y"</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre></figure><p>Here we have two separate revisions (<code>2-x</code> and <code>2-y</code>) written by two separate databases, and one database's revision (<code>2-x</code>) has arbitrarily won.</p>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p>Normally, <code>_rev</code>s look more like <code>2-c1592ce7b31cc26e91d2f2029c57e621</code>, i.e. a digit followed by a very long hash. In these examples, <code>x</code> and <code>y</code> are used in place of the hash, for simplicity's sake.</p>
+</div></div>
+<p>Notice that the document's current revision starts with <code>2-</code>, and the conflicting version also starts with <code>2-</code>, indicating that they're both at the same level of the revision tree. (Revision hashes start with <code>1-</code>, <code>2-</code>, <code>3-</code>, etc., which indicates their distance from the first, &quot;root&quot; revision. The root always starts with <code>1-</code>.)</p>
+<p>Both databases will see the same conflict, assuming replication has completed. In fact, all databases in the network will see the exact same revision history – much like Git.</p>
+<p>To fetch the losing revision, you simply <code>get()</code> it using the <code>rev</code> option:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">rev</span><span class="token operator">:</span> <span class="token string">'2-y'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// do something with the doc</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle any errors</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>At this point, you can present both versions to the user, or resolve the conflict automatically using your preferred conflict resolution strategy: last write wins, first write wins, <a href="https://www.gnu.org/software/rcs/">RCS</a>, etc.</p>
+<p>To mark a conflict as resolved, all you need to do is <code>remove()</code> the unwanted revisions. So for instance, to remove <code>'2-y'</code>, you would do:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token string">'2-y'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// yay, we're done</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// handle any errors</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If you want to resolve the conflict by creating a new revision, you simply <code>put()</code> a new document on top of the current winner, and make sure that the losing revision is deleted.</p>
+<div class='h2'><div class='anchor-id' id='accountants-dont-use-erasers'></div><a class='anchor' href='#accountants-dont-use-erasers' name='accountants-dont-use-erasers'>Accountants don't use erasers</a></div>
+<p>Another conflict resolution strategy is to design your database so that conflicts are impossible. In practice, this means that you never update or remove existing documents – you only create new documents.</p>
+<p>This strategy has been called the &quot;every doc is a delta&quot; strategy. A classic use-case for this would be a checkbook app, where every document is simply an operation that increases or decreases the account balance:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">change</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">}</span> <span class="token comment">// balance increased by $100</span>
+<span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">change</span><span class="token operator">:</span> <span class="token operator">-</span><span class="token number">50</span><span class="token punctuation">}</span> <span class="token comment">// balance decreased by $50</span>
+<span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">change</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">}</span> <span class="token comment">// balance increased by $200</span></code></pre></figure><p>In this system, it is impossible for two documents to conflict, because the document <code>_id</code>s are just timestamps. Ledger transactions are recorded in the order they were made, and at the end of the day, you only need to do an <code>allDocs()</code> or <code>query()</code> operation to sum the result.</p>
+<p>The wisdom of this strategy can be expressed by the maxim: <a href="https://queue.acm.org/detail.cfm?id=2884038">&quot;Accountants don't use erasers&quot;</a>. Like a diligent accountant, your app can just add new documents when you want to make a change, rather than going back and scrubbing out previous changes.</p>
+<p>There is also a PouchDB plugin that implements this strategy: <a href="https://github.com/redgeoff/delta-pouch">delta-pouch</a>.</p>
+<div class='h2'><div class='anchor-id' id='next'></div><a class='anchor' href='#next' name='next'>Next</a></div>
+<p>Now that we've settled our conflicts, let's take a look at the changes feed.</p>
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        
+        
+
+        <ul class="pager">
+            
+                <li class="previous">
+                    <a href="/guides/replication.html">&larr; Replication</a>
+                </li>
+            
+            
+                <li class="next">
+                    <a href="/guides/changes.html">Changes feed &rarr;</a>
+                </li>
+            
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+        <div>
+
+    </div>
+
+  </div>
+</article>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

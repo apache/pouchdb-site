@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PouchDB, the JavaScript Database that Syncs!</title>
+    <title>Setting up CouchDB</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
     <link rel="stylesheet" href="/static/css/pouchdb.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
@@ -65,123 +65,258 @@
 
     </header>
     
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Setting up CouchDB</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/guides/setup-couchdb.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
 
     <div role="main">
-      <div class="band band-inverse">
+      
+<article class="band">
   <div class="container">
     <div class="row">
-      <div class='col-sm-6'>
-        <h1>The Database that Syncs!</h1>
-        <p>PouchDB is an open-source JavaScript database inspired by <a href="http://couchdb.apache.org/">Apache CouchDB</a> that is designed to run well within the browser.</p>
-        <p>PouchDB was created to help web developers build applications that work as well offline as they do online.<br>
-        <p>It enables applications to store data locally while offline, then synchronize it with CouchDB and compatible servers when the application is back online, keeping the user's data in sync no matter where they next login.</p>
-        <a href="/learn.html" class="btn btn-primary btn-lg btn-block-xs">Learn more</a>
-      </div>
-      <div class='col-sm-6'>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'dbname'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <div id="sidebar" class="col-sm-3 nav-sidebar-wrapper">
+          <ul class="nav nav-silent nav-sidebar" role="navigation">
+            
+    
+    
+        
+    
+    <li >
+    <a href="/guides/">Intro</a>
+</li>
 
-db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-  <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'dave@gmail.com'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'David'</span><span class="token punctuation">,</span>
-  <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token number">69</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Ch-Ch-Changes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    
+    <li  class="active" >
+    <a href="/guides/setup-couchdb.html">Setting up CouchDB</a>
+</li>
 
-db<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span><span class="token string">'https://example.com/mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
-      </div>
+
+    
+    
+    <li >
+    <a href="/guides/setup-pouchdb.html">Setting up PouchDB</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/databases.html">Working with databases</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/documents.html">Working with documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/async-code.html">Asynchronous code</a>
+</li>
+
+
+    
+    
+        
+    
+    <li >
+    <a href="/guides/updating-deleting.html">Updating/deleting documents</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/bulk-operations.html">Bulk operations</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/attachments.html">Working with attachments</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/replication.html">Replication</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/conflicts.html">Conflicts</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/changes.html">Changes feed</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/mango-queries.html">Mango queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/queries.html">Map/reduce queries</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/compact-and-destroy.html">Compacting and destroying</a>
+</li>
+
+
+    
+    
+    <li >
+    <a href="/guides/local-documents.html">Local documents</a>
+</li>
+
+
+
+          </ul>
+        </div>
+
+        <div class="col-sm-9" role="main">
+          
+<div class='h2'><div class='anchor-id' id='couchdb-pouchdbs-older-sibling'></div><a class='anchor' href='#couchdb-pouchdbs-older-sibling' name='couchdb-pouchdbs-older-sibling'>CouchDB: PouchDB's older sibling</a></div>
+<p>One of the main benefits of learning PouchDB is that it's exactly the same as CouchDB. In fact, PouchDB is a shameless plagiarist: all of the API methods are the same, with only slight modifications to make it more JavaScript-y.</p>
+<p>For instance, in CouchDB you would fetch all documents using:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">/db/_all_docs?include_docs=true</code></pre></figure><p>In PouchDB this becomes:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">include_docs</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></figure><p>The APIs are the same, and the semantics are the same.</p>
+<p>In the following examples, we will set up CouchDB and talk to it using a tool you're already familiar with: your browser.</p>
+<div class='h2'><div class='anchor-id' id='installing-couchdb'></div><a class='anchor' href='#installing-couchdb' name='installing-couchdb'>Installing CouchDB</a></div>
+<p>If you are on a Debian flavor of Linux (Ubuntu, Mint, etc.), you can install CouchDB as follows.</p>
+<p>First, <a href="https://docs.couchdb.org/en/stable/install/unix.html#enabling-the-apache-couchdb-package-repository">enable the CouchDB package repository</a> on your machine:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">$ sudo apt update && sudo apt install -y curl apt-transport-https gnupg
+$ curl https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | sudo tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1
+source /etc/os-release
+$ echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ ${VERSION_CODENAME} main" \
+    | sudo tee /etc/apt/sources.list.d/couchdb.list >/dev/null</code></pre></figure><p>Next, update your package lists and install CouchDB:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">$ sudo apt-get update
+$ sudo apt-get install -y couchdb</code></pre></figure><p>If you are on a Mac or Windows you should install the official binaries from <a href="https://couchdb.apache.org/#download">the CouchDB web site</a>.</p>
+<h4>A CouchDB alternative: PouchDB Server</h4>
+<p>If you have trouble installing CouchDB, you can also install PouchDB Server, which is a drop-in replacement for CouchDB that uses PouchDB under the hood:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">$ npm install -g pouchdb-server
+$ pouchdb-server --port 5984</code></pre></figure><p>PouchDB Server is currently experimental, and we do not recommend it for production environments.</p>
+<div class='h2'><div class='anchor-id' id='verify-your–installation'></div><a class='anchor' href='#verify-your–installation' name='verify-your–installation'>Verify your installation</a></div>
+<p>Once CouchDB is installed, it should be running at <code>localhost:5984</code>. To verify, you can open up your terminal and type</p>
+<figure class="highlight"><pre data-copybutton><code class="language-">$ curl localhost:5984</code></pre></figure><p>You should see something like:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"couchdb"</span><span class="token operator">:</span><span class="token string">"Welcome"</span><span class="token punctuation">,</span><span class="token string-property property">"version"</span><span class="token operator">:</span><span class="token string">"2.2.0"</span><span class="token punctuation">,</span><span class="token operator">...</span><span class="token punctuation">}</span></code></pre></figure><p>Next, open up <a href="http://localhost:5984/_utils/">http://localhost:5984/_utils/</a> in your browser.</p>
+<p>If you see a screen like the following, then you are ready to rock and roll with CouchDB:</p>
+<p>
+  <a href="/static/img/fauxton.png" target="_blank">
+    <img class="img-responsive"  src="/static/img/fauxton.png" alt="Fauxton interface" />
+  </a>
+</p>
+<div class='h2'><div class='anchor-id' id='set-up-cors'></div><a class='anchor' href='#set-up-cors' name='set-up-cors'>Set up CORS</a></div>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS</a> is a web technology that allows web sites to use resources from another domain. You will want to enable this in your CouchDB before continuing, because otherwise PouchDB will not work unless it's served from exactly the same domain as CouchDB.</p>
+<p>Enabling CORS is easy. Just install this handy script:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-sh">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> add-cors-to-couchdb</code></pre></figure><p>And run it:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-sh">$ add-cors-to-couchdb</code></pre></figure><p>If you installed PouchDB Server, CORS is enabled by default, and this step is not necessary.</p>
+<div class='h2'><div class='anchor-id' id='next'></div><a class='anchor' href='#next' name='next'>Next</a></div>
+<p>Now that you have CouchDB installed, let's install PouchDB.</p>
+
+
+
+
+    
+
+    
+        
+        
+
+        <ul class="pager">
+            
+                <li class="previous">
+                    <a href="/guides/">&larr; Introduction to PouchDB</a>
+                </li>
+            
+            
+                <li class="next">
+                    <a href="/guides/setup-pouchdb.html">Setting up PouchDB &rarr;</a>
+                </li>
+            
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+        <div>
+
     </div>
+
   </div>
-</div>
-<div class="band">
-  <div class="container">
-    <div class='row'>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/node.svg"
-          alt=""
-        />
-        <h3>Cross Browser</h3>
-        <p class="margin-bottom-none-md">Works in Firefox, Chrome, Opera, Safari, IE and Node.js</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/light.svg"
-          alt=""
-        />
-        <h3>Lightweight</h3>
-        <p class="margin-bottom-none-md">PouchDB is just a script tag and 46KB (gzipped) away in the browser, or <code>$ npm install pouchdb</code> away
-        in Node.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/learn.svg"
-          alt=""
-        />
-        <h3>Easy to Learn</h3>
-        <p class="margin-bottom-none-md">Requires some programming knowledge, however PouchDB is a piece of cake to learn.</p>
-      </div>
-      <div class='text-center col-sm-6 col-md-3'>
-        <img
-          class="icon icon-lg"
-          src="/static/img/index/open.svg"
-          alt=""
-        />
-        <h3>Open Source</h3>
-        <p class="margin-bottom-none-md">Everything is developed out in the open on GitHub, contributors always welcome!</p>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="band band-inverse">
-  <div class="container">
-    <h3>Latest</h3>
-        <div class="row">
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2026/04/10/migration-to-nodesqlite.html'>PouchDB has a new adapter - nodesqlite</a></p>
-<div class="post">
-  <div class="media">
-    <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
-    </a>
-    <div class="media-body">
-    <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 10 April 2026<br>
-<p>Hello everyone! PouchDB has a new available adapter for you to use, nodesqlite, that internally uses Node.js's native SQLite module as its persistence layer. This will be, in PouchDB's release
-<a href='/2026/04/10/migration-to-nodesqlite.html'>[...]</a></p>
-<p></p>
-</div></p>
-  </div>
-</div>
-  </div>
-<div class="col-md-6">
-  <p class="margin-bottom-none"><a class='h4' href='/2024/05/24/pouchdb-9.0.0.html'>PouchDB 9.0.0</a></p>
-<div class="post">
-  <div class="media">
-    <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
-    </a>
-    <div class="media-body">
-    <p>
-      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
-      <strong>Published:</strong> 24 May 2024<br>
-<p>The PouchDB developers are delighted to announce the immediate availability of PouchDB 9.0.0. This is a major release with 202 PRs merged since the last version.
-<a href='/2024/05/24/pouchdb-9.0.0.html'>[...]</a></p>
-<p></p>
-</div></p>
-  </div>
-</div>
-  </div>
-   </div>
-<a class="btn btn-primary btn-lg" href="/blog/index.html">View more</a>
-  </div>
-</div>
+</article>
 
     </div>
 

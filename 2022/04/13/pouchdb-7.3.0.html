@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PouchDB 7.3.0</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">PouchDB 7.3.0</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/posts/2022-04-13-pouchdb-7.3.0.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      <div class='band'>
+  <div class='container'>
+    <article role="article">
+      
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+    
+      
+    
+  
+
+
+
+
+<div class="post">
+  <div class="media">
+    <a class="pull-left" href="#">
+    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/da81e745b26ae8ca53fc77538599510f' alt='Alba Herrerías'>
+    </a>
+    <div class="media-body">
+    <p>
+      <strong>By:</strong> <a href="https://twitter.com/alba_dev">Alba Herrerías</a><br>
+      <strong>Published:</strong> 13 April 2022<br>
+      
+    </p>
+    </div>
+  </div>
+</div>
+
+
+      <p>We're happy to announce the release of PouchDB 7.3.0, bringing in features, fixes and dependency updates. For a full changelog from 7.2.2 to 7.3.0, please see <a href="https://github.com/pouchdb/pouchdb/releases">the releases page</a> or view the <a href="https://github.com/pouchdb/pouchdb/compare/7.2.2...7.3.0">latest commits</a>. Some of the highlights:</p>
+<h2>Improving testing</h2>
+<p>We have been investing <em>lots</em> of time into our test suites, with around 36 commits, 112 files changed, 3314 insertions and 2064 deletions made about this topic. We have:</p>
+<ul>
+<li>Migrated from Travis CI to <a href="https://github.com/pouchdb/pouchdb/actions/workflows/ci.yml">Github Actions</a>, which has improved the speed, throughput and reliability of our CI.</li>
+<li>Rewrote <a href="https://github.com/pouchdb/pouchdb/blob/master/TESTING.md">TESTING.md</a> documentation.</li>
+<li>Upgraded eslint configuration in order to use ES6 syntax within our tests. Feel free to incorporate newer syntax (such as <code>async/await</code>) into your new tests contributions.</li>
+<li>Fixed bugs in CI configuration: ADAPTERS and GREP variables weren't working correctly, background servers being started incorrectly, build failure caused by an older version of pouchdb-express-router.</li>
+<li>Unified the configuration variables used in the build.</li>
+<li>Fix the majority of non-deterministic tests to substantially reduce random failure during CI runs, and put in tooling for retrying failed tasks. This includes improving tests that check behaviour for unreachable servers, which previously relied on a third party service being available.</li>
+<li>Restructured the CI tasks so that each task exercises a single backend (i.e. CouchDB server version or client-side PouchDB adapter), rather than some combination of local and remote adapters. This reduces the impact of flaky tests, reduces the duration of each task, reduces redundant tasks repeating the same work, and allows more parallelisation of tests.</li>
+<li>Improved the test coverage across target platforms, including cross-browser tests, different Node.js versions, and different CouchDB versions. We have fixed tests that assume CouchDB v1.x behaviour so that they now work on v2.x and v3.x.</li>
+<li>Allowed the indexeddb adapter to be loaded and used during tests</li>
+</ul>
+<h2>Add <code>indexeddb</code> adapter in the default distribution</h2>
+<p>The indexeddb adapter is now available in the default distribution. You can use it specifying the adapter:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-indexeddb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'indexeddb'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Please note that it is considered BETA quality, use it carefully and please <a href="https://github.com/pouchdb/pouchdb/issues/new">report</a> any issues you find. Thank you.</p>
+<h2>Add <code>view_update_changes_batch_size</code></h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8320">#8320</a> With <code>view_update_changes_batch_size</code>, we can now specify how many change records will be consumed at a time when rebuilding view indexes when the <code>query()</code> method is used.</p>
+<h2>Support <code>partial_filter_selector</code></h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8276">#8276</a> <a href="https://github.com/pouchdb/pouchdb/pull/8277">#8277</a> Now PouchDB-find supports <a href="https://docs.couchdb.org/en/3.2.0/api/database/find.html#partial-indexes"><code>partial_filter_selector</code></a>.</p>
+<h2>Indexing event to show the progress of view updates</h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8321">#8321</a> We can now subscribe to an <code>indexing</code> event, which will emit a <code>progress</code> object containing the properties <code>view</code>, <code>last_seq</code>, <code>results_count</code> and <code>indexed_docs</code>.</p>
+<h2>Checkpoint events during replication</h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8324">#8324</a> During replication, we can subscribe to <code>checkpoint</code> events, which will emit the following properties: <code>checkpoint</code>, <code>revs_diff</code>, <code>start_next_batch</code> and <code>pending_batch</code>.</p>
+<h2>Add <code>style</code> to replication options</h2>
+<p><a href="https://github.com/pouchdb/pouchdb/issues/8380">#8380</a> <a href="https://github.com/pouchdb/pouchdb/issues/8379">#8379</a> We expose changes feed <code>style</code> to replication options.</p>
+<h2>Add <code>view_adapter</code> option</h2>
+<p><a href="https://github.com/pouchdb/pouchdb/pull/8335">#8335</a> <code>view_adapter</code> provides an option for the user to specify a separate adapter to store their view index in addition to the main adapter for their core data:</p>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token constant">DB_NAME</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'indexeddb'</span><span class="token punctuation">,</span> <span class="token literal-property property">view_adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h2>Enable discussions and projects</h2>
+<p>In Github we have enabled:</p>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/discussions">Discussions</a>: feel free to open and participate</li>
+<li><a href="https://github.com/orgs/pouchdb/projects?type=beta">Projects</a>: we are keeping track of the issues and PRs for future releases.</li>
+</ul>
+<h2>Changelog</h2>
+<h3>New features</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7cc1c8e397a471ca0d107cadec486d589535dd0d">7cc1c8e3</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8171">#8171</a>) - Allow <code>_access</code> field in documents</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b359d78836f86a8045761361447a2aa7b162944b">b359d788</a> Let caller set the change batch size when updating views (<a href="https://github.com/pouchdb/pouchdb/pull/8320">#8320</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a9e2996b3739880bc600bb13a75aeaacb3d76878">a9e2996b</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8277">#8277</a>) - Support <code>partial_filter_selector</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0875b19acd96f066717ec41367e82838d8eb6bb3">0875b19a</a> Add an indexing event to show progress of view updates</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/fe9bd0281707fc91f598724211af4af56cc6707a">fe9bd028</a> Add checkpoint events during replication</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b523a1d2775ca06fb72e9a12c9cab757de6200de">b523a1d2</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8379">#8379</a>) - Expose changes feed style to replication options (<a href="https://github.com/pouchdb/pouchdb/pull/8380">#8380</a>)</li>
+<li>(<a href="https://github.com/pouchdb/pouchdb/pull/8335">#8335</a>) Add view adapter option</li>
+</ul>
+<h3>Bugfixes</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b8d3fc65377b65a1945ae3c7a753d62739b3d918">b8d3fc65</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8229">#8229</a>) - indexeddb: ensure errors are propagated and handle database deletion</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/fe7ffa9cf7306baf74856b74cf7734ebafac25d0">fe7ffa9c</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8237">#8237</a>) - Conform pouchdb find operators to couchdb's (<a href="https://github.com/pouchdb/pouchdb/pull/8327">#8327</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0e27e23f4437bce134d0780a543f08a3020fa4de">0e27e23f</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8222">#8222</a>) - fix multiple $regex conditions on same field when using $and</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ab451d9e1d190627c6375a5babbf4f001ae448c1">ab451d9e</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8165">#8165</a>) - Initial dollar sign escaped with unit tests.</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f544c8221a82fc4b6f6714da3a59530dd0041d56">f544c822</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8242">#8242</a>) - unhandled promise rejection in upsert</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/62dd11bf3ef9365d7013e8c4ac1a788d279f3f2d">62dd11bf</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8185">#8185</a>) - Fix date checking</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a6a34357e18c8abee524e1f35c0c3d481492966e">a6a34357</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8187">#8187</a>) - Don't include leveldown in browsers</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9bf131092bdc3003ab1682bb17d3ed30be93b30e">9bf13109</a> (<a href="https://github.com/pouchdb/pouchdb/issues/7331">#7331</a>) - Close leveldb file handlers</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/be55391bf9f69830d0c0d7854e17cb50087272ca">be55391b</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8274">#8274</a>) - rev() should clone only when needed</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/8377ae00476aca98ad607b17e32e6853a85bdb77">8377ae00</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8316">#8316</a>) - Properly handle transaction abort</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c4aaf255f86938c7c3e41048cc3e8c1f45d359b6">c4aaf255</a> Fix escaping of key path segments in indexeddb adapter (<a href="https://github.com/pouchdb/pouchdb/pull/8358">#8358</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/77d9782afbc1bbf83f232d7f283677f5693d146e">77d9782a</a> Fix memory leak when replications fails</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/73a9bad44f9ee36c059b15eea8a70d25a3ddb007">73a9bad4</a> fix: add <code>auto_compaction</code> to indexeddb bulkDocs</li>
+<li>(<a href="https://github.com/pouchdb/pouchdb/pull/8460">#8460</a>) Fix writing erroneous attachment rev references in bulkDocs</li>
+<li>(<a href="https://github.com/pouchdb/pouchdb/issues/8370">#8370</a>) Implement skip and limit for keys query <a href="https://github.com/pouchdb/pouchdb/pull/8404">#8404</a></li>
+<li>(<a href="https://github.com/pouchdb/pouchdb/pull/8473">#8473</a>) Add stack to CustomPouchError (fix <a href="https://github.com/pouchdb/pouchdb/issues/8372">#8372</a>)</li>
+<li>(<a href="https://github.com/pouchdb/pouchdb/pull/8473">#8473</a>) Add idb global database failure error as reason to transaction errors <a href="https://github.com/pouchdb/pouchdb/pull/8414">#8414</a></li>
+</ul>
+<h3>Documentation</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d37fc6da659a9093451c9c2f4c1e134b7c305b91">d37fc6da</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8212">#8212</a>) - Fix broken link to levelDB website</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ab97b853d8d0670b8815050f7bcf331e52fb82b3">ab97b853</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8201">#8201</a>) - Add indexeddb adapter option</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b3eaf791608c9db964d2445ea51c79fbc4215001">b3eaf791</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8259">#8259</a>) - Change link to firefox addon for deleting data</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f703887fd46fcb9498ed4e5c924cab6dfbd958e7">f703887f</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8269">#8269</a>) - Fix link to CouchDB docs related to views collation</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a5a920c9d325ff2e1c65149605193b2dfe8dbb63">a5a920c9</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8267">#8267</a>) - Add pouchdb-adapter-hyperbee</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d6203248db74030cd09c11d7833aea0da42c2814">d6203248</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8292">#8292</a>) - Add Newt image</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ef0a2c6b25bb556ae7126e684acbdf0365225763">ef0a2c6b</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8292">#8292</a>) - Add Newt to Who's Using PouchDB (https://newt.to)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7532eb30f514d37b94f829ed22e70da7f3c1ed3a">7532eb30</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8261">#8261</a>) - Bump redcarpet from 3.5.0 to 3.5.1 in /docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c3f066930c62045783e7c0f51f9cfb690104d595">c3f06693</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8279">#8279</a>) - Bump kramdown from 2.3.0 to 2.3.1 in /docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/91b4136097d577400061db23e087289083ce708a">91b41360</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8295">#8295</a>) - Bump rexml from 3.2.4 to 3.2.5 in /docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/09a26ba9d5d0132af47b6ac90afd52bfff3663c7">09a26ba9</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8301">#8301</a>) - Update overview.html</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/8b3ed08952b314236b1c7ce0f87abeca27478d6f">8b3ed089</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8328">#8328</a>) - Bump addressable from 2.7.0 to 2.8.0 in /docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a7b9b8c327da1f641d6fd3269149fb2c6df4b016">a7b9b8c3</a> update IRC links</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/40cf3dac5ce54fcf879fa6a1bfbddab496803ede">40cf3dac</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8354">#8354</a>) - Docs: Update couchdb setup guide (<a href="https://github.com/pouchdb/pouchdb/pull/8355">#8355</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a33bc407407f97b9f2382db364f9e49a0fa03b62">a33bc407</a> Reorganise the testing documentation</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/349ca75e75a703128a2f48a2d854a25a2c9948c3">349ca75e</a> docs: Fix a few typos</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/0ad477023493284a0b0ee3c300ea5fad59ddf88b">0ad4770</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8474">#8474</a>) feat(docs) document the <code>partial_filter_selector</code> option to createIndex()</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/a44ae12431c0c32fb74035ad0f407bd26662721d">a44ae12</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8474">#8474</a>) feat(docs) add documentation for the indexing event</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1c3ac7063b8e7c2ac2d26dbff517399528ede19a">1c3ac70</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8474">#8474</a>) feat(docs) add documentation for the checkpoint event</li>
+</ul>
+<h3>Testing</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/04d2a45872d11e57e25fd1bfdaa0011234ac1fb6">04d2a458</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8227">#8227</a>) - Remove saucelabs test runs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/095ada4f50a88ec09b417c21a57e76d3e204d6ac">095ada4f</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8319">#8319</a>) - Fix node build ordering</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/451e7ec426f3f90bd72d9cbf426707d7f170042f">451e7ec4</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8325">#8325</a>) - Reduce the number of travis runs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1e6cfa1a3652e90952920670fa3a958ea099563d">1e6cfa1a</a> Update indexing event test to use async/await instead of callbacks</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/9f5da871ac5748bca187f97b3926326cdbddcce5">9f5da871</a> Update checkpoint event test to use async/await instead of callbacks</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2218ed1ca6f47ef30a0e304a7ae39cbb64f81be8">2218ed1c</a> Parse query string into an object in webrunner.js</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b39b98f796fb84a0e32e3e61265d8cf7497b7402">b39b98f7</a> Load adapters as plugins only if they are present in <code>packages/node_modules/pouchdb/dist</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/731a83ba39a8aac5c46f991614b922a1c74c8353">731a83ba</a> Remove the ADAPTER variable from the browser test scripts and update CI config and docs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7a8ff25f4b8e8ab96f7172b87b222edba30b5668">7a8ff25f</a> Replace remaining uses of ADAPTER in tests with ADAPTERS</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/efa56c8ca1a0a5e78671d73405a2684ff407180c">efa56c8c</a> Turn indexeddb into a plugin and make it loadable via the ADAPTERS option</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6c5d601a07c29afcf824af0fca0c6c5ca0fdf911">6c5d601a</a> Run &quot;find&quot; tests against a single implementation at a time (<a href="https://github.com/pouchdb/pouchdb/pull/8359">#8359</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4a9562d2897d7639fe11828a6d4ba28a85985a43">4a9562d2</a> Quote arguments to mocha(1) to make GREP work correctly (<a href="https://github.com/pouchdb/pouchdb/pull/8363">#8363</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d9edb532332afbcbcbc5b1de6ff39934ae3f6927">d9edb532</a> Fix mapreduce tests (<a href="https://github.com/pouchdb/pouchdb/pull/8365">#8365</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/453dd3e6e5265d810cdc7b7d3212fa58bf2f503b">453dd3e6</a> Consistent loading of PouchDB in tests (<a href="https://github.com/pouchdb/pouchdb/pull/8366">#8366</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/18c74c3ed066e0bacc42ed12f7fa6e37d3c42ba1">18c74c3e</a> Migrate CI to GitHub Actions (<a href="https://github.com/pouchdb/pouchdb/pull/8368">#8368</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/55b5ee5b8d7f9c55112a490410d7acda810c1612">55b5ee5b</a> Add test for broken skip in pouch-find (<a href="https://github.com/pouchdb/pouchdb/pull/8371">#8371</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/566502c7ab20acd981bb87037a11f57a2853f3e1">566502c7</a> fix(test): skip test setup and assertions were wrong</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/07376dedf574008ad7a07fc94650a8aebc1cc38a">07376ded</a> chore(test): uncomment test for future fix</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/45413a6e5b9c6d549a24e1b939be74fb39e67c62">45413a6e</a> chore: rename build node variable</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c0771a7d7ad1e4bc0af63e4f3a2c099fb323a1c4">c0771a7d</a> fix: skip building node on webpack tests</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1fc976f718883ee5f195f058261f3b6862b7db0e">1fc976f7</a> Add webpack test to github actions</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/469a49380f6d331d67af18c61df642505dbd6eab">469a4938</a> Fix mapreduce tests that assume bulkDocs() response order, which pouchdb-server does not guarantee</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/fc7f685509839152a5509efb45b904c7ad2e4656">fc7f6855</a> Test for non-string values for <code>views.*.map</code> should pass on more recent CouchDB versions which do not reject the design doc on write, but fail on queries instead</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/5b0903cbaa08c2be0fcb9dd26376e94a9a902b52">5b0903cb</a> Add missing &quot;npm test&quot; command in mapreduce CI tasks</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ea46e5a84029a7e8788926626432e624913f5a57">ea46e5a8</a> Run integration tests on Node.js, and with the memory adapter, and use ADAPTERS (plural) to set the adapter</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/423124c07fd989af1890123722d509ff869894e8">423124c0</a> Run integration tests against CouchDB and pouchdb-server</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/4040b214e6853c0ca8458b51b1a25d1a9d9544dc">4040b214</a> Add all the combinations for testing the pouchdb-find plugin to the CI matrix</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6893afd5089fcc99c720d483cc3b1e806f890a44">6893afd5</a> Build pouchdb-server correctly during tests on GitHub Actions</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d39126875c237c21e7001cb072ac4b14409b9842">d3912687</a> Refactor the GitHub actions workflows</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ac7bcc6532700071178fed3d0416c38058133477">ac7bcc65</a> Do not run eslint after all tests, but make it a distinct task that other CI jobs depend on</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/6786456db080776b31e51a3d275fa6ce5ca3cc3c">6786456d</a> test: add couchdb 2.3 browser matrix</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1ba99d64b8c05f8c7e29394091ae90c4caeb8a03">1ba99d64</a> test: remove debugging logs</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/ad5202985701e5efbf65c3a3b7d615ef12d571b7">ad520298</a> feat: add down server, use it in tests</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/fc690dd42395fa0a8a8940b6a417acd6f096e22e">fc690dd4</a> test: refactor in replication test replicate from down server test</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e7e3eff7436c8ca0514be5fba823fddcec58e9b2">e7e3eff7</a> feat: add retries to failed jobs in gha ci</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/31bc31f89f3dc2616142d8dcfa85fe5d1c56b1f3">31bc31f8</a> fix: node build on tests</li>
+</ul>
+<h3>Dependency updates</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/7b9ae245f10c5e17af8f205c91a7161e2512842c">7b9ae245</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8160">#8160</a>) - fix: upgrade uuid from 8.1.0 to 8.3.0</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/dca61ca149fd5438c156fb917efc6cf0f34a3f63">dca61ca1</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8232">#8232</a>) - Update node-fetch</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3531d136e67ce52d75a8c73c1b314145a8b0a53b">3531d136</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8235">#8235</a>) - fix: upgrade fetch-cookie from 0.10.1 to 0.11.0</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/356d696c31e2d6527cfbd73bd92d852778f24c6a">356d696c</a> (<a href="https://github.com/pouchdb/pouchdb/pull/8254">#8254</a>) - fix: upgrade uuid from 8.3.0 to 8.3.2</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e76f02f96148d69855c592764cde274c3a43f4f0">e76f02f9</a> Upgrade pouchdb-express-router to 0.0.11 to fix sync tests</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/2c93c04faca48958ffadad7ecca43b371a8980f1">2c93c04f</a> chore: remove unused dependency</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/e4bda69ff6b5e6871a11909a5a51afb567dae25e">e4bda69f</a> Revert &quot;chore: remove unused dependency&quot;</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/f42cc235c34f6d40480c36a728f6da7db380b10f">f42cc235</a> fix: upgrade node-fetch from 2.6.1 to 2.6.2 (<a href="https://github.com/pouchdb/pouchdb/pull/8369">#8369</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/cd77102ec4c3cd86b88f1af7e4c81493ff7866ff">cd77102e</a> fix: upgrade node-fetch from 2.6.2 to 2.6.4 (<a href="https://github.com/pouchdb/pouchdb/pull/8377">#8377</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/da0aac831429a826e8ed4180406a93a073e7c3cc">da0aac83</a> chore: upgrade ua-parser-js version (<a href="https://github.com/pouchdb/pouchdb/pull/8424">#8424</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b810edd7255c2d42ad03784d86df8d5fbab12b59">b810edd7</a> chore: remove unused dependency js-extend (<a href="https://github.com/pouchdb/pouchdb/pull/8425">#8425</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/c3333db0c636eb575604b65a1e4d918df192f9ae">c3333db0</a> chore: update eslint to the latest version (8.7.0)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/abf87a848811ae791c82caa37d017081bdedc855">abf87a84</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8440">#8440</a>) - bump node-fetch to 2.6.7 (<a href="https://github.com/pouchdb/pouchdb/pull/8448">#8448</a>)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/3b980f215e4a50ea827e6433f3c38d701e9f6c6a">3b980f21</a> Upgrade dependencies, remove request</li>
+</ul>
+<h3>Other changes</h3>
+<ul>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1ba879709fdf6306dc3f8e9d2d67f4060ade6e50">1ba87970</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8167">#8167</a>) - Revert Jekyll to 3.9.0 to be able to build documentation (+ doc updates)</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/dfdb55e604c9fc87c835d1b7a7f698cca5204fe2">dfdb55e6</a> (<a href="https://github.com/pouchdb/pouchdb/issues/8219">#8219</a>) - Update stale bot configuration</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1a48c5413c14db65f4e485bee60170bd943ad6b3">1a48c541</a> Upgrade eslint ecmaVersion to 8</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/1d8d750059d63ba7dc7171bd256098a3f3c18492">1d8d7500</a> Update issue template's adapters</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d5f47348a09adb8fb0ece9d6ef01e384a5deca44">d5f47348</a> chore: fix eslint running at <code>packages/node_modules</code></li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/d143e02eb96ff78e4599df31a3f7f101830b1db3">d143e02e</a> chore: remove local, unneeded eslint config</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/b1742b1d9373f19d0ad070779839a9d033f2b39d">b1742b1d</a> chore: fix eslint no-prototype-builtins errors</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/41d70ea8cac50c0214aee72cfd5dd731db2e3b05">41d70ea8</a> Update README's build status badge</li>
+<li><a href="https://github.com/pouchdb/pouchdb/commit/dae3e3846b76bbd5c658e84506c40b73cc8a3dee">dae3e384</a> Add or update repository field in package.jsons</li>
+</ul>
+<h2>Get in touch</h2>
+<p>As always, we welcome feedback from the community and would love to hear what you think of this release as well as PouchDB's future direction. Please don't hesitate to <a href="https://github.com/pouchdb/pouchdb/issues">file issues</a>, <a href="https://github.com/pouchdb/pouchdb/discussions">open discussions</a> or <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">get in touch</a>. And of course, a big thanks to all of our <a href="https://github.com/pouchdb/pouchdb/graphs/contributors">new and existing contributors</a>!</p>
+
+    </article>
+  </div>
+</div>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>

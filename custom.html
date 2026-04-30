@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" manifest="/manifest.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Custom Builds</title>
+    <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
+    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="me" href="https://fosstodon.org/@pouchdb" />
+    <meta name="theme-color" content="#6ccb99">
+    <meta name="msapplication-TileColor" content="#6ccb99">
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-42479701-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
+  </head>
+
+  <body data-spy="scroll" data-target="#sidebar">
+
+    <header role="banner">
+
+      <a
+        href="https://github.com/apache/pouchdb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+         <div class="ribbon">GitHub</div>
+      </a>
+
+      <div class="container">
+
+        <a class="logo" href="/">
+          <div class="logo-img"></div>
+          <span class='sr-only'>PouchDB</span>
+        </a>
+
+        <ul class='nav nav-header nav-pills' role="navigation">
+          <li>
+            <a class='btn btn-link btn-lg' href="/blog/">Blog</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/guides/">Guides</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/api.html">API</a>
+          </li>
+          <li>
+            <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
+          </li>
+          <li>
+            <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
+          </li>
+        </ul>
+
+      </div>
+
+    </header>
+    
+      <div class="band band-inverse">
+
+        <div class="container">
+
+          <h1 class="margin-bottom-none">Custom Builds</h1>
+          
+            <span class="h1 margin-bottom-none">
+              
+<a
+  data-toggle="tooltip"
+  data-placement="top"
+  title="Edit this on Github"
+  class="icon-edit"
+  href="https://github.com/apache/pouchdb/edit/master/docs/custom.md"
+  target="_blank"
+></a>
+
+            </span>
+          
+          
+
+        </div>
+
+      </div>
+    
+
+    <div role="main">
+      
+<article class="band">
+  <div class="container">
+    <div class="row">
+        <div id="sidebar" class="col-sm-3 nav-sidebar-wrapper">
+          <ul class="nav nav-silent nav-sidebar" role="navigation">
+            <li >
+    <a href="/learn.html">About</a>
+</li>
+
+<li >
+    <a href="/download.html">Download</a>
+</li>
+
+<li >
+    <a href="/users.html">Who's using PouchDB?</a>
+</li>
+
+<li >
+    <a href="/getting-started.html">Get Started Guide</a>
+</li>
+
+<li >
+    <a href="/api.html">API</a>
+</li>
+
+<li >
+    <a href="/adapters.html">Adapters</a>
+</li>
+
+<li  class="active" >
+    <a href="/custom.html">Custom Builds</a>
+</li>
+
+<li >
+    <a href="/external.html">Plugins</a>
+</li>
+
+<li >
+    <a href="/faq.html">FAQ</a>
+</li>
+
+<li >
+    <a href="/errors.html">Common Errors</a>
+</li>
+
+
+          </ul>
+        </div>
+
+        <div class="col-sm-9" role="main">
+          <p>PouchDB supports custom builds, meaning you can pick and choose the features of
+PouchDB that you want to use, potentially resulting in smaller bundle sizes
+and faster build times.</p>
+<p>PouchDB exposes its custom builds via separate packages available on npm. All of
+these packages follow the format <code>pouchdb-&lt;name&gt;</code> and can be installed using <code>npm install</code>.</p>
+<p>Some packages are included by default in the main <code>pouchdb</code> package, whereas
+others (including third-party packages) must be installed separately.</p>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p>Custom builds require an <a href="http://npmjs.com/">npm</a>-based build system, using a bundler
+like <a href="http://browserify.org/">Browserify</a>, <a href="http://webpack.github.io/">Webpack</a>, <a href="https://github.com/systemjs/systemjs">SystemJS</a>, <a href="http://rollupjs.org/">Rollup</a>, or <a href="http://jspm.io/">JSPM</a>. Tools like
+<a href="http://bower.io">Bower</a>, as well as direct download of prebuilt JavaScript files, are not supported.</p>
+</div></div>
+<p>PouchDB packages come in three flavors: <em>presets</em>, <em>plugins</em>, and
+<em>utilities</em>.</p>
+<p><strong>Presets</strong> are a collection of plugins, which expose a <code>PouchDB</code> object that is ready to be used.</p>
+<p><strong>Plugins</strong> are features that can be added to a <code>PouchDB</code> instance using the <code>PouchDB.plugin()</code>
+API.</p>
+<p><strong>Utilities</strong> are grab-bags of helper functions, and are only recommended for advanced use cases.</p>
+<h4>Quick links</h4>
+<ul>
+<li><a href="#presets">Presets</a></li>
+<li><a href="#plugins">Plugins</a></li>
+<li><a href="#utilities">Utilities</a></li>
+</ul>
+<div class='h2'><div class='anchor-id' id='presets'></div><a class='anchor' href='#presets' name='presets'>Presets</a></div>
+<p>Presets export a <code>PouchDB</code> object and contain a built-in set of PouchDB
+plugins. You are free to create your own presets, but PouchDB provides a few first-party presets to address common use cases.</p>
+<h3><a href="https://npmjs.org/package/pouchdb-browser">pouchdb-browser</a></h3>
+<p>The <code>pouchdb-browser</code> preset contains the version of PouchDB that is designed
+for the browser. In particular, it ships with the IndexedDB adapter
+as its default adapter. It also contains the replication, HTTP, and map/reduce plugins.</p>
+<p>Use this preset if you only want to use PouchDB in the browser,
+and don't want to use it in Node.js. (E.g. to avoid installing LevelDB.)</p>
+<h4>Example Usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-browser</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-browser'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h4>Source code (simplified)</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-idb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-mapreduce'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-replication'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-node">pouchdb-node</a></h3>
+<p>The <code>pouchdb-node</code> preset contains the version of PouchDB that is designed for
+Node.js. In particular, it uses the LevelDB adapter and doesn't ship with the
+IndexedDB or WebSQL adapters. It also contains the replication, HTTP, and map/reduce plugins.</p>
+<p>Use this preset if you are only using PouchDB in Node, and not in the browser.</p>
+<h4>Example Usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-node</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-node'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h4>Source code (simplified)</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-leveldb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-mapreduce'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-replication'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-core">pouchdb-core</a></h3>
+<p>The <code>pouchdb-core</code> package is a special preset in that it exposes the minimum
+number of APIs. It contains zero plugins and is designed to be used in addition
+with other plugins. By itself, it probably isn't very useful.</p>
+<h4>Example Usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-core</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token comment">/* attach plugins to make me more interesting! */</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='plugins'></div><a class='anchor' href='#plugins' name='plugins'>Plugins</a></div>
+<p>Plugins contain functionality that can be added to a <code>PouchDB</code> instance using <code>PouchDB.plugin()</code>. There are many <a href="/external.html">third-party plugins</a>, but the ones described below are first-party plugins, which are given the same level of support as PouchDB itself. Some first-party plugins are included in the default <code>pouchdb</code> build, whereas others aren't.</p>
+<p>There is also a special type of plugin called an <em>adapter plugin</em>.  Adapter plugins (such as IndexedDB, WebSQL, LevelDB, and HTTP) determine the storage format that
+PouchDB uses. For the non-HTTP adapters, the plugin order matters, i.e. if you
+want IndexedDB to be preferred to WebSQL, then you should load it first.</p>
+<h3><a href="https://npmjs.org/package/pouchdb-adapter-idb">pouchdb-adapter-idb</a></h3>
+<p>The primary adapter used by PouchDB in the browser, using IndexedDB. The adapter
+name is <code>'idb'</code>.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-idb</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-idb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'idb'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'idb'</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-adapter-websql">pouchdb-adapter-websql</a></h3>
+<p>An adapter used by PouchDB in the browser, using WebSQL. The adapter
+name is <code>'websql'</code>.</p>
+<p>Before PouchDB 7.0.0, this was shipped as a default adapter. As of PouchDB 7.0.0, it must be loaded as a separate plugin.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-websql</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-websql'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'websql'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'websql'</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-adapter-leveldb">pouchdb-adapter-leveldb</a></h3>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>Warning: deprecation notice.</strong> The <code>leveldb</code> adapter will be deprecated in PouchDB version 10.0.0 and removed in version 11.0.0. You can read <a href="https://pouchdb.com/2026/04/10/migration-to-nodesqlite.html">the migration guide here</a> and more about the topic in <a href="https://github.com/apache/pouchdb/issues/9163">this link</a>.</p>
+</div></div>
+<p>The primary adapter used by PouchDB in Node.js, using LevelDB. The adapter name
+is <code>'leveldb'</code>.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-leveldb</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-leveldb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'leveldb'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'leveldb'</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-adapter-http">pouchdb-adapter-http</a></h3>
+<p>The primary adapter used by PouchDB in both Node.js and the browser for communicating
+with external CouchDB (or CouchDB-like) servers.</p>
+<p>This plugin can be added to PouchDB in any order, and is somewhat special in that
+you must pass in a name like <code>'http://...'</code> in order to use it. The adapter name
+is either <code>'http'</code> or <code>'https'</code> depending on the protocol.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-http</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://127.0.0.1:5984/mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'http'</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-adapter-memory">pouchdb-adapter-memory</a></h3>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>Warning: deprecation notice.</strong> The <code>memory</code> adapter will be deprecated in PouchDB version 10.0.0 and removed in version 11.0.0. You can read <a href="https://pouchdb.com/2026/04/10/migration-to-nodesqlite.html">the migration guide here</a> and more about the topic in <a href="https://github.com/apache/pouchdb/issues/9163">this link</a>.</p>
+</div></div>
+<p>An optional adapter that works in the browser and Node.js, fully in-memory. The adapter name
+is <code>'memory'</code>.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-memory</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-memory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'memory'</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-adapter-localstorage">pouchdb-adapter-localstorage</a></h3>
+<p>An optional adapter that works in the browser using LocalStorage. The adapter name
+is <code>'localstorage'</code>.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-localstorage</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-localstorage'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'localstorage'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'localstorage'</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-adapter-node-websql">pouchdb-adapter-node-websql</a></h3>
+<p>An optional adapter that works in Node.js using SQLite via <a href="https://github.com/nolanlawson/node-websql">node-websql</a>. The adapter name
+is <code>'websql'</code>.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-node-websql</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-node-websql'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'websql'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'websql'</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-adapter-indexeddb">pouchdb-adapter-indexeddb</a></h3>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>Warning: experimental.</strong> You probably don't want to use this yet. 😉</p>
+</div></div>
+<p>An experimental next-generation IndexedDB adapter, also known as &quot;idb-next&quot;. Currently not shipped as part of PouchDB. The adapter name is <code>'indexeddb'</code>.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-adapter-indexeddb</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-indexeddb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'indexeddb'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span>adapter<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'indexeddb'</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-find">pouchdb-find</a></h3>
+<p>PouchDB's &quot;Mango&quot; query API, exposed via the <code>find()</code>, <code>listIndexes(), </code>createIndex()<code>, and </code>deleteIndex()` methods. Not shipped by default in PouchDB.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-find</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token comment">/* see API docs for full info */</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-mapreduce">pouchdb-mapreduce</a></h3>
+<p>PouchDB's map/reduce API, exposed via the <code>query()</code> and <code>viewCleanup()</code> methods. Ships by default in PouchDB.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-mapreduce</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-mapreduce'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+db<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token comment">/* see query API docs for full info */</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-replication">pouchdb-replication</a></h3>
+<p>PouchDB's replication API, exposed via the <code>replicate()</code> and <code>sync()</code> methods. Ships by default in PouchDB.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> pouchdb-replication</code></pre></figure><figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-replication'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+db<span class="token punctuation">.</span><span class="token function">replicate</span><span class="token punctuation">(</span><span class="token comment">/* see replicate/sync API docs for full info */</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='utilities'></div><a class='anchor' href='#utilities' name='utilities'>Utilities</a></div>
+<p>These utilities are intended only for advanced users of PouchDB, such as
+third-party plugin authors. Formerly, many of them were exposed via the <code>extras/</code> API, which
+is now deprecated.</p>
+<p>Most of these are internal, and the APIs are not thoroughly documented. You will
+most likely need to read the source code to understand how they work.</p>
+<div class="alert alert-warning">
+<div class="alert-text">
+<p><strong>Warning:</strong> you are entering a semver-free zone.</p>
+<p>In contrast to the presets and plugins listed above, <strong>none of the following packages
+follow semver</strong>. Their versions are pinned to PouchDB's, and may change at any time
+without warning. You are strongly recommended to <strong>use exact versions</strong> when installing these packages.</p>
+</div></div>
+<h3><a href="https://npmjs.org/package/pouchdb-abstract-mapreduce">pouchdb-abstract-mapreduce</a></h3>
+<p>The underlying logic for secondary indexes, as expressed in both <code>pouchdb-mapreduce</code> and <code>pouchdb-find</code>. Both packages use this package under the hood.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-abstract-mapreduce</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-adapter-utils">pouchdb-adapter-utils</a></h3>
+<p>Utilities for PouchDB adapters.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-adapter-utils</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-ajax">pouchdb-ajax</a></h3>
+<p>PouchDB's <code>ajax()</code> function.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-ajax</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-binary-utils">pouchdb-binary-utils</a></h3>
+<p>Utilities for operating on binary strings and Buffers/Blobs.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-binary-utils</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-checkpointer">pouchdb-checkpointer</a></h3>
+<p>Tool to write a checkpoint, e.g. during replication.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-checkpointer</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-collate">pouchdb-collate</a></h3>
+<p>Collation functions for PouchDB map/reduce.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-collate</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-collections">pouchdb-collections</a></h3>
+<p>ES6 shims for Map and Set as used in PouchDB.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-collections</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-errors">pouchdb-errors</a></h3>
+<p>Errors exposed by PouchDB.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-errors</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-generate-replication-id">pouchdb-generate-replication-id</a></h3>
+<p>Function to generate a replication ID to mark progress during replications.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-generate-replication-id</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-json">pouchdb-json</a></h3>
+<p>Utilities for safely stringifying and parsing JSON.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-json</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-mapreduce-utils">pouchdb-mapreduce-utils</a></h3>
+<p>Utilities used by <code>pouchdb-mapreduce</code>.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-mapreduce-utils</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-md5">pouchdb-md5</a></h3>
+<p>Utilities for calculating MD5 checksums.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-md5</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-merge">pouchdb-merge</a></h3>
+<p>PouchDB's CouchDB-style document merge algorithm.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-merge</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-promise">pouchdb-promise</a></h3>
+<p>A <code>Promise</code> object, polyfilled using <code>lie</code> if Promises aren't available globally.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-promise</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-selector-core">pouchdb-selector-core</a></h3>
+<p>The core Mango selector logic, which allows the selector to be used both by <code>pouchdb-find</code> and for filtering/replication.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-selector-core</code></pre></figure><h3><a href="https://npmjs.org/package/pouchdb-utils">pouchdb-utils</a></h3>
+<p>A potpourri of miscellaneous utilities used by PouchDB and its sub-packages.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact pouchdb-utils</code></pre></figure><h3><a href="https://npmjs.org/package/sublevel-pouchdb">sublevel-pouchdb</a></h3>
+<p>Fork of <a href="https://github.com/dominictarr/level-sublevel">level-sublevel</a>
+with only the subset of the API that PouchDB uses.</p>
+<h4>Example usage</h4>
+<figure class="highlight"><pre data-copybutton><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-exact sublevel-pouchdb</code></pre></figure>
+        <div>
+
+    </div>
+
+  </div>
+</article>
+
+    </div>
+
+    <div class="band">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://bsky.app/profile/pouchdb.bsky.social"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/bluesky.svg"
+                alt="PouchDB's Bluesky"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-offset-0 col-md-2">
+            <a
+              href="https://fosstodon.org/@pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/mastodon.svg"
+                alt="PouchDB's Mastodon"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/rvagg/node-levelup"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/leveldb.svg"
+                alt="Node Levelup"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="https://github.com/apache/pouchdb"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/github.svg"
+                alt="PouchDB's Github Repo"
+              />
+            </a>
+          </div>
+
+          <div class="col-xs-4 col-md-2">
+            <a
+              href="http://couchdb.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="icon"
+                src="/static/img/friends/couchdb.svg"
+                alt="CouchDB"
+              >
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="band band-inverse">
+
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Learn</h3>
+            <ul class="nav nav-silent">
+              <li><a href="/getting-started.html">Getting Started</a></li>
+              <li><a href="/api.html">API Guide</a></li>
+              <li><a href="https://github.com/apache/pouchdb/wiki">Wiki</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Discuss</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://bsky.app/profile/pouchdb.bsky.social">Bluesky</a></li>
+              <li><a href="https://fosstodon.org/@pouchdb">Mastodon</a></li>
+              <li><a href="https://github.com/apache/pouchdb/discussions">GitHub Discussions</a></li>
+              <li><a href="https://join.slack.com/t/couchdb/shared_invite/zt-3aqucllea-C92fkzW5oO_VhllRCqFbcw">Slack</a></li>
+              <li><a href="http://stackoverflow.com/questions/tagged/pouchdb">StackOverflow</a></li>
+            </ul>
+          </div>
+
+          <div class="col-sm-3">
+            <h3 class="nav-head">Contribute</h3>
+            <ul class="nav nav-silent">
+              <li><a href="https://github.com/apache/pouchdb/blob/master/CONTRIBUTING.md">Contributing</a></li>
+              <li><a href="https://github.com/apache/pouchdb">Source</a></li>
+              <li><a href="https://github.com/apache/pouchdb/issues">Issues</a></li>
+              <li><a href="https://github.com/apache/pouchdb/blob/master/LICENSE">Apache License</a></li>
+              <li><a href="https://lists.apache.org/list.html?dev@pouchdb.apache.org">Dev Mailing List</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/code.min.js"></script>
+    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
+    <script type="text/javascript">
+      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
+      if ($navSidebarWrapper.length) {
+        $navSidebarWrapper.Stickyfill();
+      }
+      $('[data-toggle="tooltip"]').tooltip();
+      function onCached(e) {
+        if (applicationCache.status === 1) {
+          giveIntro();
+        }
+      }
+
+      function giveIntro() {
+        console.log('%c\n..............................................................................\n.?I...........~+: ............................................................\n.???.........++++.............................................................\n:????+......+++++.............................................................\n.??????+++++++++:.................................H...........D..B............\n...????++++++++...................................H...........D..B............\n...=????++++++.......PPPPP...OOOO...U....U...CCCC.HHHHH...DDDDD..BBBBB........\n...?????+++++++......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n..???????+++++++ ....P. ..P.O....O..U....U.CC.....H...H..D....D..B....B.......\n..?????????????......P...:P.OO...O..U....U..C.....H...H..D....D..B....B.......\n...I??????????~......PPPPP...OOOO...=UUUUU...CCCC.H...H...DDDDD..BBBBB........\n....?????????~.......P.... ...................................................\n.....???????+........P........................................................\n......??????..................................................................\n..............................................................................\n..............................................................................\n..............................................................................', 'color: #4ec084');
+        console.log('%c\nPouchDB itself is hosted at PouchDB.com!\nTo get started, try typing:\nvar db = new PouchDB(\'mydb\');', 'color: #4ec084');
+      }
+      function offerToReload() {
+        $('.js-update-notification')
+          .removeClass('btn-update-hidden')
+          .on('click', function(){
+            window.location.reload();
+          });
+      }
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+          .then(function (registration) {
+            registration.addEventListener('updatefound', function () {
+              var newWorker = registration.installing;
+              registration.installing.addEventListener('statechange', function () {
+                if (newWorker.state == 'installed' && navigator.serviceWorker.controller) {
+                  offerToReload();
+                }
+              });
+            });
+            giveIntro();
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed: ', error);
+          });
+      } else if (window.applicationCache) {
+        applicationCache.addEventListener('cached', onCached, false);
+        applicationCache.addEventListener('noupdate', giveIntro, false);
+        applicationCache.addEventListener('updateready', offerToReload, false);
+      }
+    </script>
+    <button type="button" class="js-update-notification btn btn-primary btn-update btn-update-hidden">
+      Content updated, reload now? ↻
+    </button>
+  </body>
+</html>
