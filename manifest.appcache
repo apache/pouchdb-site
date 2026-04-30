@@ -1,9 +1,10 @@
 
 CACHE MANIFEST
 #
-# rev 2026-04-30T09:26:40.596Z
+# rev 2026-04-30T13:14:15.127Z
 
 CACHE:
+/.asf.yml
 /feed.xml
 
 /serviceWorker.js
