@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Filtered replication&#58; from Couch to Pouch and back</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Filtered replication&#58; from Couch to Pouch and back</h1>
+          <h1 class="margin-bottom-none">Filtered replication&#58; from Couch to Pouch and back
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -166,14 +167,14 @@
 <p>To reproduce the examples you’ll need PouchDB v3.4.0, which contains some bugfixes for filtered replication.</p>
 </div></div>
 <p>The first step in implementing your server-side filtering solution is to create the design document. This is an example:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
    <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"_design/app"</span><span class="token punctuation">,</span>
    <span class="token string-property property">"filters"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
      <span class="token string-property property">"by_agent"</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">doc<span class="token punctuation">,</span> req</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
        <span class="token keyword">return</span> doc<span class="token punctuation">.</span>agent <span class="token operator">===</span> req<span class="token punctuation">.</span>query<span class="token punctuation">.</span>agent<span class="token punctuation">;</span>
      <span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>Filters in CouchDB are like filters as higher-order functions: they take some arguments and return <code>true</code> or <code>false</code>. Note that the function needs to be stringified when you store it!</p>
 <div class="alert alert-info">
 <div class="alert-text">
@@ -185,7 +186,7 @@
 <li><code>filter</code>: can take either the string corresponding to the filter function (see example below), or a JS function (for client-side filtering).</li>
 <li><code>query_params</code>: takes a JS object. This object is what we find in the <code>req.query</code> object inside the design document function. Just what we need!</li>
 </ul>
-<figure class="highlight"><pre data-copybutton><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
   <span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
   <span class="token literal-property property">retry</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
   <span class="token literal-property property">filter</span><span class="token operator">:</span> <span class="token string">'app/by_agent'</span><span class="token punctuation">,</span>
@@ -196,7 +197,7 @@
   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
     <span class="token comment">// upsert</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>We're doing a two-way replication (from Couch to Pouch and back), using a filter (in our faithful design document) all in real-time (see <code>live</code> and <code>retry</code> options). Couch will give us a batch of documents from the <code>_changes</code> feed, which we then iterate and manage according to our needs.</p>
 <h3>Caveats</h3>
 <p>Now, this looks easy, and it is, but there are a few gotchas:</p>
@@ -214,22 +215,22 @@ present. This will ensure that the filter will propagate deletions properly.</p>
 </blockquote>
 <p>In PouchDB, this corresponds to <code>put()</code>ing a document with <code>_deleted: true</code>, rather than <code>remove()</code>ing it.</p>
 <p>The next gotcha deserves a bit more space. I find it very counter-intuitive, and my guess is that you'll feel the same. Since you're interested in two-way replication, you want the client to not only read data, but write data as well. What you expect is that saves on the local database will get replicated to the remote database. Let's look at some code:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function-variable function">save</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">foobar</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function-variable function">save</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">foobar</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> localDB<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>foobar<span class="token punctuation">.</span>_id<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     doc<span class="token punctuation">.</span>someNiceField <span class="token operator">=</span> foobar<span class="token punctuation">.</span>someNiceField<span class="token punctuation">;</span>
     <span class="token keyword">return</span> localDB<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>
 <p>In ORM parlance, this is a &quot;connected scenario&quot; update. You retrieve the document from the local database, you change the fields you need to change, then you put it back into the local database.</p>
 <p>If you followed this post step-by-step, however, this won't work. Why? To make two-way filtered replication work, the design document needs to be in both the remote database and the local database. To do this, we might decide to simply replicate the design document alongside the other documents. Hence our design document becomes:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"_design/app"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"filters"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token string-property property">"by_agent"</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">doc<span class="token punctuation">,</span> req</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token keyword">return</span> doc<span class="token punctuation">.</span>_id <span class="token operator">===</span> <span class="token string">'_design/app'</span> <span class="token operator">||</span> doc<span class="token punctuation">.</span>agent <span class="token operator">===</span> req<span class="token punctuation">.</span>query<span class="token punctuation">.</span>agent<span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>It is enough to have it stored locally; Pouch will handle the rest. The downside is that now we need to remember to handle the design document, by not letting it mingle with the documents needed in the UI.</p>
 <p>If you feel you'd rather keep the filter function clean and not worry about filtering the design document itself, then you could also have two different design documents by the same id, one in Couch and one in Pouch, not replicating.</p>
 <h3>Conclusion</h3>
@@ -370,13 +371,8 @@ present. This will ensure that the filter will propagate deletions properly.</p>
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

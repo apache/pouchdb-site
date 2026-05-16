@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mango queries</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Mango queries</h1>
+          <h1 class="margin-bottom-none">Mango queries
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -232,65 +233,76 @@
 <div class='h2'><div class='anchor-id' id='installation'></div><a class='anchor' href='#installation' name='installation'>Installation</a></div>
 <p>The <code>find()</code> API is currently offered as a separate plugin, meaning that you must install it on top of <code>pouchdb.js</code>. Here's how to do so:</p>
 <h3>Script tags</h3>
-<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.find.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><p>The <code>pouchdb.find.js</code> file is available in the <code>pouchdb</code> package in npm/Bower, on <a href="https://unpkg.com/pouchdb/dist/">unpkg</a>, or <a href="https://github.com/apache/pouchdb/releases/download/9.0.0/pouchdb.find.js">as a GitHub download</a>. Note it must be placed after <code>pouchdb.js</code>.</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb.find.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre>
+<p>The <code>pouchdb.find.js</code> file is available in the <code>pouchdb</code> package in npm/Bower, on <a href="https://unpkg.com/pouchdb/dist/">unpkg</a>, or <a href="https://github.com/apache/pouchdb/releases/download/9.0.0/pouchdb.find.js">as a GitHub download</a>. Note it must be placed after <code>pouchdb.js</code>.</p>
 <h3>npm</h3>
 <p>If you are using Node, Browserify, Webpack, Rollup, etc., then you can install it like so:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-sh"><span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">--save</span> pouchdb-find</code></pre></figure><p>Then in code:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='query-language'></div><a class='anchor' href='#query-language' name='query-language'>Query language</a></div>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">--save</span> pouchdb-find</code></pre>
+<p>Then in code:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<div class='h2'><div class='anchor-id' id='query-language'></div><a class='anchor' href='#query-language' name='query-language'>Query language</a></div>
 <p>The <a href="https://github.com/cloudant/mango">Mango query language</a> is a DSL inspired by MongoDB, which allows you to define an index that is then used for querying. One quick way to understand how this works is to use the <a href="https://nolanlawson.github.io/pouchdb-find/">live query demo</a>.</p>
 <p>At a basic level, there are two steps to running a query: <code>createIndex()</code> (to define which fields to index) and <code>find()</code> (to query the index).</p>
 <p>For instance, let's imagine a simple index to look up all documents whose <code>name</code> is <code>&quot;mario&quot;</code>. First we'll create it:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This returns a Promise that resolves once the index is created. At this point, we have an index based on the <code>&quot;name&quot;</code> field, so we can use it for lookup:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This returns a Promise that resolves once the index is created. At this point, we have an index based on the <code>&quot;name&quot;</code> field, so we can use it for lookup:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'mario'</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This returns a Promise containing an array of all documents that match this selector. Note that this is equivalent to using the <code>$eq</code> (equals) operator:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This returns a Promise containing an array of all documents that match this selector. Note that this is equivalent to using the <code>$eq</code> (equals) operator:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$eq</span><span class="token operator">:</span> <span class="token string">'mario'</span><span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>The important thing to understand is that, for a typical database, <code>createIndex()</code> is the expensive operation, because it is looping through all documents in the database and building a <a href="https://en.wikipedia.org/wiki/B-tree">B-tree</a> based on the <code>name</code> value.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>The important thing to understand is that, for a typical database, <code>createIndex()</code> is the expensive operation, because it is looping through all documents in the database and building a <a href="https://en.wikipedia.org/wiki/B-tree">B-tree</a> based on the <code>name</code> value.</p>
 <p>Once the B-tree is built up, though, the <code>find()</code> is relatively cheap. (If this were <em>not</em> the case, then we would be better off just using <code>allDocs()</code> to iterate through the database ourselves!)</p>
 <p>Once we have an index on <code>name</code>, we can also sort all documents by <code>name</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gte</span><span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token literal-property property">sort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Note that we are specifying that the <code>name</code> must be greater than or equal to <code>null</code>, which is a workaround for the fact that the Mango query language requires us to have a selector. In <a href="https://docs.couchdb.org/en/stable/ddocs/views/collation.html">CouchDB collation order</a>, <code>null</code> is the &quot;lowest&quot; value, and so this will return all documents regardless of their <code>name</code> value.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Note that we are specifying that the <code>name</code> must be greater than or equal to <code>null</code>, which is a workaround for the fact that the Mango query language requires us to have a selector. In <a href="https://docs.couchdb.org/en/stable/ddocs/views/collation.html">CouchDB collation order</a>, <code>null</code> is the &quot;lowest&quot; value, and so this will return all documents regardless of their <code>name</code> value.</p>
 <div class='h2'><div class='anchor-id' id='pagination'></div><a class='anchor' href='#pagination' name='pagination'>Pagination</a></div>
 <p>Reading all documents in the database and sorting them by a particular value is neat, but we could do this ourselves with <code>allDocs()</code>, and it would have the same performance impact. Where it gets more interesting is when we use <code>limit</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gte</span><span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token literal-property property">sort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token literal-property property">limit</span><span class="token operator">:</span> <span class="token number">10</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In this case, we only get 10 documents back, but they are the first 10 documents, sorted by name. This means that we have only read 10 documents out of the database into memory, which can be used for <a href="/2014/04/14/pagination-strategies-with-pouchdb.html">efficient pagination</a>.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>In this case, we only get 10 documents back, but they are the first 10 documents, sorted by name. This means that we have only read 10 documents out of the database into memory, which can be used for <a href="/2014/04/14/pagination-strategies-with-pouchdb.html">efficient pagination</a>.</p>
 <p>For instance, if we are displaying the first 10 results on a single page, and the user clicks &quot;next&quot; to see the next page, we can restructure our query based on the last result, to continue the pagination. Let's imagine the first 10 documents' <code>name</code>s are:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">[</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">[</span>
   <span class="token string">'abby'</span><span class="token punctuation">,</span> <span class="token string">'bertrand'</span><span class="token punctuation">,</span> <span class="token string">'clarice'</span><span class="token punctuation">,</span> <span class="token string">'don'</span><span class="token punctuation">,</span> <span class="token string">'emily'</span><span class="token punctuation">,</span>
   <span class="token string">'fumiko'</span><span class="token punctuation">,</span> <span class="token string">'gunther'</span><span class="token punctuation">,</span> <span class="token string">'horatio'</span><span class="token punctuation">,</span> <span class="token string">'ike'</span><span class="token punctuation">,</span> <span class="token string">'joy'</span>
-<span class="token punctuation">]</span></code></pre></figure><p>For our next 10 pages of results, the query becomes:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<span class="token punctuation">]</span></code></pre>
+<p>For our next 10 pages of results, the query becomes:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token string">'joy'</span><span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token literal-property property">sort</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token literal-property property">limit</span><span class="token operator">:</span> <span class="token number">10</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Because we are now specifying that the <code>name</code> must be greater than <code>'joy'</code>, we are guaranteed to get the next-highest result after <code>'joy'</code>, which may (for instance) look like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">[</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Because we are now specifying that the <code>name</code> must be greater than <code>'joy'</code>, we are guaranteed to get the next-highest result after <code>'joy'</code>, which may (for instance) look like this:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">[</span>
   <span class="token string">'kim'</span><span class="token punctuation">,</span> <span class="token string">'lin'</span><span class="token punctuation">,</span> <span class="token string">'maria'</span><span class="token punctuation">,</span> <span class="token string">'nell'</span><span class="token punctuation">,</span> <span class="token string">'oliver'</span><span class="token punctuation">,</span>
   <span class="token string">'pat'</span><span class="token punctuation">,</span> <span class="token string">'quincy'</span><span class="token punctuation">,</span> <span class="token string">'roy'</span><span class="token punctuation">,</span> <span class="token string">'sam'</span><span class="token punctuation">,</span> <span class="token string">'tanya'</span>
-<span class="token punctuation">]</span></code></pre></figure><p>In this way, we can continue paginating by using the last value as our next starting point. At any given point in time, there are only 10 documents stored in memory at once, which is great for performance.</p>
+<span class="token punctuation">]</span></code></pre>
+<p>In this way, we can continue paginating by using the last value as our next starting point. At any given point in time, there are only 10 documents stored in memory at once, which is great for performance.</p>
 <div class='h2'><div class='anchor-id' id='more-than-one-field'></div><a class='anchor' href='#more-than-one-field' name='more-than-one-field'>Indexing on more than one field</a></div>
 <p>Sometimes an index is not as simple as &quot;find all documents whose <code>name</code> is <code>&quot;mario&quot;</code>. Sometimes you want to do something fancy, such as &quot;find all documents whose <code>name</code> is <code>&quot;mario&quot;</code> and whose <code>age</code> is greater than <code>21</code>&quot;. In those cases, you can index on more than one field:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'age'</span><span class="token punctuation">]</span>
   <span class="token punctuation">}</span>
@@ -301,8 +313,9 @@ PouchDB<span class="token punctuation">.</span><span class="token function">plug
       <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>One thing to note is that the order of these fields matters when creating your index. For instance, the following would <em>not</em> work:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">/* THIS WON'T WORK! */</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>One thing to note is that the order of these fields matters when creating your index. For instance, the following would <em>not</em> work:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">/* THIS WON'T WORK! */</span>
 db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'age'</span><span class="token punctuation">,</span> <span class="token string">'name'</span><span class="token punctuation">]</span>
@@ -314,7 +327,8 @@ db<span class="token punctuation">.</span><span class="token function">createInd
       <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>The reason for this is easy to understand if we imagine how this index would sort a hypothetical database:</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>The reason for this is easy to understand if we imagine how this index would sort a hypothetical database:</p>
 <div class="table-responsive">
 <table class="table">
 <tr>
@@ -412,7 +426,7 @@ db<span class="token punctuation">.</span><span class="token function">createInd
 <p>The Mango query language is generally very permissive, and allows you to write queries that may not perform very well, but will run regardless. For instance, you may create an index with <code>createIndex()</code>, but then write a <code>find()</code> query that doesn't actually use that index. In general, the query planner tries to find the most appropriate index, but it may fall back to in-memory querying.</p>
 <p>As a straightforward example, if you query using the <code>_id</code> field, then the query planner will automatically map that directly to an <code>allDocs()</code> query. However, if you query for a field that isn't yet indexed, then it will simply use <code>allDocs()</code> to read in all documents from the database (!) and then filter in-memory. This can lead to poor performance, especially if your database is large.</p>
 <p>If you're ever wondering how the query planner is interpreting your query, you can use the explain endpoint:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">explain</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">explain</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">selector</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'mario'</span><span class="token punctuation">,</span>
     <span class="token literal-property property">age</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token literal-property property">$gt</span><span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">}</span>
@@ -420,15 +434,18 @@ db<span class="token punctuation">.</span><span class="token function">createInd
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
 <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">explained</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// detailed explained info can be viewed</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In the console, the query planner will show a detailed explanation of how it has interpreted the query, whether it uses any indexes, and whether any parts of the query need to be executed in-memory.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>In the console, the query planner will show a detailed explanation of how it has interpreted the query, whether it uses any indexes, and whether any parts of the query need to be executed in-memory.</p>
 <p>You may also want to pay attention to the <code>&quot;warning&quot;</code> value included in your results set, indicating that there was no index that matched the given query. For instance, the warning may look like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"docs"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token comment">/* ... */</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token string-property property">"warning"</span><span class="token operator">:</span> <span class="token string">"No matching index found, create an index to optimize query time."</span>
-<span class="token punctuation">}</span></code></pre></figure><div class='h2'><div class='anchor-id' id='use_index'></div><a class='anchor' href='#use_index' name='use_index'>Set which index to use</a></div>
+<span class="token punctuation">}</span></code></pre>
+<div class='h2'><div class='anchor-id' id='use_index'></div><a class='anchor' href='#use_index' name='use_index'>Set which index to use</a></div>
 <p>When creating a query, by settings the <code>use_index</code> field, it is possible to tell pouchdb-find which index to use.
 The below example shows how to do that.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">createIndex</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">index</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">fields</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'age'</span><span class="token punctuation">,</span> <span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
     <span class="token literal-property property">ddoc</span><span class="token operator">:</span> <span class="token string">"my-index-design-doc"</span>
@@ -441,7 +458,8 @@ The below example shows how to do that.</p>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token literal-property property">use_index</span><span class="token operator">:</span> <span class="token string">'my-index-design-doc'</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='further-reading'></div><a class='anchor' href='#further-reading' name='further-reading'>Further reading</a></div>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<div class='h2'><div class='anchor-id' id='further-reading'></div><a class='anchor' href='#further-reading' name='further-reading'>Further reading</a></div>
 <p>The Mango query language is quite large and supports many options. Some of the more common ones include:</p>
 <ul>
 <li><code>$eq</code>: equals</li>
@@ -652,13 +670,8 @@ CouchDB 2.0 is the reference implementation, so the API should be the same. Couc
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

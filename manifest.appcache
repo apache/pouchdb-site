@@ -1,7 +1,7 @@
 
 CACHE MANIFEST
 #
-# rev 2026-04-30T13:14:15.127Z
+# rev 2026-05-16T09:39:35.073Z
 
 CACHE:
 /.asf.yml
@@ -108,10 +108,9 @@ CACHE:
 /2014/04/01/pouchdb-2.1.0.html
 
 
-/static/css/pouchdb.css
+/static/css/pouchdb.min.css
 /static/favicon.ico
 /static/js/code.min.js
-/static/js/stickyfill.min.js
 
 https://code.jquery.com/jquery.min.js
 https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js

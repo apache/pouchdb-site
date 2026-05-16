@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Conflicts</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Conflicts</h1>
+          <h1 class="margin-bottom-none">Conflicts
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -231,7 +232,7 @@
 <p>In CouchDB, conflicts can occur in two places: immediately, when you try to commit a new revision, or later, when two peers have committed changes to the same document. Let's call these <strong>immediate conflicts</strong> and <strong>eventual conflicts</strong>.</p>
 <h3>Immediate conflicts</h3>
 <p><strong>Immediate conflicts</strong> can occur with any API that takes a <code>rev</code> or a document with <code>_rev</code> as input – <code>put()</code>, <code>post()</code>, <code>remove()</code>, <code>bulkDocs()</code>, and <code>putAttachment()</code>. They manifest as a <code>409</code> (conflict) error:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> myDoc <span class="token operator">=</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> myDoc <span class="token operator">=</span> <span class="token punctuation">{</span>
   <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'someid'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'1-somerev'</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
@@ -243,12 +244,13 @@ db<span class="token punctuation">.</span><span class="token function">put</span
   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
     <span class="token comment">// some other error</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In your code, <em>you should always be handling conflicts</em>. No matter how unlikely it may seem, 409s can and do occur.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>In your code, <em>you should always be handling conflicts</em>. No matter how unlikely it may seem, 409s can and do occur.</p>
 <p>For instance, if you are doing live replication, a document may be modified by somebody else while the user is working on it. If the remote changes are replicated to the local database before the user tries to commit their changes, then they will receive the above 409 error.</p>
 <h4>Upsert</h4>
 <p>In many cases, the most practical solution to the 409 problem is to retry the <code>put()</code> until it succeeds. If the user's intended change can be expressed as a <strong>delta</strong> (i.e. a change that doesn't depend on the current revision), then this is very easy to achieve.</p>
 <p>Borrowing a phrase from traditional databases, let's call this an <strong>upsert</strong> (&quot;update or insert&quot;), and use the <a href="https://github.com/pouchdb/pouchdb-upsert">pouchdb-upsert</a> plugin to implement it:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">myDeltaFunction</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">myDeltaFunction</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   doc<span class="token punctuation">.</span>counter <span class="token operator">=</span> doc<span class="token punctuation">.</span>counter <span class="token operator">||</span> <span class="token number">0</span><span class="token punctuation">;</span>
   doc<span class="token punctuation">.</span>counter<span class="token operator">++</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> doc<span class="token punctuation">;</span>
@@ -258,7 +260,8 @@ db<span class="token punctuation">.</span><span class="token function">upsert</s
   <span class="token comment">// success!</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// error (not a 404 or 409)</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This <code>upsert()</code> function takes a <code>docId</code> and <code>deltaFunction</code>, where the <code>deltaFunction</code> is just a function that takes a document and outputs a new document. (If the document does not exist, then an empty document is provided.)</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This <code>upsert()</code> function takes a <code>docId</code> and <code>deltaFunction</code>, where the <code>deltaFunction</code> is just a function that takes a document and outputs a new document. (If the document does not exist, then an empty document is provided.)</p>
 <p><code>pouchdb-upsert</code> also offers a <code>putIfNotExists()</code> function, which will create a document if it doesn't exist already. For more details, see <a href="https://github.com/pouchdb/pouchdb-upsert#readme">the plugin's documentation</a>.</p>
 <h3>Eventual conflicts</h3>
 <p>Now, let's move on to the second type: <strong>eventual conflicts</strong>.</p>
@@ -266,17 +269,19 @@ db<span class="token punctuation">.</span><span class="token function">upsert</s
 <p>Both users committed changes to the same version of the document, and their local databases did not throw 409 errors. What happens then?</p>
 <p>This is the classic &quot;conflict&quot; scenario, and CouchDB handles it very elegantly. By default, CouchDB will choose an arbitrary winner based on a deterministic algorithm, which means both users will see the same winner once they're back online. However, since the replication history is stored, you can always go back in time to resolve the conflict.</p>
 <p>To detect if a document is in conflict, you use the <code>{conflicts: true}</code> option when you <code>get()</code> it.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">conflicts</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">conflicts</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// do something with the doc</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle any errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If the document has conflicts, then the <code>doc</code> will be returned with a <code>_conflicts</code> attribute, which may contain the revision IDs of conflicting revisions.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>If the document has conflicts, then the <code>doc</code> will be returned with a <code>_conflicts</code> attribute, which may contain the revision IDs of conflicting revisions.</p>
 <p>For instance, imagine the <code>doc</code> returned is the following:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"docid"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_rev"</span><span class="token operator">:</span> <span class="token string">"2-x"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_conflicts"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"2-y"</span><span class="token punctuation">]</span>
-<span class="token punctuation">}</span></code></pre></figure><p>Here we have two separate revisions (<code>2-x</code> and <code>2-y</code>) written by two separate databases, and one database's revision (<code>2-x</code>) has arbitrarily won.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>Here we have two separate revisions (<code>2-x</code> and <code>2-y</code>) written by two separate databases, and one database's revision (<code>2-x</code>) has arbitrarily won.</p>
 <div class="alert alert-warning">
 <div class="alert-text">
 <p>Normally, <code>_rev</code>s look more like <code>2-c1592ce7b31cc26e91d2f2029c57e621</code>, i.e. a digit followed by a very long hash. In these examples, <code>x</code> and <code>y</code> are used in place of the hash, for simplicity's sake.</p>
@@ -284,23 +289,26 @@ db<span class="token punctuation">.</span><span class="token function">upsert</s
 <p>Notice that the document's current revision starts with <code>2-</code>, and the conflicting version also starts with <code>2-</code>, indicating that they're both at the same level of the revision tree. (Revision hashes start with <code>1-</code>, <code>2-</code>, <code>3-</code>, etc., which indicates their distance from the first, &quot;root&quot; revision. The root always starts with <code>1-</code>.)</p>
 <p>Both databases will see the same conflict, assuming replication has completed. In fact, all databases in the network will see the exact same revision history – much like Git.</p>
 <p>To fetch the losing revision, you simply <code>get()</code> it using the <code>rev</code> option:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">rev</span><span class="token operator">:</span> <span class="token string">'2-y'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">rev</span><span class="token operator">:</span> <span class="token string">'2-y'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// do something with the doc</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle any errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>At this point, you can present both versions to the user, or resolve the conflict automatically using your preferred conflict resolution strategy: last write wins, first write wins, <a href="https://www.gnu.org/software/rcs/">RCS</a>, etc.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>At this point, you can present both versions to the user, or resolve the conflict automatically using your preferred conflict resolution strategy: last write wins, first write wins, <a href="https://www.gnu.org/software/rcs/">RCS</a>, etc.</p>
 <p>To mark a conflict as resolved, all you need to do is <code>remove()</code> the unwanted revisions. So for instance, to remove <code>'2-y'</code>, you would do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token string">'2-y'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">,</span> <span class="token string">'2-y'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// yay, we're done</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle any errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If you want to resolve the conflict by creating a new revision, you simply <code>put()</code> a new document on top of the current winner, and make sure that the losing revision is deleted.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>If you want to resolve the conflict by creating a new revision, you simply <code>put()</code> a new document on top of the current winner, and make sure that the losing revision is deleted.</p>
 <div class='h2'><div class='anchor-id' id='accountants-dont-use-erasers'></div><a class='anchor' href='#accountants-dont-use-erasers' name='accountants-dont-use-erasers'>Accountants don't use erasers</a></div>
 <p>Another conflict resolution strategy is to design your database so that conflicts are impossible. In practice, this means that you never update or remove existing documents – you only create new documents.</p>
 <p>This strategy has been called the &quot;every doc is a delta&quot; strategy. A classic use-case for this would be a checkbook app, where every document is simply an operation that increases or decreases the account balance:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">change</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">}</span> <span class="token comment">// balance increased by $100</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">change</span><span class="token operator">:</span> <span class="token number">100</span><span class="token punctuation">}</span> <span class="token comment">// balance increased by $100</span>
 <span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">change</span><span class="token operator">:</span> <span class="token operator">-</span><span class="token number">50</span><span class="token punctuation">}</span> <span class="token comment">// balance decreased by $50</span>
-<span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">change</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">}</span> <span class="token comment">// balance increased by $200</span></code></pre></figure><p>In this system, it is impossible for two documents to conflict, because the document <code>_id</code>s are just timestamps. Ledger transactions are recorded in the order they were made, and at the end of the day, you only need to do an <code>allDocs()</code> or <code>query()</code> operation to sum the result.</p>
+<span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token literal-property property">change</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">}</span> <span class="token comment">// balance increased by $200</span></code></pre>
+<p>In this system, it is impossible for two documents to conflict, because the document <code>_id</code>s are just timestamps. Ledger transactions are recorded in the order they were made, and at the end of the day, you only need to do an <code>allDocs()</code> or <code>query()</code> operation to sum the result.</p>
 <p>The wisdom of this strategy can be expressed by the maxim: <a href="https://queue.acm.org/detail.cfm?id=2884038">&quot;Accountants don't use erasers&quot;</a>. Like a diligent accountant, your app can just add new documents when you want to make a change, rather than going back and scrubbing out previous changes.</p>
 <p>There is also a PouchDB plugin that implements this strategy: <a href="https://github.com/redgeoff/delta-pouch">delta-pouch</a>.</p>
 <div class='h2'><div class='anchor-id' id='next'></div><a class='anchor' href='#next' name='next'>Next</a></div>
@@ -494,13 +502,8 @@ db<span class="token punctuation">.</span><span class="token function">upsert</s
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

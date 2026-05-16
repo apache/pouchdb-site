@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Working with attachments</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Working with attachments</h1>
+          <h1 class="margin-bottom-none">Working with attachments
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -227,7 +228,7 @@
 <div class='h2'><div class='anchor-id' id='how-attachments-are-stored'></div><a class='anchor' href='#how-attachments-are-stored' name='how-attachments-are-stored'>How attachments are stored</a></div>
 <p>As their name implies, attachments are <em>attached</em> to documents. You can work with attachments either in base64-encoded format, or as a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob">Blob</a>.</p>
 <p>For example, here is a very simple document with a plain text attachment, stored as base64.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'mydoc'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">_attachments</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token string-property property">'myattachment.txt'</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -235,18 +236,21 @@
       <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token string">'aGVsbG8gd29ybGQ='</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Our document has the usual <code>_id</code> field, but it also has a special <code>_attachments</code> field that holds the attachments. Documents can have as many attachments as you want.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Our document has the usual <code>_id</code> field, but it also has a special <code>_attachments</code> field that holds the attachments. Documents can have as many attachments as you want.</p>
 <div class="alert alert-info">
 <div class="alert-text">
 <p>When you create an attachment, you need to specify its <code>content_type</code>, otherwise known as the <a href='https://en.wikipedia.org/wiki/MIME'>MIME type</a>. Common MIME types include <code>'text/plain'</code> for plain text, <code>'image/png'</code> for PNG images, and <code>'image/jpeg'</code> for JPG images.</p>
 </div></div>
 <p>As it turns out, <code>'aGVsbG8gd29ybGQ='</code> is just the string <code>'hello world'</code> encoded in base64. You can use the <code>atob()</code> and <code>btoa()</code> methods in your browser to verify.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token function">btoa</span><span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">)</span>      <span class="token comment">// "aGVsbG8gd29ybGQ="</span>
-<span class="token function">atob</span><span class="token punctuation">(</span><span class="token string">'aGVsbG8gd29ybGQ='</span><span class="token punctuation">)</span> <span class="token comment">// "hello world"</span></code></pre></figure><p>Let's see what happens after we store this document. If you try to <code>get()</code> it normally, you may be surprised to see that the attachment data itself isn't returned:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token function">btoa</span><span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">)</span>      <span class="token comment">// "aGVsbG8gd29ybGQ="</span>
+<span class="token function">atob</span><span class="token punctuation">(</span><span class="token string">'aGVsbG8gd29ybGQ='</span><span class="token punctuation">)</span> <span class="token comment">// "hello world"</span></code></pre>
+<p>Let's see what happens after we store this document. If you try to <code>get()</code> it normally, you may be surprised to see that the attachment data itself isn't returned:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>The returned document will look like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>The returned document will look like this:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"_attachments"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token string-property property">"myattachment.txt"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
       <span class="token string-property property">"content_type"</span><span class="token operator">:</span> <span class="token string">"text/plain"</span><span class="token punctuation">,</span>
@@ -256,13 +260,15 @@
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"mydoc"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_rev"</span><span class="token operator">:</span> <span class="token string">"1-e8a84187bb4e671f27ec11bdf7320aaa"</span>
-<span class="token punctuation">}</span></code></pre></figure><p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/0a4b1267d3a5b5edd7b1">a live example</a></strong> of this code.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/0a4b1267d3a5b5edd7b1">a live example</a></strong> of this code.</p>
 <p>By default, PouchDB will only give you an attachment <strong>stub</strong>, which contains a <code>digest</code>, i.e. the <a href="http://en.wikipedia.org/wiki/Md5sum">md5sum</a> of the binary attachment.</p>
 <p>To get the full attachments when using <code>get()</code> or <code>allDocs()</code>, you need to specify <code>{attachments: true}</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">attachments</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">attachments</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Then you'll get back the full attachment, base64-encoded:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Then you'll get back the full attachment, base64-encoded:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"_attachments"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token string-property property">"myattachment.txt"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
       <span class="token string-property property">"content_type"</span><span class="token operator">:</span> <span class="token string">"text/plain"</span><span class="token punctuation">,</span>
@@ -272,11 +278,12 @@
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"mydoc"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_rev"</span><span class="token operator">:</span> <span class="token string">"1-e8a84187bb4e671f27ec11bdf7320aaa"</span>
-<span class="token punctuation">}</span></code></pre></figure><p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/b6d6164035f1fa0d38a8">a live example</a></strong> of this code.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/b6d6164035f1fa0d38a8">a live example</a></strong> of this code.</p>
 <div class='h2'><div class='anchor-id' id='image-attachments'></div><a class='anchor' href='#image-attachments' name='image-attachments'>Image attachments</a></div>
 <p>Plaintext is cool and all, but you know what would be <em>really</em> awesome? Storing images.</p>
 <p>So let's do it! In this example, we'll put a document with a small icon attachment, represented as a base64-encoded string. Then we'll fetch it and display the icon as a normal <code>&lt;img&gt;</code> tag:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'meowth'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">_attachments</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token string-property property">'meowth.png'</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -293,7 +300,8 @@
   document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/2a5f98a66c9fe3ae3532">a live example</a></strong> of this code.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/2a5f98a66c9fe3ae3532">a live example</a></strong> of this code.</p>
 <p>You should be unsurprised to see a cat smiling back at you. If the kitten theme bothers you, then you haven't been on the Internet very long.</p>
 <p>How does this code work? First off, we are making use of the <code>URL.createObjectURL()</code> method, which is a standard HTML5 method that converts a <code>Blob</code> to a URL that we can easily use as the <code>src</code> of an <code>img</code>.</p>
 <p>Second off, we are using the <code>getAttachment()</code> API, which returns a <code>Blob</code> rather than a base64-encoded string. To be clear: we can always convert between base64 and <code>Blob</code>s, but in this case, <code>getAttachment()</code> is just more convenient.</p>
@@ -305,7 +313,7 @@
 <p>In <strong>Node.js</strong>, PouchDB uses <a href='http://nodejs.org/api/buffer.html'>Buffers</a> instead of Blobs. Otherwise, the same rules apply.</p>
 </div></div>
 <p>For instance, we can read the image data from an <code>&lt;img&gt;</code> tag using a <code>canvas</code> element, and then directly write that Blob to PouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">convertImgToBlob</span><span class="token punctuation">(</span><span class="token parameter">img<span class="token punctuation">,</span> callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">convertImgToBlob</span><span class="token punctuation">(</span><span class="token parameter">img<span class="token punctuation">,</span> callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
    <span class="token keyword">const</span> canvas <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'canvas'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    <span class="token keyword">const</span> context <span class="token operator">=</span> canvas<span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token string">'2d'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
    context<span class="token punctuation">.</span><span class="token function">drawImage</span><span class="token punctuation">(</span>img<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -322,7 +330,8 @@
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/edaf09b84185418a55d9">a live example</a></strong> of this code.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/edaf09b84185418a55d9">a live example</a></strong> of this code.</p>
 <p>This stores exactly the same image content as in the other example, which you can confirm by checking the base64-encoded output.</p>
 <div class="alert alert-warning">
 <div class="alert-text">
@@ -335,8 +344,9 @@ addition to the attachment API. For instance, it has an
 <p>You can also upload a file with the HTML5 <code>File</code> API and store it directly in the database, because the data you get from the <code>&lt;input type=&quot;file&quot;&gt;</code> element is already a <code>Blob</code>.
 (See: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Blob">Blob API</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/API/File">File API</a>, which inherits properties from the <code>Blob</code> Interface.)</p>
 <p>Here is an example of allowing a user to choose a file from their filesystem:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></code></pre></figure><p>And then &quot;uploading&quot; that file directly into PouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> input <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'input'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></code></pre>
+<p>And then &quot;uploading&quot; that file directly into PouchDB:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> input <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'input'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 input<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> file <span class="token operator">=</span> input<span class="token punctuation">.</span>files<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// file is a Blob</span>
 
@@ -351,12 +361,13 @@ input<span class="token punctuation">.</span><span class="token function">addEve
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see <strong><a href="http://bl.ocks.org/ntwcklng/f57b03c15e91c25e2cb5">a live example</a></strong> of this code.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see <strong><a href="http://bl.ocks.org/ntwcklng/f57b03c15e91c25e2cb5">a live example</a></strong> of this code.</p>
 <p>Select a file and you will see the stored file, <code>size</code>, and <code>type</code>, which are valid <code>Blob</code> properties. If you choose an image, it will also show the image!</p>
 <div class='h2'><div class='anchor-id' id='base64-vs-blobs-buffers'></div><a class='anchor' href='#base64-vs-blobs-buffers' name='base64-vs-blobs-buffers'>Base64 vs Blobs/Buffers</a></div>
 <p>Whether you supply attachments as base64-encoded strings or as Blobs/Buffers, PouchDB will try to store them in <a href="/faq.html#data_types">the most efficient way</a>.</p>
 <p>So when you insert your attachments, either format is acceptable. For instance, you can put Blobs/Buffers using <code>put()</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'mydoc'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">_attachments</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token string-property property">'myattachment.txt'</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -364,9 +375,11 @@ input<span class="token punctuation">.</span><span class="token function">addEve
       <span class="token literal-property property">data</span><span class="token operator">:</span> myBlob
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>And you can also pass base64-encoded strings to <code>putAttachment()</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">putAttachment</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">,</span> <span class="token string">'myattachment.png'</span><span class="token punctuation">,</span> myBase64String<span class="token punctuation">,</span> <span class="token string">'image/png'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can also insert multiple attachments at once using <code>put()</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>And you can also pass base64-encoded strings to <code>putAttachment()</code>:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">putAttachment</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">,</span> <span class="token string">'myattachment.png'</span><span class="token punctuation">,</span> myBase64String<span class="token punctuation">,</span> <span class="token string">'image/png'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can also insert multiple attachments at once using <code>put()</code>:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'mydoc'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">_attachments</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token string-property property">'myattachment1.txt'</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -383,7 +396,8 @@ input<span class="token punctuation">.</span><span class="token function">addEve
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token comment">// etc.</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>The <code>bulkDocs()</code> and <code>post()</code> APIs also accept attachments in either format.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>The <code>bulkDocs()</code> and <code>post()</code> APIs also accept attachments in either format.</p>
 <p>When you fetch attachments, however, <code>getAttachment()</code> will always return Blobs/Buffers.</p>
 <p>The other &quot;read&quot; APIs, such as <code>get()</code>, <code>allDocs()</code>, <code>changes()</code>, and <code>query()</code> have an <code>{attachments: true}</code> option that returns the attachments base64-encoded strings. If you add <code>{binary: true}</code>, though, they will return Blobs/Buffers.</p>
 <div class="alert alert-info">
@@ -392,7 +406,7 @@ input<span class="token punctuation">.</span><span class="token function">addEve
 </div></div>
 <div class='h2'><div class='anchor-id' id='blob-types'></div><a class='anchor' href='#blob-types' name='blob-types'>Blob types</a></div>
 <p>Blobs have their own <code>type</code>, but there is also a <code>content_type</code> that you specify when you store it in PouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> myBlob <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Blob</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'I am plain text!'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'text/plain'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> myBlob <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Blob</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'I am plain text!'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'text/plain'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>myBlob<span class="token punctuation">.</span>type<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 'text/plain'</span>
 
 db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
@@ -403,7 +417,8 @@ db<span class="token punctuation">.</span><span class="token function">put</span
       <span class="token literal-property property">data</span><span class="token operator">:</span> myBlob
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>The reason for this redundancy is 1) Buffers in Node do not have a <code>type</code>, and 2) the CouchDB attachment format requires it.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>The reason for this redundancy is 1) Buffers in Node do not have a <code>type</code>, and 2) the CouchDB attachment format requires it.</p>
 <p>So for best results, you should ensure that your Blobs have the same type as the one reported to PouchDB. Otherwise you may see inconsistent behavior (e.g. in IndexedDB, where the Blob is stored as-is on compatible browsers).</p>
 <div class='h2'><div class='anchor-id' id='related-api-documentation'></div><a class='anchor' href='#related-api-documentation' name='related-api-documentation'>Related API documentation</a></div>
 <ul>
@@ -602,13 +617,8 @@ db<span class="token punctuation">.</span><span class="token function">put</span
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Changes feed</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Changes feed</h1>
+          <h1 class="margin-bottom-none">Changes feed
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -230,21 +231,22 @@
 <p>For all of these and related questions, there's the <code>changes()</code> API.</p>
 <div class='h2'><div class='anchor-id' id='basic-changes-usage'></div><a class='anchor' href='#basic-changes-usage' name='basic-changes-usage'>Basic changes usage</a></div>
 <p>If you want to simply fetch all changes since the beginning of time, you can do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">since</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   <span class="token literal-property property">include_docs</span><span class="token operator">:</span> <span class="token boolean">true</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">changes</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/7c32861af5d31a8fac4a">live example</a></strong> of this code.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/7c32861af5d31a8fac4a">live example</a></strong> of this code.</p>
 <p>Then you will have a list of all changes made to the database, in the order that they were made.</p>
 <p>One thing you will notice about the changes feed is that it actually omits non-leaf revisions to documents. For instance, in the live example, we skip from <code>seq</code> 1 immediately to <code>seq</code> 3.</p>
 <p>This is by design – the changes feed only tells us about leaf revisions. However, the order of those leaf revisions is determined by the order they were put in the database. So you may notice that <code>'firstDoc'</code> still appears before <code>'secondDoc'</code>, which appears before <code>'thirdDoc'</code>.</p>
 <p>Also notice the option <code>{include_docs: true}</code>. By default, the documents themselves are not included in the changes feed; only the <code>id</code>s, <code>rev</code>s, and whether or not they were <code>deleted</code>. With <code>{include_docs: true}</code>, however, each non-deleted change will have a <code>doc</code> property containing the new or modified document.</p>
 <div class='h2'><div class='anchor-id' id='changes-pagination'></div><a class='anchor' href='#changes-pagination' name='changes-pagination'>Changes pagination</a></div>
 <p>If you expect this to be a very large number of changes, you can also use the <code>limit</code> option to do pagination:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> pageSize <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> pageSize <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
 <span class="token keyword">let</span> lastSeq <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token keyword">function</span> <span class="token function">fetchNextPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
@@ -262,20 +264,22 @@
 
 <span class="token function">fetchNextPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/dcdeae555b31c2a6d332">live example</a></strong> of this code.</p>
-<div class='h2'><div class='anchor-id' id='seq-versus-rev'></div><a class='anchor' href='#seq-versus-rev' name='seq-versus-rev'>`seq` versus `_rev`</a></div>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/dcdeae555b31c2a6d332">live example</a></strong> of this code.</p>
+<div class='h2'><div class='anchor-id' id='seq-versus-rev'></div><a class='anchor' href='#seq-versus-rev' name='seq-versus-rev'><code>seq</code> versus <code>_rev</code></a></div>
 <p>The changes feed lists each change with a corresponding <code>seq</code> integer. <code>seq</code> always starts with 0, and beyond that it increases monotonically. (In Cloudant, these are strings rather than integers.)</p>
 <p><code>seq</code> can be thought of as a version number for the entire database. Basically it answers the question of &quot;How many total changes have been made to all documents in this database?&quot; This sets it apart from the revision hash <code>_rev</code>, which marks the changes made to a single document.</p>
 <p>However, the <code>seq</code> between two databases is not guaranteed to be kept in sync. CouchDB and PouchDB have slightly different ways of increasing their <code>seq</code> values, so really <code>seq</code> is only meaningful within a single database.</p>
 <div class='h2'><div class='anchor-id' id='live-changes-feed'></div><a class='anchor' href='#live-changes-feed' name='live-changes-feed'>Live changes feed</a></div>
 <p>Just like replication, you can also listen to a live changes feed. The way this works is very similar to the replication API:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">since</span><span class="token operator">:</span> <span class="token string">'now'</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">change</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// received a change</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>In the above example, we've also taken advantage of the quasi-magical <code>'now'</code> option for <code>since</code>, which will give us all changes from the moment we start listening.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>In the above example, we've also taken advantage of the quasi-magical <code>'now'</code> option for <code>since</code>, which will give us all changes from the moment we start listening.</p>
 <p>This can be very useful for scenarios where you want to update the UI whenever something in the database changes, such as for a real-time chat application.</p>
 <div class='h2'><div class='anchor-id' id='understanding-changes'></div><a class='anchor' href='#understanding-changes' name='understanding-changes'>Understanding changes</a></div>
 <p>There are two types of changes:</p>
@@ -285,7 +289,7 @@
 </ul>
 <p>To distinguish between the two types in a live <code>changes()</code> listener,
 you can use the following code:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">since</span><span class="token operator">:</span> <span class="token string">'now'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
   <span class="token literal-property property">include_docs</span><span class="token operator">:</span> <span class="token boolean">true</span>
@@ -298,7 +302,8 @@ you can use the following code:</p>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see a <a href="http://bl.ocks.org/nolanlawson/fa42662cdfeeaa7b78fc">live example</a> of this code.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see a <a href="http://bl.ocks.org/nolanlawson/fa42662cdfeeaa7b78fc">live example</a> of this code.</p>
 <p>Notice that <code>change.doc</code> contains the document (unless it's deleted), because we used <code>{include_docs: true}</code>.</p>
 <p>Also notice that new documents always have revisions starting with the string <code>'1-'</code>. Subsequent revisions start with <code>'2-'</code>, <code>'3-'</code>, <code>'4-'</code>, etc.</p>
 <div class="alert alert-info">
@@ -501,13 +506,8 @@ you can use the following code:</p>
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Setting up CouchDB</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Setting up CouchDB</h1>
+          <h1 class="margin-bottom-none">Setting up CouchDB
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -224,27 +225,34 @@
 <div class='h2'><div class='anchor-id' id='couchdb-pouchdbs-older-sibling'></div><a class='anchor' href='#couchdb-pouchdbs-older-sibling' name='couchdb-pouchdbs-older-sibling'>CouchDB: PouchDB's older sibling</a></div>
 <p>One of the main benefits of learning PouchDB is that it's exactly the same as CouchDB. In fact, PouchDB is a shameless plagiarist: all of the API methods are the same, with only slight modifications to make it more JavaScript-y.</p>
 <p>For instance, in CouchDB you would fetch all documents using:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">/db/_all_docs?include_docs=true</code></pre></figure><p>In PouchDB this becomes:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">include_docs</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></figure><p>The APIs are the same, and the semantics are the same.</p>
+<pre class="language-bash"><code class="language-bash">/db/_all_docs?include_docs<span class="token operator">=</span>true</code></pre>
+<p>In PouchDB this becomes:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">include_docs</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre>
+<p>The APIs are the same, and the semantics are the same.</p>
 <p>In the following examples, we will set up CouchDB and talk to it using a tool you're already familiar with: your browser.</p>
 <div class='h2'><div class='anchor-id' id='installing-couchdb'></div><a class='anchor' href='#installing-couchdb' name='installing-couchdb'>Installing CouchDB</a></div>
 <p>If you are on a Debian flavor of Linux (Ubuntu, Mint, etc.), you can install CouchDB as follows.</p>
 <p>First, <a href="https://docs.couchdb.org/en/stable/install/unix.html#enabling-the-apache-couchdb-package-repository">enable the CouchDB package repository</a> on your machine:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">$ sudo apt update && sudo apt install -y curl apt-transport-https gnupg
-$ curl https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | sudo tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1
-source /etc/os-release
-$ echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ ${VERSION_CODENAME} main" \
-    | sudo tee /etc/apt/sources.list.d/couchdb.list >/dev/null</code></pre></figure><p>Next, update your package lists and install CouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">$ sudo apt-get update
-$ sudo apt-get install -y couchdb</code></pre></figure><p>If you are on a Mac or Windows you should install the official binaries from <a href="https://couchdb.apache.org/#download">the CouchDB web site</a>.</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt</span> update <span class="token operator">&amp;&amp;</span> <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> <span class="token parameter variable">-y</span> <span class="token function">curl</span> apt-transport-https gnupg
+$ <span class="token function">curl</span> https://couchdb.apache.org/repo/keys.asc <span class="token operator">|</span> gpg <span class="token parameter variable">--dearmor</span> <span class="token operator">|</span> <span class="token function">sudo</span> <span class="token function">tee</span> /usr/share/keyrings/couchdb-archive-keyring.gpg <span class="token operator">></span>/dev/null <span class="token operator"><span class="token file-descriptor important">2</span>></span><span class="token file-descriptor important">&amp;1</span>
+<span class="token builtin class-name">source</span> /etc/os-release
+$ <span class="token builtin class-name">echo</span> <span class="token string">"deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ <span class="token variable">${VERSION_CODENAME}</span> main"</span> <span class="token punctuation">\</span>
+    <span class="token operator">|</span> <span class="token function">sudo</span> <span class="token function">tee</span> /etc/apt/sources.list.d/couchdb.list <span class="token operator">></span>/dev/null</code></pre>
+<p>Next, update your package lists and install CouchDB:</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt-get</span> update
+$ <span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> <span class="token parameter variable">-y</span> couchdb</code></pre>
+<p>If you are on a Mac or Windows you should install the official binaries from <a href="https://couchdb.apache.org/#download">the CouchDB web site</a>.</p>
 <h4>A CouchDB alternative: PouchDB Server</h4>
 <p>If you have trouble installing CouchDB, you can also install PouchDB Server, which is a drop-in replacement for CouchDB that uses PouchDB under the hood:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">$ npm install -g pouchdb-server
-$ pouchdb-server --port 5984</code></pre></figure><p>PouchDB Server is currently experimental, and we do not recommend it for production environments.</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> pouchdb-server
+$ pouchdb-server <span class="token parameter variable">--port</span> <span class="token number">5984</span></code></pre>
+<p>PouchDB Server is currently experimental, and we do not recommend it for production environments.</p>
 <div class='h2'><div class='anchor-id' id='verify-your–installation'></div><a class='anchor' href='#verify-your–installation' name='verify-your–installation'>Verify your installation</a></div>
 <p>Once CouchDB is installed, it should be running at <code>localhost:5984</code>. To verify, you can open up your terminal and type</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">$ curl localhost:5984</code></pre></figure><p>You should see something like:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"couchdb"</span><span class="token operator">:</span><span class="token string">"Welcome"</span><span class="token punctuation">,</span><span class="token string-property property">"version"</span><span class="token operator">:</span><span class="token string">"2.2.0"</span><span class="token punctuation">,</span><span class="token operator">...</span><span class="token punctuation">}</span></code></pre></figure><p>Next, open up <a href="http://localhost:5984/_utils/">http://localhost:5984/_utils/</a> in your browser.</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">curl</span> localhost:5984</code></pre>
+<p>You should see something like:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"couchdb"</span><span class="token operator">:</span><span class="token string">"Welcome"</span><span class="token punctuation">,</span><span class="token string-property property">"version"</span><span class="token operator">:</span><span class="token string">"2.2.0"</span><span class="token punctuation">,</span><span class="token operator">...</span><span class="token punctuation">}</span></code></pre>
+<p>Next, open up <a href="http://localhost:5984/_utils/">http://localhost:5984/_utils/</a> in your browser.</p>
 <p>If you see a screen like the following, then you are ready to rock and roll with CouchDB:</p>
 <p>
   <a href="/static/img/fauxton.png" target="_blank">
@@ -254,8 +262,10 @@ $ pouchdb-server --port 5984</code></pre></figure><p>PouchDB Server is currently
 <div class='h2'><div class='anchor-id' id='set-up-cors'></div><a class='anchor' href='#set-up-cors' name='set-up-cors'>Set up CORS</a></div>
 <p><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS</a> is a web technology that allows web sites to use resources from another domain. You will want to enable this in your CouchDB before continuing, because otherwise PouchDB will not work unless it's served from exactly the same domain as CouchDB.</p>
 <p>Enabling CORS is easy. Just install this handy script:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-sh">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> add-cors-to-couchdb</code></pre></figure><p>And run it:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-sh">$ add-cors-to-couchdb</code></pre></figure><p>If you installed PouchDB Server, CORS is enabled by default, and this step is not necessary.</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> add-cors-to-couchdb</code></pre>
+<p>And run it:</p>
+<pre class="language-bash"><code class="language-bash">$ add-cors-to-couchdb</code></pre>
+<p>If you installed PouchDB Server, CORS is enabled by default, and this step is not necessary.</p>
 <div class='h2'><div class='anchor-id' id='next'></div><a class='anchor' href='#next' name='next'>Next</a></div>
 <p>Now that you have CouchDB installed, let's install PouchDB.</p>
 
@@ -447,13 +457,8 @@ $ pouchdb-server --port 5984</code></pre></figure><p>PouchDB Server is currently
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

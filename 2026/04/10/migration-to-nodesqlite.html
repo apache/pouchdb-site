@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB has a new adapter - nodesqlite</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB has a new adapter - nodesqlite</h1>
+          <h1 class="margin-bottom-none">PouchDB has a new adapter - nodesqlite
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -150,7 +151,7 @@
       <p>Hello everyone! PouchDB has a new available adapter for you to use, <code>nodesqlite</code>, that internally uses Node.js's native SQLite module as its persistence layer. This will be, in PouchDB's release version 11.0.0, the default adapter for node environments, replacing the deprecated LevelDB ecosystem we currently depend on. You can read more about the details, discussion and timeline in this <a href="https://github.com/apache/pouchdb/issues/9163">issue</a>, and look at its implementation in this <a href="https://github.com/apache/pouchdb/pull/9223">pull request</a>.</p>
 <h2>Migration guide</h2>
 <p>We suggest you to create a replication from your databases to new ones using the <code>nodesqlite</code> adapter. We have drafted a snippet you can copy and modify according to your needs.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getDb</span> <span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getDb</span> <span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> oldDb <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'leveldb'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
   
   <span class="token comment">// create a new database with new nodesqlite adapter</span>
@@ -172,12 +173,15 @@
       <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'denied'</span><span class="token punctuation">,</span> reject<span class="token punctuation">)</span>
       <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> reject<span class="token punctuation">)</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span>
-<span class="token punctuation">}</span></code></pre></figure><p>Now, instead of getting your database like:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'my-db-name'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'leveldb'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Now, instead of getting your database like:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'my-db-name'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'leveldb'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
 
 <span class="token comment">// or like this, since `leveldb` is the default adapter in the Node.js environment</span>
-<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'my-db-name'</span><span class="token punctuation">)</span></code></pre></figure><p>Do it like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">getDb</span><span class="token punctuation">(</span><span class="token string">'my-db-name'</span><span class="token punctuation">)</span></code></pre></figure><p>If you encounter a bug in this migration, please <a href="https://github.com/pouchdb/pouchdb/issues">file an issue</a> and, ideally, modify this post for the benefit of others. Thanks!</p>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'my-db-name'</span><span class="token punctuation">)</span></code></pre>
+<p>Do it like this:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">getDb</span><span class="token punctuation">(</span><span class="token string">'my-db-name'</span><span class="token punctuation">)</span></code></pre>
+<p>If you encounter a bug in this migration, please <a href="https://github.com/pouchdb/pouchdb/issues">file an issue</a> and, ideally, modify this post for the benefit of others. Thanks!</p>
 <h2>Get in touch</h2>
 <p>As always, we welcome feedback from the community. Please don't hesitate to <a href="https://github.com/pouchdb/pouchdb/issues">file issues</a>, <a href="https://github.com/pouchdb/pouchdb/discussions">open discussions</a> or <a href="https://github.com/pouchdb/pouchdb/blob/master/CONTRIBUTING.md#get-in-touch">get in touch</a>. And of course, a big thanks to all of our <a href="https://github.com/pouchdb/pouchdb/graphs/contributors">new and existing contributors</a>!</p>
 
@@ -314,13 +318,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

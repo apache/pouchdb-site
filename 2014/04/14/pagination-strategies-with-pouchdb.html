@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pagination strategies with PouchDB</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Pagination strategies with PouchDB</h1>
+          <h1 class="margin-bottom-none">Pagination strategies with PouchDB
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -150,7 +151,7 @@
       <p>PouchDB, like CouchDB, was designed to store large amounts of data. However, once you're dealing with hundreds, thousands, or even millions of documents in a single database, proper pagination becomes crucial if you want to offer anything manageable to your users.  Nobody likes scrolling through a mile-high web page to try to find what they want.</p>
 <h2>A basic example</h2>
 <p>Let's pretend we're storing 20 documents in PouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token keyword">var</span> pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'numbers'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> pouch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'numbers'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">var</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span>
   <span class="token punctuation">{</span><span class="token literal-property property">_id</span> <span class="token operator">:</span> <span class="token string">'doc01'</span><span class="token punctuation">,</span> <span class="token literal-property property">name</span> <span class="token operator">:</span> <span class="token string">'uno'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>        <span class="token punctuation">{</span><span class="token literal-property property">_id</span> <span class="token operator">:</span> <span class="token string">'doc02'</span><span class="token punctuation">,</span> <span class="token literal-property property">name</span> <span class="token operator">:</span> <span class="token string">'dos'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token punctuation">{</span><span class="token literal-property property">_id</span> <span class="token operator">:</span> <span class="token string">'doc03'</span><span class="token punctuation">,</span> <span class="token literal-property property">name</span> <span class="token operator">:</span> <span class="token string">'tres'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>       <span class="token punctuation">{</span><span class="token literal-property property">_id</span> <span class="token operator">:</span> <span class="token string">'doc04'</span><span class="token punctuation">,</span> <span class="token literal-property property">name</span> <span class="token operator">:</span> <span class="token string">'cuatro'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -165,11 +166,13 @@
 <span class="token punctuation">]</span><span class="token punctuation">;</span>
 pouch<span class="token punctuation">.</span><span class="token function">bulkDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">docs</span> <span class="token operator">:</span> docs<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle err or response</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Now, the simplest kind of Pouch query, called <a href="/api.html#batch_fetch"><code>allDocs()</code></a>, doesn't do any pagination by default.  As the name implies, it just returns all the docs:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript">pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Now, the simplest kind of Pouch query, called <a href="/api.html#batch_fetch"><code>allDocs()</code></a>, doesn't do any pagination by default.  As the name implies, it just returns all the docs:</p>
+<pre class="language-javascript"><code class="language-javascript">pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle err or response</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Here's the response:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Here's the response:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
   <span class="token string-property property">"total_rows"</span><span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
   <span class="token string-property property">"offset"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   <span class="token string-property property">"rows"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
@@ -190,14 +193,17 @@ pouch<span class="token punctuation">.</span><span class="token function">bulkDo
       <span class="token string-property property">"value"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token string-property property">"rev"</span><span class="token operator">:</span> <span class="token string">"1-f6fee051188e84ac3d22c645c819a5d2"</span><span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">]</span>
-<span class="token punctuation">}</span></code></pre></figure><div class="alert alert-warning">
+<span class="token punctuation">}</span></code></pre>
+<div class="alert alert-warning">
 <div class="alert-text">
 <p><strong>Potential gotcha!</strong> Somewhat unintuitively, <code>allDocs()</code> doesn't return the full document data by default.  It only returns the document <code>id</code> and revision hash <code>rev</code>, unless you pass in the option <code>{include_docs : true}</code>.</p>
 </div></div>
 <p>All 20 documents are returned, no pagination involved.  We can visualize it graphically like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                                    Last doc returned
+<pre><code>First doc returned                                    Last doc returned
  ↓                                                                   ↓ 
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</code></pre></figure><p>Now obviously, returning all 20 docs is nice, but we're here to paginate!  So let's see what we can pass to the <code>allDocs()</code> method to slice and dice our data.</p>
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+</code></pre>
+<p>Now obviously, returning all 20 docs is nice, but we're here to paginate!  So let's see what we can pass to the <code>allDocs()</code> method to slice and dice our data.</p>
 <h2>Learning the pagination lingo</h2>
 <p><code>allDocs()</code> is a pretty flexible API, and we have a lot of parameters to choose from.  Since PouchDB is modeled after CouchDB, we can learn about these parameters by directly consulting <a href="https://wiki.apache.org/couchdb/HTTP_view_API#Querying_Options">the Couch docs</a>, but here's a basic rundown:</p>
 <ul>
@@ -208,10 +214,11 @@ pouch<span class="token punctuation">.</span><span class="token function">bulkDo
 <li><code>descending</code>: <code>true</code> if we want reverse ordering</li>
 </ul>
 <p>These parameters are simply passed as the first argument to <code>allDocs()</code>, e.g.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript">pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">startkey</span> <span class="token operator">:</span> <span class="token string">'doc05'</span><span class="token punctuation">,</span> <span class="token literal-property property">endkey</span> <span class="token operator">:</span> <span class="token string">'doc06'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-javascript"><code class="language-javascript">pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">startkey</span> <span class="token operator">:</span> <span class="token string">'doc05'</span><span class="token punctuation">,</span> <span class="token literal-property property">endkey</span> <span class="token operator">:</span> <span class="token string">'doc06'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle err or response</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Here's the response:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Here's the response:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
   <span class="token string-property property">"total_rows"</span><span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
   <span class="token string-property property">"offset"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   <span class="token string-property property">"rows"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
@@ -226,43 +233,57 @@ pouch<span class="token punctuation">.</span><span class="token function">bulkDo
       <span class="token string-property property">"value"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token string-property property">"rev"</span><span class="token operator">:</span> <span class="token string">"1-5b35abcf7cc48e2cea63e64281f271ca"</span><span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">]</span>
-<span class="token punctuation">}</span></code></pre></figure><p>Now, let's go through each of these parameters in detail.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>Now, let's go through each of these parameters in detail.</p>
 <h3>startkey and endkey</h3>
 <p><code>startkey</code> simply tells PouchDB where you'd like to start in the stream.  For instance, the options <code>{startkey : 'doc05'}</code> would return these docs:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                              Last doc returned
+<pre><code>      First doc returned                              Last doc returned
              ↓                                                       ↓ 
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</code></pre></figure><p>Similarly, <code>endkey</code> tells PouchDB where to stop reading.  <code>{endkey : 'doc15'}</code> would give us:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                         Last doc returned
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+</code></pre>
+<p>Similarly, <code>endkey</code> tells PouchDB where to stop reading.  <code>{endkey : 'doc15'}</code> would give us:</p>
+<pre><code>First doc returned                         Last doc returned
  ↓                                               ↓ 
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</code></pre></figure><p>These two options can be used together!  <code>{startkey : 'doc05', endkey: 'doc15'}</code> gives us:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                   Last doc returned
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+</code></pre>
+<p>These two options can be used together!  <code>{startkey : 'doc05', endkey: 'doc15'}</code> gives us:</p>
+<pre><code>      First doc returned                   Last doc returned
              ↓                                   ↓ 
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</code></pre></figure><p>Notice that both <code>startkey</code> and <code>endkey</code> are <em>inclusive</em> — i.e., the matching value itself is included in the results.</p>
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+</code></pre>
+<p>Notice that both <code>startkey</code> and <code>endkey</code> are <em>inclusive</em> — i.e., the matching value itself is included in the results.</p>
 <p>However, the value doesn't actually need to be present. So for example, if you have the documents <code>['A', 'B', 'X', 'Y']</code>, calling <code>{startkey : 'C', endkey : 'Z'}</code> would return <code>['X', 'Y']</code>.</p>
 <h3>skip and limit</h3>
 <p><code>skip</code> tells PouchDB how many documents to skip from its normal starting point.  E.g. <code>{skip : 5}</code> gives us:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                              Last doc returned
+<pre><code>         First doc returned                              Last doc returned
                 ↓                                                    ↓ 
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</code></pre></figure><p>Whereas <code>limit</code> does the opposite: it cuts off documents from the end. <code>{limit : 15}</code> only gives us the first 15 docs:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                         Last doc returned
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+</code></pre>
+<p>Whereas <code>limit</code> does the opposite: it cuts off documents from the end. <code>{limit : 15}</code> only gives us the first 15 docs:</p>
+<pre><code>First doc returned                         Last doc returned
  ↓                                               ↓ 
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</code></pre></figure><p>When <code>skip</code> and <code>limit</code> are used together, <code>limit</code> applies after <code>skip</code>.  So e.g. <code>{skip : 5, limit : 10}</code> would slice your documents like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                Last doc returned
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+</code></pre>
+<p>When <code>skip</code> and <code>limit</code> are used together, <code>limit</code> applies after <code>skip</code>.  So e.g. <code>{skip : 5, limit : 10}</code> would slice your documents like this:</p>
+<pre><code>         First doc returned                Last doc returned
                 ↓                                ↓ 
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</code></pre></figure><h3>Skipping into a trap</h3>
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+</code></pre>
+<h3>Skipping into a trap</h3>
 <p>If you come from a SQL background, you might recognize <code>skip</code> and <code>limit</code> as our old friends from SQL: <code>OFFSET</code> and <code>LIMIT</code>. You might also imagine that these parameters are the only ones you need for proper pagination.  But this is a trap!</p>
 <h4>Dumb method (do not use!)</h4>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token keyword">var</span> pageSize <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> pageSize <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
 <span class="token keyword">var</span> offset <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token keyword">function</span> <span class="token function">fetchNextPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">limit</span> <span class="token operator">:</span> pageSize<span class="token punctuation">,</span> <span class="token literal-property property">skip</span> <span class="token operator">:</span> offset<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     offset <span class="token operator">+=</span> pageSize<span class="token punctuation">;</span>
     <span class="token comment">// handle err or response</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure><p>This method is intuitive, but once <code>skip</code> grows to a large number, your performance will start to degrade pretty drastically.  That's because those documents must literally be <em>skipped</em> over with each query, and the database will still read into memory every document that it's skipping. This can be really bad for performance, especially on mobile devices with constrained memory.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>This method is intuitive, but once <code>skip</code> grows to a large number, your performance will start to degrade pretty drastically.  That's because those documents must literally be <em>skipped</em> over with each query, and the database will still read into memory every document that it's skipping. This can be really bad for performance, especially on mobile devices with constrained memory.</p>
 <p>Just repeat to yourself: <code>skip</code> really means &quot;skip&quot;!</p>
 <h4>Smart method (please use!)</h4>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token keyword">var</span> options <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token literal-property property">limit</span> <span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> options <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token literal-property property">limit</span> <span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
 <span class="token keyword">function</span> <span class="token function">fetchNextPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span>options<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>response <span class="token operator">&amp;&amp;</span> response<span class="token punctuation">.</span>rows<span class="token punctuation">.</span>length <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -271,7 +292,8 @@ pouch<span class="token punctuation">.</span><span class="token function">bulkDo
     <span class="token punctuation">}</span>
     <span class="token comment">// handle err or response</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure><p>This method takes a bit more time to grok, but what it's essentially doing is leveraging <code>startkey</code>, instead of relying on the performance-killer <code>skip</code>.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>This method takes a bit more time to grok, but what it's essentially doing is leveraging <code>startkey</code>, instead of relying on the performance-killer <code>skip</code>.</p>
 <p>In our initial query, we simply tell PouchDB to give us the first 5 documents (or 10, or whatever your page size is).  In our subsequent queries, we tell it to start with the last doc from the previous page, and to <code>skip</code> that one doc.</p>
 <p>Of course, you could also fetch <code>pageSize + 1</code> docs each time, and simply omit the last document when you display the results to the user.  The choice is yours, but either method is preferable to using <code>skip</code> and <code>limit</code> alone.</p>
 <div class="alert alert-info">
@@ -286,82 +308,105 @@ traditional key-value stores, they don't have a good way to count offsets.  Also
 </div></div>
 <h2>Paginating in backwards land</h2>
 <p>When <code>descending</code> is set to <code>true</code>, the normal document order is reversed.  Simply passing <code>{descending : true}</code> would give us:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                                    Last doc returned
+<pre><code>First doc returned                                    Last doc returned
  ↓                                                                   ↓ 
-[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</code></pre></figure><p>Additionally, all the other parameters suddenly work backwards from their normal behavior!  For instance, if we want to fetch the documents from <code>'doc01'</code> to <code>'doc10'</code>, we'd normally do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript">pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">startkey</span> <span class="token operator">:</span> <span class="token string">'doc01'</span><span class="token punctuation">,</span> <span class="token literal-property property">endkey</span> <span class="token operator">:</span> <span class="token string">'doc10'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+</code></pre>
+<p>Additionally, all the other parameters suddenly work backwards from their normal behavior!  For instance, if we want to fetch the documents from <code>'doc01'</code> to <code>'doc10'</code>, we'd normally do:</p>
+<pre class="language-javascript"><code class="language-javascript">pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">startkey</span> <span class="token operator">:</span> <span class="token string">'doc01'</span><span class="token punctuation">,</span> <span class="token literal-property property">endkey</span> <span class="token operator">:</span> <span class="token string">'doc10'</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle err or response</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This would give us 10 results, as expected:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned     Last doc returned
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This would give us 10 results, as expected:</p>
+<pre><code>First doc returned     Last doc returned
  ↓                           ↓ 
-[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]</code></pre></figure><p>If we set <code>descending</code> to <code>true</code>, though, we're in backwards land! So that same query will give us zero results:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">Last doc???         First doc???
+[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+</code></pre>
+<p>If we set <code>descending</code> to <code>true</code>, though, we're in backwards land! So that same query will give us zero results:</p>
+<pre><code>                                       Last doc???         First doc???
                                           ↓                          ↓ 
-[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</code></pre></figure><p>Here's the actual JavaScript <code>response</code> object:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token punctuation">{</span>
+[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+</code></pre>
+<p>Here's the actual JavaScript <code>response</code> object:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
   <span class="token string-property property">"total_rows"</span><span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
   <span class="token string-property property">"offset"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   <span class="token string-property property">"rows"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-<span class="token punctuation">}</span></code></pre></figure><p>Whenever <code>descending</code> is set to <code>true</code>, we need to switch the <code>startkey</code> and <code>endkey</code> to get the results we want:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript">pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">startkey</span> <span class="token operator">:</span> <span class="token string">'doc10'</span><span class="token punctuation">,</span> <span class="token literal-property property">endkey</span> <span class="token operator">:</span> <span class="token string">'doc01'</span><span class="token punctuation">,</span> <span class="token literal-property property">descending</span> <span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Whenever <code>descending</code> is set to <code>true</code>, we need to switch the <code>startkey</code> and <code>endkey</code> to get the results we want:</p>
+<pre class="language-javascript"><code class="language-javascript">pouch<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">startkey</span> <span class="token operator">:</span> <span class="token string">'doc10'</span><span class="token punctuation">,</span> <span class="token literal-property property">endkey</span> <span class="token operator">:</span> <span class="token string">'doc01'</span><span class="token punctuation">,</span> <span class="token literal-property property">descending</span> <span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle err or response</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This gives us what we expect:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned     Last doc returned
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This gives us what we expect:</p>
+<pre><code>                               First doc returned     Last doc returned
                                           ↓                          ↓ 
-[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</code></pre></figure><h3>Skip and limit in backwards land</h3>
+[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+</code></pre>
+<h3>Skip and limit in backwards land</h3>
 <p>Similarly, for <code>skip</code> and <code>limit</code>, the operations are performed on the reversed list.  Setting <code>skip</code> to <code>5</code> will skip the &quot;first&quot; 5 documents, so <code>{skip : 5, descending : true}</code> returns:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                     Last doc returned
+<pre><code>               First doc returned                     Last doc returned
                       ↓                                              ↓ 
-[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</code></pre></figure><p>And setting <code>limit</code> to <code>15</code> will give us the &quot;first&quot; 15 documents, so <code>{limit : 15, descending : true}</code> gives us:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned                              Last doc returned
+[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+</code></pre>
+<p>And setting <code>limit</code> to <code>15</code> will give us the &quot;first&quot; 15 documents, so <code>{limit : 15, descending : true}</code> gives us:</p>
+<pre><code>First doc returned                              Last doc returned
   ↓                                                   ↓ 
-[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</code></pre></figure><p>Of course, you're free to go nuts and combine these parameters together. For example, the somewhat bloated options:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token punctuation">{</span>
+[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+</code></pre>
+<p>Of course, you're free to go nuts and combine these parameters together. For example, the somewhat bloated options:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
   <span class="token literal-property property">skip</span> <span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
   <span class="token literal-property property">limit</span> <span class="token operator">:</span> <span class="token number">5</span><span class="token punctuation">,</span>
   <span class="token literal-property property">startkey</span> <span class="token operator">:</span> <span class="token string">'doc10'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">descending</span> <span class="token operator">:</span> <span class="token boolean">true</span>
-<span class="token punctuation">}</span></code></pre></figure><p>would give us:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">First doc returned    Last doc returned
+<span class="token punctuation">}</span></code></pre>
+<p>would give us:</p>
+<pre><code>                             First doc returned    Last doc returned
                                              ↓           ↓ 
-[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</code></pre></figure><h2>Keeping your strings in order</h2>
+[20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+</code></pre>
+<h2>Keeping your strings in order</h2>
 <p>In the examples up to now, I've been careful to name my documents <code>'doc01'</code>, <code>'doc02'</code>, etc.  Astute readers might wonder if that's because PouchDB uses standard <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#Comparing_strings">JavaScript string ordering</a>.  And those smarty-pants readers would be correct!  Since <code>doc2</code> comes after <code>doc10</code> in lexicographical ASCII order, I pad the single digits with zeroes.</p>
 <p>This can be a very useful trick for document sorting.  Normally, PouchDB will generate a random doc ID if you don't specify one (e.g. <code>'36483B8A-DF4A-4AEB-B946-096BA0FA8813'</code>), but if you provide your own IDs, you can make sorting incredibly easy for a variety of applications.</p>
 <h3>Example: sort by date</h3>
 <p>Let's imagine we want to sort our documents by date. For the doc IDs, we'll use timestamps in <a href="http://www.w3.org/TR/NOTE-datetime">standard ISO-8601 format</a>, given by <code>new Date().toJSON()</code>. This guarantees proper lexicographical ordering:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token keyword">var</span> partyLikeIts <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token number">915148800000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1999</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> partyLikeIts <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token number">915148800000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1999</span>
 <span class="token keyword">var</span> now <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token number">1394841840000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment">// 2014</span>
 
 partyLikeIts<span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// "1999-01-01T00:00:00.000Z"</span>
 now<span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span>          <span class="token comment">// "2014-03-15T00:04:00.000Z"</span>
 
 <span class="token comment">// Party on!</span>
-partyLikeIts<span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> now<span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// true</span></code></pre></figure><div class="alert alert-warning">
+partyLikeIts<span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> now<span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// true</span></code></pre>
+<div class="alert alert-warning">
 <div class="alert-text">
 <p><strong>Note:</strong> If you're worried about ID collisions, you could also use <code>new Date().toJSON() + Math.random()</code>.</p>
 </div></div>
 <p>Now we can fetch the 10 most recent docs:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token punctuation">{</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
   <span class="token literal-property property">limit</span> <span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
   <span class="token literal-property property">descending</span> <span class="token operator">:</span> <span class="token boolean">true</span>
-<span class="token punctuation">}</span></code></pre></figure><p>Or the first 10 docs published after January 1st, 2000:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token punctuation">{</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Or the first 10 docs published after January 1st, 2000:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
   <span class="token literal-property property">limit</span> <span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
   <span class="token literal-property property">startkey</span> <span class="token operator">:</span> <span class="token string">'2000-01-01T00:00:00.000Z'</span>
-<span class="token punctuation">}</span></code></pre></figure><p>And if you need fancier sorting, or more than one index, try the Map/Reduce-powered <a href="/api.html#query_database"><code>query()</code> API</a>, which boasts <a href="http://docs.couchdb.org/en/latest/couchapp/views/collation.html#collation-specification">complex key collation</a>.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>And if you need fancier sorting, or more than one index, try the Map/Reduce-powered <a href="/api.html#query_database"><code>query()</code> API</a>, which boasts <a href="http://docs.couchdb.org/en/latest/couchapp/views/collation.html#collation-specification">complex key collation</a>.</p>
 <h2>total_rows is totally awesome</h2>
 <p>When we call <code>allDocs()</code>, a typical response object looks like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token punctuation">{</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
   <span class="token string-property property">"total_rows"</span><span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
   <span class="token string-property property">"offset"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   <span class="token string-property property">"rows"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token comment">/* results go here */</span><span class="token punctuation">]</span>
-<span class="token punctuation">}</span></code></pre></figure><p><code>offset</code> simply tells us how many documents were <code>skip</code>ped, but <code>total_rows</code> tells us the total number of docs in our database.  This can be very useful if you want to calculate how many documents are left to be read in, or if you just want to quickly fetch the database size.</p>
+<span class="token punctuation">}</span></code></pre>
+<p><code>offset</code> simply tells us how many documents were <code>skip</code>ped, but <code>total_rows</code> tells us the total number of docs in our database.  This can be very useful if you want to calculate how many documents are left to be read in, or if you just want to quickly fetch the database size.</p>
 <p>For instance, calling <code>allDocs()</code> with <code>{limit : 0}</code> will simply return an empty list:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript"><span class="token punctuation">{</span>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
   <span class="token string-property property">"total_rows"</span><span class="token operator">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
   <span class="token string-property property">"offset"</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
   <span class="token string-property property">"rows"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-<span class="token punctuation">}</span></code></pre></figure><p>If you're a SQL jockey, you can think of this as your <code>COUNT(*)</code>.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>If you're a SQL jockey, you can think of this as your <code>COUNT(*)</code>.</p>
 <h2>Putting it all together</h2>
 <p>PouchDB and CouchDB handle pagination like it ain't no thing.  There are more advanced topics, like how to page through Map/Reduce views with the <code>query()</code> API, but if you understand <code>allDocs()</code>, you're already 75% of the way there.</p>
 <p>So congratulations, you're now a <a href="https://en.wikipedia.org/wiki/Pagemaster">Page Master</a>!  Try to use your newfound powers for good.</p>
@@ -499,13 +544,8 @@ partyLikeIts<span class="token punctuation">.</span><span class="token function"
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

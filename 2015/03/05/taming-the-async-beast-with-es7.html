@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Taming the asynchronous beast with ES7</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Taming the asynchronous beast with ES7</h1>
+          <h1 class="margin-bottom-none">Taming the asynchronous beast with ES7
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -150,35 +151,35 @@
       <p>One of the trickiest aspects of PouchDB is that its API is asynchronous. I see no shortage of confused questions on Stack Overflow, Github, and IRC, and most often they stem from a misunderstanding of callbacks and promises.</p>
 <p>We can't really help it. PouchDB is an abstraction over IndexedDB, WebSQL, LevelDB (in Node), and CouchDB (via Ajax). All of those APIs are asynchronous; hence PouchDB must be asynchronous.</p>
 <p>When I think of elegant database APIs, however, I'm still struck by the simplicity of LocalStorage:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>localStorage<span class="token punctuation">.</span>foo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>localStorage<span class="token punctuation">.</span>foo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   localStorage<span class="token punctuation">.</span>foo <span class="token operator">=</span> <span class="token string">'bar'</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>localStorage<span class="token punctuation">.</span>foo<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>localStorage<span class="token punctuation">.</span>foo<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>To work with LocalStorage, you simply treat it like a magical JavaScript object that happens to persist your data. It uses the same synchronous toolset that you're already used to from working with JavaScript itself.</p>
 <p>For all of <a href="http://www.html5rocks.com/en/tutorials/offline/quota-research/">LocalStorage's</a> <a href="https://blog.mozilla.org/tglek/2012/02/22/psa-dom-local-storage-considered-harmful/">faults</a>, the ergonomics of this API go a long way to explain its continuing popularity. People keep using LocalStorage, because it's simple and works exactly as expected.</p>
 <h3>Promises aren't a panacea</h3>
 <p>For PouchDB, we can try to mitigate the complexity of asynchronous APIs with promises, and that certainly helps us escape the <a href="https://medium.com/@wavded/managing-node-js-callback-hell-1fe03ba8baf">pyramid of doom</a>.</p>
 <p>However, promisey code is still hard to read, because promises are basically a bolt-on replacement for language primitives like <code>try</code>, <code>catch</code>, and <code>return</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">result</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// post a new doc</span>
   <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// fetch the doc</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>                  <span class="token comment">// log the doc</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>                  <span class="token comment">// log any errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>As JavaScript developers, we now have two parallel systems – sync and async – that we have to keep straight in our heads. And this gets even worse as our control flow becomes more complex, and we need to reach for APIs like <code>Promise.all()</code> and <code>Promise.resolve()</code>. Or maybe we just opt for <a href="https://github.com/petkaantonov/bluebird">one</a> <a href="https://github.com/tildeio/rsvp.js">of</a> <a href="https://github.com/caolan/async">the</a> <a href="https://github.com/kriskowal/q">many</a> <a href="https://github.com/cujojs/when">helper</a> <a href="https://msdn.microsoft.com/en-us/library/windows/apps/br211867.aspx">libraries</a> and pray we can understand the documentation.</p>
 <p>Until recently, this was the best we could hope for. But all of that changes with ES7.</p>
 <h3>Enter ES7</h3>
 <p>What if I told you that, with ES7, you could rewrite the above code to look like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">try</span> <span class="token punctuation">{</span>
   <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">let</span> doc <span class="token operator">=</span> <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>And what if I told you that, thanks to tools like <a href="https://babeljs.io/">Babel.js</a> and <a href="http://facebook.github.io/regenerator/">Regenerator</a>, you can transpile that down to ES5 and run it in a browser <em>today</em>?</p>
 <p>
   <a href="/static/img/orson_welles_clapping.gif" target="_blank">
@@ -189,18 +190,18 @@ db<span class="token punctuation">.</span><span class="token function">post</spa
 <p>First, let's take a look at how ES7 is accomplishing this amazing feat.</p>
 <h3>Async functions</h3>
 <p>ES7 gives us a new kind of function, the <code>async function</code>. Inside of an <code>async function</code>, we have a new keyword, <code>await</code>, which we use to &quot;wait for&quot; a promise:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">myFunction</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">myFunction</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">somethingThatReturnsAPromise</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// cool, we have a result</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>If the promise resolves, we can immediately interact with it on the next line. And if it rejects, then an error is thrown. So <code>try</code>/<code>catch</code> actually works again!</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">myFunction</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">myFunction</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">try</span> <span class="token punctuation">{</span>
     <span class="token keyword">await</span> <span class="token function">somethingThatReturnsAPromise</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// oh noes, we got an error</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>This allows us to write code that looks synchronous on the surface, but is actually asynchronous under the hood. The fact that the API returns a promise instead of blocking the event loop is just an implementation detail.</p>
 <p>
   <a href="/static/img/pepperidge_farm_remembers.png" target="_blank">
@@ -211,16 +212,16 @@ db<span class="token punctuation">.</span><span class="token function">post</spa
 <h3>Managing errors and return values</h3>
 <p>First, consider a common idiom in PouchDB: we want to <code>get()</code> a document by <code>_id</code> if it exists, or return a new document if it doesn't.</p>
 <p>With promises, you'd have to write something like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">.</span>name <span class="token operator">===</span> <span class="token string">'not_found'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token comment">// new doc</span>
   <span class="token punctuation">}</span>
   <span class="token keyword">throw</span> err<span class="token punctuation">;</span> <span class="token comment">// some error other than 404</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></figure>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre>
 <p>With async functions, this becomes:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> doc<span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> doc<span class="token punctuation">;</span>
 <span class="token keyword">try</span> <span class="token punctuation">{</span>
   doc <span class="token operator">=</span> <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'docid'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -230,14 +231,14 @@ db<span class="token punctuation">.</span><span class="token function">post</spa
     <span class="token keyword">throw</span> err<span class="token punctuation">;</span> <span class="token comment">// some error other than 404</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Much more readable! This is almost the exact same code we would write if <code>db.get()</code> directly returned a document rather than a promise. The only difference is that we have to add the <code>await</code> keyword when we call any promise-returning function.</p>
 <h3>Potential gotchas</h3>
 <p>There are a few subtle issues that I ran into while playing with this, so it's good to be aware of them.</p>
 <p>First off, anytime you <code>await</code> something, you need to be inside an async function. So if your code relies heavily on PouchDB, you may find that you write lots of async functions, but very few regular functions.</p>
 <p>Another, more insidious problem is that you have to be careful to wrap your code in <code>try</code>/<code>catch</code>es, or else a promise might be rejected, in which case the error is silently swallowed. (!)</p>
 <p>My advice is to ensure that your async functions are entirely surrounded by <code>try</code>/<code>catch</code>es, at least at the top level:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">createNewDoc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">createNewDoc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">let</span> response <span class="token operator">=</span> <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// post a new doc</span>
   <span class="token keyword">return</span> <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// find by id</span>
 <span class="token punctuation">}</span>
@@ -249,11 +250,11 @@ console<span class="token punctuation">.</span><span class="token function">log<
   <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <h3>Loops</h3>
 <p>Async functions get really impressive when it comes to iteration. For instance, Let's say that we want to insert some documents into the database, but <em>sequentially</em>. That is, we want the promises to execute one after the other, not concurrently.</p>
 <p>Using standard ES6 promises, we'd have to roll our own promise chain:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> promise <span class="token operator">=</span> Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> promise <span class="token operator">=</span> Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">var</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 docs<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -264,72 +265,76 @@ docs<span class="token punctuation">.</span><span class="token function">forEach
 
 promise<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// now all our docs have been saved</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>This works, but it sure is ugly. It's also error-prone, because if you accidentally do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">docs<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">docs<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   promise <span class="token operator">=</span> promise<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Then the promises will actually execute <em>concurrently</em>, which can lead to unexpected results.</p>
 <p>With ES7, though, we can just use a regular for-loop:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> docs<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">let</span> doc <span class="token operator">=</span> docs<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
   <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>This (very concise) code does the same thing as the promise chain! We can make it even shorter by using <code>for...of</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> doc <span class="token keyword">of</span> docs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>Note that you cannot use a  <code>forEach()</code> loop here. If you were to naïvely write:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token comment">// WARNING: this won't work</span>
 docs<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Then Babel.js will fail with a somewhat opaque error:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">Error : /../script.js: Unexpected token (38:23)
-> 38 |     await db.post(doc);
-     |           ^</code></pre></figure><p>This is because you cannot use <code>await</code> from within a normal function. You have to use an async function.</p>
+<pre><code>Error : /../script.js: Unexpected token (38:23)
+&gt; 38 |     await db.post(doc);
+     |           ^
+</code></pre>
+<p>This is because you cannot use <code>await</code> from within a normal function. You have to use an async function.</p>
 <p>However, if you try to use an async function, then you will get a more subtle bug:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token comment">// WARNING: this won't work</span>
 docs<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc<span class="token punctuation">,</span> i</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'main loop done'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'main loop done'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>This will compile, but the problem is that this will print out:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">main loop done
+<pre><code>main loop done
 0
 1
-2</code></pre></figure><p>What's happening is that the main function is exiting early, because the <code>await</code> is actually in the sub-function. Furthermore, this will execute each promise <em>concurrently</em>, which is not what we intended.</p>
+2
+</code></pre>
+<p>What's happening is that the main function is exiting early, because the <code>await</code> is actually in the sub-function. Furthermore, this will execute each promise <em>concurrently</em>, which is not what we intended.</p>
 <p>The lesson is: be careful when you have any function inside your async function. The <code>await</code> will only pause its parent function, so check that it's doing what you actually think it's doing.</p>
 <h3>Concurrent loops</h3>
 <p>If we do want to execute multiple promises concurrently, though, then this is pretty easy to accomplish with ES7.</p>
 <p>Recall that with ES6 promises, we have <code>Promise.all()</code>. Let's use it to return an array of values from an array of promises:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 <span class="token keyword">return</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span>docs<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">results</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>results<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>In ES7, we can do this is a more straightforward way:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token keyword">let</span> promises <span class="token operator">=</span> docs<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token operator">=></span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token keyword">let</span> results <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> promise <span class="token keyword">of</span> promises<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   results<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token keyword">await</span> promise<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>results<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>results<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>The most important parts are 1) creating the <code>promises</code> array, which starts invoking all the promises immediately, and 2) that we are <code>await</code>ing those promises within the main function. If we tried to use <code>Array.prototype.map</code>, then it wouldn't work:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token keyword">let</span> promises <span class="token operator">=</span> docs<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token operator">=></span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// WARNING: this doesn't work</span>
@@ -338,14 +343,14 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// This will just be a list of promises :(</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>results<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>results<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>The reason this doesn't work is because we are <code>await</code>ing inside of the sub-function, and not the main function. So the main function exits before we are really done waiting.</p>
 <p>If you don't mind using <code>Promise.all</code>, you can also use it to tidy up the code a bit:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> docs <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token keyword">let</span> promises <span class="token operator">=</span> docs<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token operator">=></span> db<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token keyword">let</span> results <span class="token operator">=</span> <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span>promises<span class="token punctuation">)</span><span class="token punctuation">;</span>
-console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>results<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>results<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <p>Presumably this could look even nicer if we used <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Array_comprehensions">array comprehesions</a>. However, the spec isn't final yet, so it's currently <a href="https://github.com/facebook/regenerator/issues/182">not supported</a> by Regenerator.</p>
 <h3>Caveats</h3>
 <p>ES7 is still very bleeding-edge. Async functions aren't supported in either Node.js or io.js, and you have to set some experimental flags to even get Babel to consider it. Officially, <a href="https://github.com/lukehoban/ecmascript-asyncawait#status-of-this-proposal">the async/await spec</a> is still in the &quot;proposal&quot; stage.</p>
@@ -490,13 +495,8 @@ console<span class="token punctuation">.</span><span class="token function">log<
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

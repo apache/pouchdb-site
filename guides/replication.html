@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Replication</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Replication</h1>
+          <h1 class="margin-bottom-none">Replication
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -250,35 +251,42 @@ same privileges. The data won't show up instantaneously, but depending on the In
 <p>In this way, CouchDB replication &quot;just works.&quot;</p>
 <div class='h2'><div class='anchor-id' id='setting-up-sync'></div><a class='anchor' href='#setting-up-sync' name='setting-up-sync'>Setting up sync</a></div>
 <p>As you already know, you can create either local PouchDBs:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> localDB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mylocaldb'</span><span class="token punctuation">)</span></code></pre></figure><p>or remote PouchDBs:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> remoteDB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://localhost:5984/myremotedb'</span><span class="token punctuation">)</span></code></pre></figure><p>This pattern comes in handy when you want to share data between the two.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> localDB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mylocaldb'</span><span class="token punctuation">)</span></code></pre>
+<p>or remote PouchDBs:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> remoteDB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://localhost:5984/myremotedb'</span><span class="token punctuation">)</span></code></pre>
+<p>This pattern comes in handy when you want to share data between the two.</p>
 <p>The simplest case is <strong>unidirectional replication</strong>, meaning you just want one database to mirror its changes to a second one. Writes to the second database, however, will not propagate back to the master database.</p>
 <p>To perform unidirectional replication, you simply do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">localDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">localDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// yay, we're done!</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// boo, something went wrong!</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Congratulations, all changes from the <code>localDB</code> have been replicated to the <code>remoteDB</code>.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Congratulations, all changes from the <code>localDB</code> have been replicated to the <code>remoteDB</code>.</p>
 <p>However, what if you want <strong>bidirectional replication</strong>? You could do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">localDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">;</span>
-localDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>However, to make things easier for your poor tired fingers, PouchDB has a shortcut API:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>These two code blocks above are equivalent. And the <code>sync</code> API supports all the same events as the <code>replicate</code> API:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">localDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">;</span>
+localDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>However, to make things easier for your poor tired fingers, PouchDB has a shortcut API:</p>
+<pre class="language-js"><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>These two code blocks above are equivalent. And the <code>sync</code> API supports all the same events as the <code>replicate</code> API:</p>
+<pre class="language-js"><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// yay, we're in sync!</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// boo, we hit an error!</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='live–replication'></div><a class='anchor' href='#live–replication' name='live–replication'>Live replication</a></div>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<div class='h2'><div class='anchor-id' id='live–replication'></div><a class='anchor' href='#live–replication' name='live–replication'>Live replication</a></div>
 <p>Live replication (or &quot;continuous&quot; replication) is a separate mode where changes are propagated between the two databases as the changes occur. In other words, normal replication happens once, whereas live replication happens in real time.</p>
 <p>To enable live replication, you simply specify <code>{live: true}</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
   <span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">change</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// yo, something changed!</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// yo, we got an error! (maybe the user went offline?)</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>However, there is one gotcha with live replication: what if the user goes offline? In those cases, an error will be thrown and replication will stop.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>However, there is one gotcha with live replication: what if the user goes offline? In those cases, an error will be thrown and replication will stop.</p>
 <p>You can allow PouchDB to automatically handle this error, and retry until the connection is re-established, by using the <code>retry</code> option:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
   <span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
   <span class="token literal-property property">retry</span><span class="token operator">:</span> <span class="token boolean">true</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">change</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -289,10 +297,11 @@ localDB<span class="token punctuation">.</span>replicate<span class="token punct
   <span class="token comment">// replication was resumed</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// totally unhandled error (shouldn't happen)</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This is ideal for scenarios where the user may be flitting in and out of connectivity, such as on mobile devices.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This is ideal for scenarios where the user may be flitting in and out of connectivity, such as on mobile devices.</p>
 <div class='h2'><div class='anchor-id' id='canceling—replication'></div><a class='anchor' href='#canceling—replication' name='canceling—replication'>Canceling replication</a></div>
 <p>Sometimes, you may want to manually cancel replication – for instance, because the user logged out. You can do so by calling <code>cancel()</code> and then waiting for the <code>'complete'</code> event:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> syncHandler <span class="token operator">=</span> localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> syncHandler <span class="token operator">=</span> localDB<span class="token punctuation">.</span><span class="token function">sync</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
   <span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
   <span class="token literal-property property">retry</span><span class="token operator">:</span> <span class="token boolean">true</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -301,8 +310,9 @@ syncHandler<span class="token punctuation">.</span><span class="token function">
   <span class="token comment">// replication was canceled!</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-syncHandler<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- this cancels it</span></code></pre></figure><p>The <code>replicate</code> API also supports canceling:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> replicationHandler <span class="token operator">=</span> localDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+syncHandler<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- this cancels it</span></code></pre>
+<p>The <code>replicate</code> API also supports canceling:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> replicationHandler <span class="token operator">=</span> localDB<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span>remoteDB<span class="token punctuation">,</span> <span class="token punctuation">{</span>
   <span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
   <span class="token literal-property property">retry</span><span class="token operator">:</span> <span class="token boolean">true</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -311,7 +321,8 @@ replicationHandler<span class="token punctuation">.</span><span class="token fun
   <span class="token comment">// replication was canceled!</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-replicationHandler<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- this cancels it</span></code></pre></figure><div class='h2'><div class='anchor-id' id='delete-during-replication'></div><a class='anchor' href='#delete-during-replication' name='delete-during-replication'>Deleting replicated databases</a></div>
+replicationHandler<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// &lt;-- this cancels it</span></code></pre>
+<div class='h2'><div class='anchor-id' id='delete-during-replication'></div><a class='anchor' href='#delete-during-replication' name='delete-during-replication'>Deleting replicated databases</a></div>
 <hr>
 <p>One thing to note about replication is that it tracks the data within a database, not the database itself. If you <a href="/api.html#delete_database"><code>destroy()</code></a> a database that is being replicated to, the next time the replication starts it will transfer all of the data again, recreating the database to the state it was before it was <code>destroyed</code>. If you want the data within the database to be deleted you will need to delete via <a href="/api.html#delete_document"><code>remove()</code></a> or <a href="/api.html#batch_create"><code>bulkDocs()</code></a>. The <a href="https://github.com/marten-de-vries/pouchdb-erase">pouchdb-erase</a> plugin can help you remove the entire contents of a database.</p>
 <div class='h2'><div class='anchor-id' id='fancy-replication'></div><a class='anchor' href='#fancy-replication' name='fancy-replication'>Fancy replication</a></div>
@@ -524,13 +535,8 @@ replicationHandler<span class="token punctuation">.</span><span class="token fun
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

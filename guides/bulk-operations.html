@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bulk operations</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Bulk operations</h1>
+          <h1 class="margin-bottom-none">Bulk operations
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -223,9 +224,9 @@
           
 <p>You can <code>get()</code>, <code>put()</code>, and <code>remove()</code> single documents to your heart's content, but a database isn't a database unless it can handle many operations at once!</p>
 <p>PouchDB provides two methods for bulk operations - <code>bulkDocs()</code> for bulk writes, and <code>allDocs()</code> for bulk reads.</p>
-<div class='h2'><div class='anchor-id' id='use-bulkdocs-to-write-many-docs'></div><a class='anchor' href='#use-bulkdocs-to-write-many-docs' name='use-bulkdocs-to-write-many-docs'>Use `bulkDocs()` to write many docs</a></div>
+<div class='h2'><div class='anchor-id' id='use-bulkdocs-to-write-many-docs'></div><a class='anchor' href='#use-bulkdocs-to-write-many-docs' name='use-bulkdocs-to-write-many-docs'>Use <code>bulkDocs()</code> to write many docs</a></div>
 <p>The <code>bulkDocs()</code> API is very simple.  It just takes a list of documents that you want to <code>put()</code> into the database:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">bulkDocs</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">bulkDocs</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
   <span class="token punctuation">{</span>
     <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'mittens'</span><span class="token punctuation">,</span>
     <span class="token literal-property property">occupation</span><span class="token operator">:</span> <span class="token string">'kitten'</span><span class="token punctuation">,</span>
@@ -241,9 +242,10 @@
     <span class="token literal-property property">occupation</span><span class="token operator">:</span> <span class="token string">'kitten'</span><span class="token punctuation">,</span>
     <span class="token literal-property property">cuteness</span><span class="token operator">:</span> <span class="token number">8.0</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/038a45134341f3b7235b">a live example</a></strong> of this code.</p>
+<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/038a45134341f3b7235b">a live example</a></strong> of this code.</p>
 <p>This code is equivalent to <code>put()</code>ing each document separately:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
     <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'mittens'</span><span class="token punctuation">,</span>
     <span class="token literal-property property">occupation</span><span class="token operator">:</span> <span class="token string">'kitten'</span><span class="token punctuation">,</span>
     <span class="token literal-property property">cuteness</span><span class="token operator">:</span> <span class="token number">9.0</span>
@@ -259,7 +261,8 @@
     <span class="token literal-property property">occupation</span><span class="token operator">:</span> <span class="token string">'kitten'</span><span class="token punctuation">,</span>
     <span class="token literal-property property">cuteness</span><span class="token operator">:</span> <span class="token number">8.0</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='why-bulk-up-with-bulkdocs'></div><a class='anchor' href='#why-bulk-up-with-bulkdocs' name='why-bulk-up-with-bulkdocs'>Why bulk up with `bulkDocs()`?</a></div>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<div class='h2'><div class='anchor-id' id='why-bulk-up-with-bulkdocs'></div><a class='anchor' href='#why-bulk-up-with-bulkdocs' name='why-bulk-up-with-bulkdocs'>Why bulk up with <code>bulkDocs()</code>?</a></div>
 <p>Bulk operations tend to be faster than individual operations, because they can be combined into a single transaction (in a local IndexedDB/WebSQL) or a single HTTP request (in a remote CouchDB).</p>
 <p>You can also update or delete multiple documents this way. You just need to include the <code>_rev</code> and <code>_deleted</code> values as previously discussed. The same rules as for <code>put()</code> apply to each individual document.</p>
 <div class="alert alert-warning">
@@ -269,13 +272,13 @@
 <p/>
 By design, CouchDB and PouchDB do not support transactions. A document is the smallest unit of operations.
 </div></div>
-<div class='h2'><div class='anchor-id' id='use-alldocs-to-read-many-docs'></div><a class='anchor' href='#use-alldocs-to-read-many-docs' name='use-alldocs-to-read-many-docs'>Use `allDocs()` to read many docs</a></div>
+<div class='h2'><div class='anchor-id' id='use-alldocs-to-read-many-docs'></div><a class='anchor' href='#use-alldocs-to-read-many-docs' name='use-alldocs-to-read-many-docs'>Use <code>allDocs()</code> to read many docs</a></div>
 <p>Likewise, <code>allDocs()</code> is a method that allows you to read many documents at once.</p>
 <p>Most crucially, when you read from <code>allDocs()</code>, the documents are returned <em>sorted by order of <code>_id</code></em>.  This makes the <code>_id</code> a very powerful field that you can use for more than just uniquely identifying your documents.</p>
 <p>For instance, if you refer back to <a href="http://bl.ocks.org/nolanlawson/038a45134341f3b7235b">the live example</a> above, you'll notice that the kittens are sorted by their name, because their names are used as their <code>_id</code>s.</p>
 <p>Another common way to take advantage of this is to use <code>new Date().toJSON()</code> as your document <code>_id</code>s. In this way, all your documents will be sorted by date.</p>
 <p>For instance, let's save three kittens with three different dates, and then fetch them sorted by date:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
     <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
     <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'Mittens'</span><span class="token punctuation">,</span>
     <span class="token literal-property property">occupation</span><span class="token operator">:</span> <span class="token string">'kitten'</span><span class="token punctuation">,</span>
@@ -300,8 +303,9 @@ By design, CouchDB and PouchDB do not support transactions. A document is the sm
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/8f58dbc360348a4c95f6">a live example</a></strong> to confirm that the kittens are sorted by the order they were put into the database.</p>
-<div class='h2'><div class='anchor-id' id='please-use-alldocs'></div><a class='anchor' href='#please-use-alldocs' name='please-use-alldocs'>Please use `allDocs()`. Seriously.</a></div>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/8f58dbc360348a4c95f6">a live example</a></strong> to confirm that the kittens are sorted by the order they were put into the database.</p>
+<div class='h2'><div class='anchor-id' id='please-use-alldocs'></div><a class='anchor' href='#please-use-alldocs' name='please-use-alldocs'>Please use <code>allDocs()</code>. Seriously.</a></div>
 <p><code>allDocs()</code> is the unsung star of the PouchDB world. It not only returns documents in order – it also allows you to reverse the order, filter by <code>_id</code>, slice and dice using &quot;greater than&quot; and &quot;less than&quot; operations on the <code>_id</code>, and much more.</p>
 <p>Far too many developers overlook this valuable API, because they misunderstand it. When a developer says &quot;my PouchDB app is slow!&quot;, it is usually because they are using the slow <code>query()</code> API when they should be using the fast <code>allDocs()</code> API.</p>
 <p>For details on how to effectively use <code>allDocs()</code>, you are strongly recommended to read <a href="/2014/04/14/pagination-strategies-with-pouchdb.html">&quot;Pagination strategies with PouchDB&quot;</a>. For 99% of your applications, you should be able to use <code>allDocs()</code> for all the pagination/sorting/searching functionality that you need.</p>
@@ -501,13 +505,8 @@ By design, CouchDB and PouchDB do not support transactions. A document is the sm
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

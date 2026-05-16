@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Getting Started Guide</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Getting Started Guide</h1>
+          <h1 class="margin-bottom-none">Getting Started Guide
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -155,9 +156,9 @@ and <a href="https://github.com/nickcolley/getting-started-todo/commits/master" 
 <div class="iframe-responsive"><iframe src="https://www.youtube.com/embed/-Z7UF2TuSp0" allowfullscreen></iframe></div>
 <div class='h3'><div class='anchor-id' id='download'></div><a class='anchor' href='#download' name='download'>Download Assets</a></div>
 <p>We will start with a template of the project where all the data related functions have been replaced with empty stubs. Download and unzip <a href="https://github.com/pouchdb/pouchdb-getting-started-todo/archive/master.zip">pouchdb-getting-started-todo.zip</a>. When dealing with XHR and IndexedDB you are better off running web pages from a server as opposed to a filesystem. To do this you can run:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-bash">$ <span class="token builtin class-name">cd</span> pouchdb-getting-started-todo
+<pre class="language-bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> pouchdb-getting-started-todo
 $ python <span class="token parameter variable">-m</span> SimpleHTTPServer  <span class="token comment"># for Python 2</span>
-$ python <span class="token parameter variable">-m</span> http.server       <span class="token comment"># for Python 3</span></code></pre></figure>
+$ python <span class="token parameter variable">-m</span> http.server       <span class="token comment"># for Python 3</span></code></pre>
 <p>Then visit <a href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a>. If you see the following screenshot, you are good to go:</p>
 <p>
   <a href="/static/img/screenshots/todo-1.png" target="_blank">
@@ -167,20 +168,20 @@ $ python <span class="token parameter variable">-m</span> http.server       <spa
 <p>It's also a good idea to open your browser's console so you can see any errors or confirmation messages.</p>
 <div class='h3'><div class='anchor-id' id='installing_pouchdb'></div><a class='anchor' href='#installing_pouchdb' name='installing_pouchdb'>Installing PouchDB</a></div>
 <p>Open <code>index.html</code> and include PouchDB in the app by adding a script tag:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/pouchdb@9.0.0/dist/pouchdb.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://cdn.jsdelivr.net/npm/pouchdb@{{site.version}}/dist/pouchdb.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>js/base.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>js/app.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>js/app.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre>
 <p>PouchDB is now installed in your app and ready to use! (In production, you should use a local copy of the script.)</p>
 <div class='h3'><div class='anchor-id' id='creating_a_database'></div><a class='anchor' href='#creating_a_database' name='creating_a_database'>Creating a database</a></div>
 <p>The rest of the work will be done inside <code>app.js</code>. We will start by creating a database to enter your todos. To create a database simply instantiate a new PouchDB object with the name of the database:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// EDITING STARTS HERE (you don't need to edit anything above this line)</span>
+<pre class="language-js"><code class="language-js"><span class="token comment">// EDITING STARTS HERE (you don't need to edit anything above this line)</span>
 
 <span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'todos'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> remoteCouch <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token keyword">const</span> remoteCouch <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span></code></pre>
 <p>You don't need to create a schema for the database. After giving it a name, you can immediately start writing objects to it.</p>
 <div class='h3'><div class='anchor-id' id='write_todos_to_database'></div><a class='anchor' href='#write_todos_to_database' name='write_todos_to_database'>Write todos to the database</a></div>
 <p>The first thing we shall do is start writing items to the database. The main input will call <code>addTodo</code> with the current text when the user presses <code>Enter</code>. We can complete this function with the following code:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">addTodo</span><span class="token punctuation">(</span><span class="token parameter">text</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">addTodo</span><span class="token punctuation">(</span><span class="token parameter">text</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> todo <span class="token operator">=</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toISOString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
     <span class="token literal-property property">title</span><span class="token operator">:</span> text<span class="token punctuation">,</span>
@@ -191,20 +192,20 @@ $ python <span class="token parameter variable">-m</span> http.server       <spa
       console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Successfully posted a todo!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>In PouchDB each document is required to have a unique <code>_id</code>. Any subsequent writes to a document with the same <code>_id</code> will be considered updates. Here we are using a date string as an <code>_id</code>. For our use case, it will be unique, and it can also be used to sort items in the database. You can use <code>db.post()</code> if you want random ids. The <code>_id</code> is the only thing required when creating a new document. The rest of the object you can create as you like.</p>
 <p>The <code>callback</code> function will be called once the document has been written (or failed to write). If the <code>err</code> argument is not null, then it will have an object explaining the error, otherwise the <code>result</code> will hold the result.</p>
 <div class='h3'><div class='anchor-id' id='show_database_items'></div><a class='anchor' href='#show_database_items' name='show_database_items'>Show items from the database</a></div>
 <p>We have included a helper function <code>redrawTodosUI</code> that takes an array of todos to display, so all we need to do is read the todos from the database. Here we will simply read all the documents using <code>db.allDocs</code>. The <code>include_docs</code> option tells PouchDB to give us the data within each document, and the <code>descending</code> option tells PouchDB how to order the results based on their <code>_id</code> field, giving us newest first.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">showTodos</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">showTodos</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   db<span class="token punctuation">.</span><span class="token function">allDocs</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">include_docs</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token literal-property property">descending</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token function">redrawTodosUI</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>rows<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>Once you have included this code, you should be able to refresh the page to see any todos you have entered.</p>
 <div class='h3'><div class='anchor-id' id='update_the_ui'></div><a class='anchor' href='#update_the_ui' name='update_the_ui'>Update the UI</a></div>
 <p>We don't want to refresh the page to see new items. More typically you would update the UI manually when you write data to it, however, in PouchDB you may be syncing data remotely, so you want to make sure you update whenever the remote data changes. To do this we will call <code>db.changes</code> which subscribes to updates to the database, wherever they come from. You can enter this code between the <code>remoteCouch</code> and <code>addTodo</code> declaration:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> remoteCouch <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> remoteCouch <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
 
 db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">since</span><span class="token operator">:</span> <span class="token string">'now'</span><span class="token punctuation">,</span>
@@ -212,25 +213,25 @@ db<span class="token punctuation">.</span><span class="token function">changes</
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> showTodos<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token comment">// We have to create a new todo document and enter it in the database</span>
-<span class="token keyword">function</span> <span class="token function">addTodo</span><span class="token punctuation">(</span><span class="token parameter">text</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></code></pre></figure>
+<span class="token keyword">function</span> <span class="token function">addTodo</span><span class="token punctuation">(</span><span class="token parameter">text</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></code></pre>
 <p>So every time an update happens to the database, we redraw the UI to show the new data. The <code>live</code> flag means this function will continue to run indefinitely. Now try entering a new todo and it should appear immediately.</p>
 <div class='h3'><div class='anchor-id' id='edit_a_todo'></div><a class='anchor' href='#edit_a_todo' name='edit_a_todo'>Edit a todo</a></div>
 <p>When the user checks a checkbox, the <code>checkboxChanged</code> function will be called, so we'll fill in the code to edit the object and call <code>db.put</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">checkboxChanged</span><span class="token punctuation">(</span><span class="token parameter">todo<span class="token punctuation">,</span> event</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">checkboxChanged</span><span class="token punctuation">(</span><span class="token parameter">todo<span class="token punctuation">,</span> event</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   todo<span class="token punctuation">.</span>completed <span class="token operator">=</span> event<span class="token punctuation">.</span>target<span class="token punctuation">.</span>checked<span class="token punctuation">;</span>
   db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>todo<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>This is similar to creating a document, however the document must also contain a <code>_rev</code> field (in addition to <code>_id</code>), otherwise the write will be rejected. This ensures that you don't accidentally overwrite changes to a document.</p>
 <p>You can test that this works by checking a todo item and refreshing the page. It should stay checked.</p>
 <div class='h3'><div class='anchor-id' id='delete_an_object'></div><a class='anchor' href='#delete_an_object' name='delete_an_object'>Delete an object</a></div>
 <p>To delete an object you can call db.remove with the object.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">deleteButtonPressed</span><span class="token punctuation">(</span><span class="token parameter">todo</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">deleteButtonPressed</span><span class="token punctuation">(</span><span class="token parameter">todo</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   db<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>todo<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p>Similar to editing a document, both the <code>_id</code> and <code>_rev</code> properties are required. You may notice that we are passing around the full object that we previously read from the database. You can of course manually construct the object, like: <code>{_id: todo._id, _rev: todo._rev}</code>, but passing around the existing object is usually more convenient and less error prone.</p>
 <div class='h3'><div class='anchor-id' id='complete_todo_ui'></div><a class='anchor' href='#complete_todo_ui' name='complete_todo_ui'>Complete rest of the Todo UI</a></div>
 <p><code>todoBlurred</code> is called when the user edits a document. Here we'll delete the document if the user has entered a blank title, and we'll update it otherwise.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">todoBlurred</span><span class="token punctuation">(</span><span class="token parameter">todo<span class="token punctuation">,</span> event</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">todoBlurred</span><span class="token punctuation">(</span><span class="token parameter">todo<span class="token punctuation">,</span> event</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> trimmedText <span class="token operator">=</span> event<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>trimmedText<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     db<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>todo<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -238,16 +239,16 @@ db<span class="token punctuation">.</span><span class="token function">changes</
     todo<span class="token punctuation">.</span>title <span class="token operator">=</span> trimmedText<span class="token punctuation">;</span>
     db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>todo<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <div class='h3'><div class='anchor-id' id='installing_couchdb'></div><a class='anchor' href='#installing_couchdb' name='installing_couchdb'>Installing CouchDB</a></div>
 <p>Now we'll implement the syncing. You need to have a compatible server instance. You can install either <a href="https://github.com/pouchdb/pouchdb-server">PouchDB-Server</a>, <a href="http://couchdb.apache.org/">CouchDB</a> or use an hosted Couch service such as <a href="https://cloudant.com/">Cloudant</a></p>
 <div class='h3'><div class='anchor-id' id='enabling_cors'></div><a class='anchor' href='#enabling_cors' name='enabling_cors'>Enabling CORS</a></div>
 <p>To replicate directly with CouchDB, you need to make sure CORS is enabled. Only set the username and password if you have set them previously. By default, CouchDB will be installed in &quot;Admin Party,&quot; where username and password are not needed. You will need to replace <code>myname.example.com</code> with your own host (<code>127.0.0.1:5984</code> if installed locally):</p>
 <p>You can enable CORS in CouchDB using <code>curl</code> or the Futon web interface, but we've saved you some time by making a Node script called <a href="https://github.com/pouchdb/add-cors-to-couchdb">add-cors-to-couchdb</a>. Just run:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> add-cors-to-couchdb
-$ add-cors-to-couchdb</code></pre></figure>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> add-cors-to-couchdb
+$ add-cors-to-couchdb</code></pre>
 <p>Or if your database is not at <code>127.0.0.1:5984</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-bash">$ add-cors-to-couchdb http://me.example.com <span class="token parameter variable">-u</span> myusername <span class="token parameter variable">-p</span> mypassword</code></pre></figure>
+<pre class="language-bash"><code class="language-bash">$ add-cors-to-couchdb http://me.example.com <span class="token parameter variable">-u</span> myusername <span class="token parameter variable">-p</span> mypassword</code></pre>
 <p>You can check that CORS is now enabled by visiting <a href="http://localhost:5984/_utils/config.html">http://localhost:5984/_utils/config.html</a> in your browser. You should see something like this:</p>
 <p>
   <a href="/static/img/cors_in_couchdb.png" target="_blank">
@@ -256,17 +257,17 @@ $ add-cors-to-couchdb</code></pre></figure>
 </p>
 <div class='h3'><div class='anchor-id' id='basic_two_way_sync'></div><a class='anchor' href='#basic_two_way_sync' name='basic_two_way_sync'>Implement basic two way sync</a></div>
 <p>Now we will have the todo list sync. Back in <code>app.js</code> we need to specify the address of the remote database. Remember to replace <code>user</code>, <code>pass</code> and <code>myname.example.com</code> with the credentials of your own CouchDB instance:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// EDITING STARTS HERE (you don't need to edit anything above this line)</span>
+<pre class="language-js"><code class="language-js"><span class="token comment">// EDITING STARTS HERE (you don't need to edit anything above this line)</span>
 
 <span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'todos'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> remoteCouch <span class="token operator">=</span> <span class="token string">'http://user:pass@myname.example.com/todos'</span><span class="token punctuation">;</span></code></pre></figure>
+<span class="token keyword">const</span> remoteCouch <span class="token operator">=</span> <span class="token string">'http://user:pass@myname.example.com/todos'</span><span class="token punctuation">;</span></code></pre>
 <p>Then we can implement the sync function like so:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">function</span> <span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">sync</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   syncDom<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'data-sync-state'</span><span class="token punctuation">,</span> <span class="token string">'syncing'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> opts <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
   db<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">to</span><span class="token punctuation">(</span>remoteCouch<span class="token punctuation">,</span> opts<span class="token punctuation">,</span> syncError<span class="token punctuation">)</span><span class="token punctuation">;</span>
   db<span class="token punctuation">.</span>replicate<span class="token punctuation">.</span><span class="token function">from</span><span class="token punctuation">(</span>remoteCouch<span class="token punctuation">,</span> opts<span class="token punctuation">,</span> syncError<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre></figure>
+<span class="token punctuation">}</span></code></pre>
 <p><code>db.replicate()</code> tells PouchDB to transfer all the documents <code>to</code> or <code>from</code> the <code>remoteCouch</code>. This can either be a string identifier or a PouchDB object. We call this twice: once to receive remote updates, and once to push local changes. Again, the <code>live</code> flag is used to tell PouchDB to carry on doing this indefinitely. The callback will be called whenever this finishes. For live replication, this will mean an error has occurred, like losing your connection or you canceled the replication.</p>
 <p>You should be able to open <a href="http://127.0.0.1:8000">the todo app</a> in another browser and see that the two lists stay in sync with any changes you make to them. You may also want to look at your CouchDB's Futon administration page and see the populated database.</p>
 <div class='h3'><div class='anchor-id' id='congratulations'></div><a class='anchor' href='#congratulations' name='congratulations'>Congratulations!</a></div>
@@ -408,13 +409,8 @@ $ add-cors-to-couchdb</code></pre></figure>
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 5.0.0 - Five years of PouchDB</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 5.0.0 - Five years of PouchDB</h1>
+          <h1 class="margin-bottom-none">PouchDB 5.0.0 - Five years of PouchDB
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -154,18 +155,21 @@
 <li>Remove <code>PouchDB.destroy()</code> (<a href="http://github.com/pouchdb/pouchdb/issues/4223">#4223</a>)</li>
 </ul>
 <p>Having a <code>destroy()</code> function on the <code>PouchDB</code> object was always a little awkward, which is why we introduced the <code>db.destroy()</code> alternative. So now that <code>PouchDB.destroy()</code> is out, upgrading your code should look like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>becomes:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Keep in mind that the <code>PouchDB</code> object is no longer usable after you <code>destroy()</code> it. So you should call <code>new PouchDB()</code> again if you want to re-use it.</p>
+<pre class="language-js"><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>becomes:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Keep in mind that the <code>PouchDB</code> object is no longer usable after you <code>destroy()</code> it. So you should call <code>new PouchDB()</code> again if you want to re-use it.</p>
 <ul>
 <li>Remove CRUD events (<a href="http://github.com/pouchdb/pouchdb/issues/4224">#4224</a>)</li>
 </ul>
 <p>These events (<code>'create'</code>, <code>'update'</code>, and <code>'delete'</code>) were intended to make the <code>changes()</code> API easier to work with, but they ended up being too ambitious and confusing, so 5.0.0 removes them.</p>
 <p>If you are relying on these events, then you can upgrade like so:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'create'</span><span class="token punctuation">,</span> createListener<span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'update'</span><span class="token punctuation">,</span> updateListener<span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'delete'</span><span class="token punctuation">,</span> deleteListener<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>becomes:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'delete'</span><span class="token punctuation">,</span> deleteListener<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>becomes:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">live</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">change</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>change<span class="token punctuation">.</span>deleted<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token function">deleteListener</span><span class="token punctuation">(</span>change<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -175,7 +179,8 @@
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
       <span class="token function">updateListener</span><span class="token punctuation">(</span>change<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Keep in mind that this &quot;update vs. create&quot; test is not foolproof (what happens if a <code>2-</code> document is the first version that gets synced? what happens if two conflicting <code>1-</code> revisions are synced?), but it will match the old behavior.</p>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Keep in mind that this &quot;update vs. create&quot; test is not foolproof (what happens if a <code>2-</code> document is the first version that gets synced? what happens if two conflicting <code>1-</code> revisions are synced?), but it will match the old behavior.</p>
 <p>Most of the time, your UI should be able to handle document &quot;updates&quot; or &quot;creates&quot; equivalently, so <code>change.deleted</code> becomes the only special case. See <a href="/2015/02/28/efficiently-managing-ui-state-in-pouchdb.html">Efficiently managing UI state with PouchDB</a> for some details about how to do this.</p>
 <ul>
 <li>Remove <code>idb-alt</code> plugin (<a href="http://github.com/pouchdb/pouchdb/issues/4222">#4222</a>)</li>
@@ -338,13 +343,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

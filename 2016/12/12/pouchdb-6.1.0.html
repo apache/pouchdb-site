@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 6.1.0</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 6.1.0</h1>
+          <h1 class="margin-bottom-none">PouchDB 6.1.0
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -151,8 +152,10 @@
 <h2>latest: true</h2>
 <p>CouchDB has an option on <a href="http://docs.couchdb.org/en/2.0.0/api/document/common.html">the document endpoint</a> called <code>latest=true</code>, which will fetch the latest revision of a document in the case where the requested revision has been updated.</p>
 <p>For instance, let's say we have a document:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'foo'</span><span class="token punctuation">,</span> <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'1-x'</span><span class="token punctuation">}</span></code></pre></figure><p>And we update it, so its revision increments:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'foo'</span><span class="token punctuation">,</span> <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'2-y'</span><span class="token punctuation">}</span></code></pre></figure><p>Now, if were were to fetch it using <code>db.get('foo', {rev: '1-x'})</code>, that would give us the <em>old</em> revision. However, by doing <code>db.get('foo', {rev: '1-x', latest: true})</code>, we'll get the <code>2-y</code> revision instead.</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'foo'</span><span class="token punctuation">,</span> <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'1-x'</span><span class="token punctuation">}</span></code></pre>
+<p>And we update it, so its revision increments:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'foo'</span><span class="token punctuation">,</span> <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'2-y'</span><span class="token punctuation">}</span></code></pre>
+<p>Now, if were were to fetch it using <code>db.get('foo', {rev: '1-x'})</code>, that would give us the <em>old</em> revision. However, by doing <code>db.get('foo', {rev: '1-x', latest: true})</code>, we'll get the <code>2-y</code> revision instead.</p>
 <p>This might seem like a niche use case, but this parameter is used by the CouchDB replicator to avoid race conditions where a document is updated right at the moment that it's being synced. This feature has now been added to PouchDB's replication algorithm, meaning that with 6.1.0 onward, replication should be much more robust.</p>
 <p>Many thanks to <a href="https://github.com/willholley">Will Holley</a> for implementing both <code>{latest: true}</code> and the replication fixes! See <a href="https://github.com/pouchdb/pouchdb/issues/5857">this PR</a> for more details.</p>
 <h2>Better fetch() implementation</h2>
@@ -161,24 +164,33 @@
 <p>In a future release, PouchDB will drop the XHR implementation entirely and use <code>fetch()</code> only, with a polyfill for non-<code>fetch()</code> browsers.</p>
 <h2>Better warnings</h2>
 <p>When using plugins, we found that folks would often make a mistake like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Whereas the proper form is:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Before 6.1.0 this error message was hard to diagnose. As of 6.1.0, though, this will now provide <a href="https://github.com/pouchdb/pouchdb/pull/5904">a more helpful error</a>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">Invalid plugin: got "pouchdb-find", expected an object or a function</code></pre></figure><p>We also found it common to forget to include a <code>content_type</code> when inserting attachments, which can lead to hard-to-debug errors later on. Now, an attachment without a <code>content_type</code> <a href="https://github.com/pouchdb/pouchdb/pull/5826">will emit a warning</a>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">Attachment foo.txt on document mydoc is missing content_type</code></pre></figure><p>Thanks to <a href="https://github.com/andymorris">Andy Morris</a> for the <code>content_type</code> fix!</p>
+<pre class="language-js"><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Whereas the proper form is:</p>
+<pre class="language-js"><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-find'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Before 6.1.0 this error message was hard to diagnose. As of 6.1.0, though, this will now provide <a href="https://github.com/pouchdb/pouchdb/pull/5904">a more helpful error</a>:</p>
+<pre><code>Invalid plugin: got &quot;pouchdb-find&quot;, expected an object or a function
+</code></pre>
+<p>We also found it common to forget to include a <code>content_type</code> when inserting attachments, which can lead to hard-to-debug errors later on. Now, an attachment without a <code>content_type</code> <a href="https://github.com/pouchdb/pouchdb/pull/5826">will emit a warning</a>:</p>
+<pre><code>Attachment foo.txt on document mydoc is missing content_type
+</code></pre>
+<p>Thanks to <a href="https://github.com/andymorris">Andy Morris</a> for the <code>content_type</code> fix!</p>
 <h2>Remove peerDependency on pouchdb-core</h2>
 <p>Because of the way PouchDB is structured, it's possible to use PouchDB plugins without technically including the <code>pouchdb-core</code> package. The reason for this is that packages like <code>pouchdb</code>, <code>pouchdb-browser</code>, and <code>pouchdb-node</code> are aggressively bundled to improve the installation, download, and execution time. So rather than explicitly depend on <code>pouchdb-core</code>, they inline it.</p>
 <p>Previously, this would generate a warning during <code>npm install</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">npm WARN pouchdb-adapter-memory@6.0.7 requires a peer of pouchdb-core@6.0.7 but none was installed.</code></pre></figure><p>This warning has been removed in 6.1.0 because it caused confusion more often than it helped.</p>
+<pre><code>npm WARN pouchdb-adapter-memory@6.0.7 requires a peer of pouchdb-core@6.0.7 but none was installed.
+</code></pre>
+<p>This warning has been removed in 6.1.0 because it caused confusion more often than it helped.</p>
 <p>Unfortunately npm offers no way to emit a <code>peerDependency</code> warning only if <em>any one of</em> possible peers (e.g. <code>pouchdb-core</code>, <code>pouchdb</code>, <code>pouchdb-browser</code>, or <code>pouchdb-node</code>) are not installed or have the wrong version, so we removed the <code>peerDependency</code> entirely.</p>
 <p>If you're wondering how to correctly use PouchDB plugins with core PouchDB packages, the answer is fairly simple: first-party plugins should always have the same version as the other core PouchDB packages. These packages are published at the same time with the same versions, so you just need to be sure to keep them synchronized. For instance:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-json"><span class="token punctuation">{</span>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"dependencies"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
      <span class="token property">"pouchdb-core"</span><span class="token operator">:</span> <span class="token string">"6.1.0"</span><span class="token punctuation">,</span>
      <span class="token property">"pouchdb-promise"</span><span class="token operator">:</span> <span class="token string">"6.1.0"</span><span class="token punctuation">,</span>
      <span class="token property">"pouchdb-replication"</span><span class="token operator">:</span> <span class="token string">"6.1.0"</span><span class="token punctuation">,</span>
      <span class="token property">"pouchdb-adapter-memory"</span><span class="token operator">:</span> <span class="token string">"6.1.0"</span><span class="token punctuation">,</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></figure><p>If these versions do not exactly match (e.g. &quot;6.1.0&quot; and &quot;6.0.7&quot;) then PouchDB <a href="https://github.com/pouchdb/pouchdb/pull/5925">will no longer warn you</a>, however the behavior is undefined and could lead to bugs.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>If these versions do not exactly match (e.g. &quot;6.1.0&quot; and &quot;6.0.7&quot;) then PouchDB <a href="https://github.com/pouchdb/pouchdb/pull/5925">will no longer warn you</a>, however the behavior is undefined and could lead to bugs.</p>
 <p>Note that third-party dependencies (such as <code>pouchdb-find</code>, <code>worker-pouch</code>, and <code>pouchdb-server</code>) have their own versioning schemes and therefore do not need to be kept in sync.</p>
 <h2>Smaller code, fewer dependencies</h2>
 <p>Like any codebase, PouchDB's has accumulated some cruft over time. As part of <a href="https://github.com/pouchdb/pouchdb/pull/5930">an</a> <a href="https://github.com/pouchdb/pouchdb/pull/5898">effort</a> <a href="https://github.com/pouchdb/pouchdb/pull/5905">to</a> <a href="https://github.com/pouchdb/pouchdb/pull/5899">simplify</a> the codebase, PouchDB 6.1.0 now has one less dependency (<a href="https://github.com/timdp/es6-promise-pool">es6-promise-pool</a>, replaced with a smaller custom implementation) and actually has a slightly smaller bundle size than 6.0.7 (45337 bytes min+gz to 45299).</p>
@@ -346,13 +358,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

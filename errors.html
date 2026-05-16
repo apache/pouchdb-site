@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Common Errors</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Common Errors</h1>
+          <h1 class="margin-bottom-none">Common Errors
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -143,34 +144,30 @@
         </div>
 
         <div class="col-sm-9" role="main">
-          <div class='h3'><div class='anchor-id' id='no_access_control_allow_origin_header'></div><a class='anchor' href='#no_access_control_allow_origin_header' name='no_access_control_allow_origin_header'>No 'Access-Control-Allow-Origin' header</a></div>
+          <div class='h3'><div class='anchor-id' id='no_access_control_allow_origin_header'></div><a class='anchor' href='#no_access_control_allow_origin_header' name='no_access_control_allow_origin_header'>No <code>Access-Control-Allow-Origin</code> header</a></div>
 <p>If you see the error:</p>
-<blockquote>
-<p>XMLHttpRequest cannot load [...]
-No 'Access-Control-Allow-Origin' header is present on the requested resource.
-Origin [...] is therefore not allowed access.</p>
-</blockquote>
+<pre class="language-bash"><code class="language-bash">XMLHttpRequest cannot load <span class="token punctuation">[</span><span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+No <span class="token string">'Access-Control-Allow-Origin'</span> header is present on the requested resource.
+Origin <span class="token punctuation">[</span><span class="token punctuation">..</span>.<span class="token punctuation">]</span> is therefore not allowed access.</code></pre>
 <p>or this one:</p>
-<blockquote>
-<p>Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://[couchDBIP]:[couchDBPort]/[dbname]/?_nonce=[request hash]. This can be fixed by moving the resource to the same domain or enabling CORS</p>
-</blockquote>
+<pre class="language-bash"><code class="language-bash">Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://<span class="token punctuation">[</span>couchDBIP<span class="token punctuation">]</span>:<span class="token punctuation">[</span>couchDBPort<span class="token punctuation">]</span>/<span class="token punctuation">[</span>dbname<span class="token punctuation">]</span>/?_nonce<span class="token operator">=</span><span class="token punctuation">[</span>request hash<span class="token punctuation">]</span>. This can be fixed by moving the resource to the same domain or enabling CORS</code></pre>
 <p>it's because you need to enable <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS</a> on CouchDB/Cloudant/whatever you're using. Otherwise, your scripts can only access the server database if they're served from the same origin — the protocol (ex: <em>http://</em>, <em>https://</em>), domain, and port number must match.</p>
 <p>You can enable CORS in CouchDB using <code>curl</code> or the Futon web interface, but we've saved you some time by making a Node script called <a href="https://github.com/pouchdb/add-cors-to-couchdb">add-cors-to-couchdb</a>. Just run:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> add-cors-to-couchdb
-$ add-cors-to-couchdb</code></pre></figure>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> add-cors-to-couchdb
+$ add-cors-to-couchdb</code></pre>
 <p>Or if your database is not at <code>127.0.0.1:5984</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-bash">$ add-cors-to-couchdb http://me.example.com <span class="token punctuation">\</span>
-    <span class="token parameter variable">-u</span> myusername <span class="token parameter variable">-p</span> mypassword</code></pre></figure>
+<pre class="language-bash"><code class="language-bash">$ add-cors-to-couchdb http://me.example.com <span class="token punctuation">\</span>
+    <span class="token parameter variable">-u</span> myusername <span class="token parameter variable">-p</span> mypassword</code></pre>
 <p>You can check that CORS is now enabled by visiting <a href="http://localhost:5984/_utils/config.html">http://localhost:5984/_utils/config.html</a> in your browser. You should see something like this:</p>
 <p>
   <a href="/static/img/cors_in_couchdb.png" target="_blank">
     <img class="img-responsive"  src="/static/img/cors_in_couchdb.png" alt="CORS settings in CouchDB" />
   </a>
 </p>
-<div class='h3'><div class='anchor-id' id='no_valid_adapter'></div><a class='anchor' href='#no_valid_adapter' name='no_valid_adapter'>PouchDB throws a `No valid adapter found` error</a></div>
+<div class='h3'><div class='anchor-id' id='no_valid_adapter'></div><a class='anchor' href='#no_valid_adapter' name='no_valid_adapter'>PouchDB throws a <code>No valid adapter found</code> error</a></div>
 <p>Reading from/writing to a local database from an <code>iframe</code> with a different origin will cause PouchDB to throw a <code>No valid adapter found</code> error in Firefox. This is due to Firefox's IndexedDB implementation.</p>
 <p>IndexedDB has a same-origin restriction. Read/write operations from another origin will always fail, but only Firefox triggers a <code>No valid adapter found</code> error. Chrome / Opera will instead throw an <a href="#unknown_error_chrome"><code>UnknownError</code></a>.</p>
-<div class='h3'><div class='anchor-id' id='not_enough_space'></div><a class='anchor' href='#not_enough_space' name='not_enough_space'>iOS/Safari: "there was not enough remaining storage space"</a></div>
+<div class='h3'><div class='anchor-id' id='not_enough_space'></div><a class='anchor' href='#not_enough_space' name='not_enough_space'>iOS/Safari: &quot;there was not enough remaining storage space&quot;</a></div>
 <p>On iOS and Safari, if you expect your app to use more than 5MB of space, you will need to request the space up-front from the user.  In certain versions of Safari, you can never request more than what the user originally grants you.</p>
 <p>
   <a href="/static/img/safari_popup.png" target="_blank">
@@ -179,24 +176,26 @@ $ add-cors-to-couchdb</code></pre></figure>
 </p>
 <p>To get around this, when you create your PouchDB, use the <code>opts.size</code> option for the expected <em>maximum</em> size of the database in MB.  Valid increments are 10, 50, 100, 500, and 1000.  For instance, if you request 50, then Safari will show a popup saying &quot;allow 50MB?&quot; but if you request 51, then Safari will show a popup saying &quot;allow 100MB?&quot;.</p>
 <p>If you don't use the <code>size</code> option, then you'll be able to use up to 5MB without any popup, but then once you use more, there will be a popup asking for 10.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">size</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// request 10 MB with a popup</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">size</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// request 10 MB with a popup</span>
 <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">size</span><span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// request 50 MB with a popup</span>
-<span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// implicitly request 5 MB, no popup until you exceed 5MB</span></code></pre></figure><p>This does not affect any backend other than Web SQL. Chrome, Android, and Opera do not show the popup. On PhoneGap/Cordova apps, you can also use the <a href="https://github.com/brodysoft/Cordova-SQLitePlugin">SQLite plugin</a> to get around this problem. Here's <a href="http://www.html5rocks.com/en/tutorials/offline/quota-research">more information about storage quotas</a> and <a href="https://github.com/apache/pouchdb/issues/2347">details on the Safari/iOS bug</a>.</p>
+<span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// implicitly request 5 MB, no popup until you exceed 5MB</span></code></pre>
+<p>This does not affect any backend other than Web SQL. Chrome, Android, and Opera do not show the popup. On PhoneGap/Cordova apps, you can also use the <a href="https://github.com/brodysoft/Cordova-SQLitePlugin">SQLite plugin</a> to get around this problem. Here's <a href="http://www.html5rocks.com/en/tutorials/offline/quota-research">more information about storage quotas</a> and <a href="https://github.com/apache/pouchdb/issues/2347">details on the Safari/iOS bug</a>.</p>
 <div class='h3'><div class='anchor-id' id='404__local_document'></div><a class='anchor' href='#404__local_document' name='404__local_document'>PouchDB throws 404 (Object Not Found) for '_local' document</a></div>
 <p>Don't worry, nothing is amiss, this is expected behaviour:
 During PouchDB's initial replication PouchDB will check for a checkpoint, if it doesn't exist a 404 will be returned and a checkpoint will subsequently be written.</p>
-<div class='h3'><div class='anchor-id' id='throwing_invalidstateerror'></div><a class='anchor' href='#throwing_invalidstateerror' name='throwing_invalidstateerror'>PouchDB is throwing `InvalidStateError`</a></div>
+<div class='h3'><div class='anchor-id' id='throwing_invalidstateerror'></div><a class='anchor' href='#throwing_invalidstateerror' name='throwing_invalidstateerror'>PouchDB is throwing <code>InvalidStateError</code></a></div>
 <p>Are you in private browsing mode? IndexedDB is <a href="https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB">disabled in private browsing mode</a> in Firefox.</p>
 <div class='h3'><div class='anchor-id' id='phonegap_cordova_second_database'></div><a class='anchor' href='#phonegap_cordova_second_database' name='phonegap_cordova_second_database'>Can't open second database on Android WebView with Cordova/Phone Gap</a></div>
 <p>There is a limit of one database per app in some versions of the Android WebView. Install the <a href="https://github.com/brodysoft/Cordova-SQLitePlugin">SQLite plugin</a>, then PouchDB will use that if it is available.</p>
 <div class='h3'><div class='anchor-id' id='event_emitter_limit'></div><a class='anchor' href='#event_emitter_limit' name='event_emitter_limit'>Possible EventEmitter memory leak detected</a></div>
 <p>If you see this warning:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">(node) warning: possible EventEmitter memory leak detected. 11 listeners added.
-Use emitter.setMaxListeners() to increase limit.</code></pre></figure><p>This is because PouchDB uses Node-style <a href="https://nodejs.org/api/events.html">EventEmitters</a> for its events. An EventEmitter is any object that has an <code>.on()</code> or <code>once()</code> method, such as <code>db.changes().on('change', ...</code>.</p>
+<pre class="language-bash"><code class="language-bash"><span class="token punctuation">(</span>node<span class="token punctuation">)</span> warning: possible EventEmitter memory leak detected. <span class="token number">11</span> listeners added.
+Use emitter.setMaxListeners<span class="token punctuation">(</span><span class="token punctuation">)</span> to increase limit.</code></pre>
+<p>This is because PouchDB uses Node-style <a href="https://nodejs.org/api/events.html">EventEmitters</a> for its events. An EventEmitter is any object that has an <code>.on()</code> or <code>once()</code> method, such as <code>db.changes().on('change', ...</code>.</p>
 <p>By default, all EventEmitters have 10 listeners, and if you exceed that limit, e.g. by attaching many <code>changes()</code> listeners or running many simultaneous <code>replicate()</code> or <code>sync()</code> events, then you may exceed this limit.</p>
 <p><strong>This could indicate a memory leak in your code</strong>. Check to make sure that you are calling <code>cancel()</code> on any <code>changes()</code>, <code>replicate()</code>, or <code>sync()</code> handlers, if you are constantly starting and stopping those events.</p>
 <p>If you're sure it's not a memory leak, though, you can increase the limit by doing:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-javascript">db<span class="token punctuation">.</span><span class="token function">setMaxListeners</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// or 30 or 40 or however many you need</span></code></pre></figure>
+<pre class="language-javascript"><code class="language-javascript">db<span class="token punctuation">.</span><span class="token function">setMaxListeners</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// or 30 or 40 or however many you need</span></code></pre>
 <p>In the above example, <code>db</code> refers to a database object you created using <code>new PouchDB('dbname')</code>.</p>
 <div class='h3'><div class='anchor-id' id='size_limitation_5mb'></div><a class='anchor' href='#size_limitation_5mb' name='size_limitation_5mb'>Database size limitation of ~5MB on iOS with Cordova/Phone Gap</a></div>
 <p>If you're storing large amounts of data, such as PNG attachments, the <a href="https://github.com/brodysoft/Cordova-SQLitePlugin">SQLite plugin</a> is again your friend. (See <a href="https://github.com/apache/pouchdb/issues/1260">issue #1260</a> for details.)</p>
@@ -218,36 +217,44 @@ Use emitter.setMaxListeners() to increase limit.</code></pre></figure><p>This is
 <p>In Firefox, PouchDB instead throws a <a href="#no_valid_adapter"><code>No valid adapter found</code></a> error.</p>
 <div class='h3'><div class='anchor-id' id='could_not_be_cloned'></div><a class='anchor' href='#could_not_be_cloned' name='could_not_be_cloned'>DataCloneError: An object could not be cloned</a></div>
 <p>If you ever see:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">Uncaught DataCloneError:
-  Failed to execute 'put' on 'IDBObjectStore':
-  An object could not be cloned.</code></pre></figure><p>Or:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">DataCloneError: The object could not be cloned.</code></pre></figure><p>Then the problem is that the document you are trying to store is not a pure JSON object. For example, an object with its own class (<code>new Foo()</code>) or with special methods like getters and setters cannot be stored in PouchDB/CouchDB.</p>
+<pre class="language-bash"><code class="language-bash">Uncaught DataCloneError:
+  Failed to execute <span class="token string">'put'</span> on <span class="token string">'IDBObjectStore'</span><span class="token builtin class-name">:</span>
+  An object could not be cloned.</code></pre>
+<p>Or:</p>
+<pre class="language-bash"><code class="language-bash">DataCloneError: The object could not be cloned.</code></pre>
+<p>Then the problem is that the document you are trying to store is not a pure JSON object. For example, an object with its own class (<code>new Foo()</code>) or with special methods like getters and setters cannot be stored in PouchDB/CouchDB.</p>
 <p>If you are ever unsure, then run this on the document:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>myDocument<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If the object you get out is the same as the object you put in, then you are storing the right kind of object.</p>
+<pre class="language-js"><code class="language-js"><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>myDocument<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>If the object you get out is the same as the object you put in, then you are storing the right kind of object.</p>
 <p>Note that this also means that you cannot store <code>Date</code>s in your document. You must convert them to strings or numbers first. <code>Date</code>s will be stored as-is in IndexedDB, but in the other adapters and in CouchDB, they will be automatically converted to ISO string format, e.g. <code>'2015-01-01T12:00:00.000Z'</code>. This can caused unwanted results. See <a href="https://github.com/apache/pouchdb/issues/2351">#2351</a> and <a href="https://github.com/apache/pouchdb/issues/2158">#2158</a> for details.</p>
 <div class='h3'><div class='anchor-id' id='android_pre_kitkat'></div><a class='anchor' href='#android_pre_kitkat' name='android_pre_kitkat'>DOM Exception 18 in Android pre-Kitkat WebView</a></div>
 <p>This applies to hybrid apps designed to run in Android pre-Kitkat (i.e. before 4.4).</p>
 <p>If you are directly using a <code>WebView</code> and not using Cordova/PhoneGap, you will probably either run into an error where PouchDB silently fails or you see <code>Error: SECURITY_ERR: DOM Exception 18</code> in the console. As a sanity test, you can run this JavaScript:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token function">openDatabase</span><span class="token punctuation">(</span><span class="token string">'mydatabase'</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'mydatabase'</span><span class="token punctuation">,</span> <span class="token number">5000000</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">db</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'it works!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If you see &quot;it works&quot; in the console, then everything's peachy. Otherwise there are a few things you have to do.</p>
+<pre class="language-js"><code class="language-js"><span class="token function">openDatabase</span><span class="token punctuation">(</span><span class="token string">'mydatabase'</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'mydatabase'</span><span class="token punctuation">,</span> <span class="token number">5000000</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">db</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'it works!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>If you see &quot;it works&quot; in the console, then everything's peachy. Otherwise there are a few things you have to do.</p>
 <p>First, make sure Web SQL is enabled on your <code>WebView</code> in the first place using <a href="http://developer.android.com/reference/android/webkit/WebSettings.html#setDatabaseEnabled%28boolean%29">setDatabaseEnabled</a>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-java">myWebView<span class="token punctuation">.</span><span class="token function">getSettings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setDatabaseEnabled</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Second, specify a path for the database. Yes, you need to do this, even though it's deprecated in Kitkat:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-java"><span class="token class-name">String</span> databasePath <span class="token operator">=</span> <span class="token function">getContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getDir</span><span class="token punctuation">(</span>
+<pre class="language-java"><code class="language-java">myWebView<span class="token punctuation">.</span><span class="token function">getSettings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setDatabaseEnabled</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Second, specify a path for the database. Yes, you need to do this, even though it's deprecated in Kitkat:</p>
+<pre class="language-java"><code class="language-java"><span class="token class-name">String</span> databasePath <span class="token operator">=</span> <span class="token function">getContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getDir</span><span class="token punctuation">(</span>
   <span class="token string">"database"</span><span class="token punctuation">,</span> <span class="token class-name">Context</span><span class="token punctuation">.</span><span class="token constant">MODE_PRIVATE</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-webView<span class="token punctuation">.</span><span class="token function">getSettings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setDatabasePath</span><span class="token punctuation">(</span>databasePath<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Third, you'll need to set an <code>onExceededDatabaseQuota</code> handler. Yes, it's also deprecated in Kitkat. Yes, you still need to do it.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-java">webView<span class="token punctuation">.</span><span class="token function">setWebChromeClient</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">WebChromeClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+webView<span class="token punctuation">.</span><span class="token function">getSettings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setDatabasePath</span><span class="token punctuation">(</span>databasePath<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Third, you'll need to set an <code>onExceededDatabaseQuota</code> handler. Yes, it's also deprecated in Kitkat. Yes, you still need to do it.</p>
+<pre class="language-java"><code class="language-java">webView<span class="token punctuation">.</span><span class="token function">setWebChromeClient</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">WebChromeClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
   <span class="token annotation punctuation">@Override</span>
   <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onExceededDatabaseQuota</span><span class="token punctuation">(</span><span class="token class-name">String</span> url<span class="token punctuation">,</span> <span class="token class-name">String</span> databaseIdentifier<span class="token punctuation">,</span> <span class="token keyword">long</span> currentQuota<span class="token punctuation">,</span> <span class="token keyword">long</span> estimatedSize<span class="token punctuation">,</span>
                                       <span class="token keyword">long</span> totalUsedQuota<span class="token punctuation">,</span> <span class="token class-name">WebStorage<span class="token punctuation">.</span>QuotaUpdater</span> quotaUpdater<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     quotaUpdater<span class="token punctuation">.</span><span class="token function">updateQuota</span><span class="token punctuation">(</span>estimatedSize <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If you skip any one of these three steps, then you will get the <code>DOM Exception 18</code> error. You need to do all three.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>If you skip any one of these three steps, then you will get the <code>DOM Exception 18</code> error. You need to do all three.</p>
 <p>Alternatively, you can also load the <code>WebView</code> with a fake <code>http://</code> URL, but this may cause other errors when you try to fetch files based on a relative path:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-java">webView<span class="token punctuation">.</span><span class="token function">loadDataWithBaseURL</span><span class="token punctuation">(</span><span class="token string">"http://www.example.com"</span><span class="token punctuation">,</span>
+<pre class="language-java"><code class="language-java">webView<span class="token punctuation">.</span><span class="token function">loadDataWithBaseURL</span><span class="token punctuation">(</span><span class="token string">"http://www.example.com"</span><span class="token punctuation">,</span>
     htmlContent<span class="token punctuation">,</span>
     <span class="token string">"text/html"</span><span class="token punctuation">,</span>
     <span class="token string">"utf-8"</span><span class="token punctuation">,</span>
-    <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h3'><div class='anchor-id' id='replicating_attachments_slow'></div><a class='anchor' href='#replicating_attachments_slow' name='replicating_attachments_slow'>Replication with attachments is slow or fails</a></div>
+    <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<div class='h3'><div class='anchor-id' id='replicating_attachments_slow'></div><a class='anchor' href='#replicating_attachments_slow' name='replicating_attachments_slow'>Replication with attachments is slow or fails</a></div>
 <p>The symptoms for this issues are:</p>
 <ol>
 <li>Replicating a database that has many attachments from a CouchDB server is either slow or fails randomly.</li>
@@ -263,27 +270,24 @@ webView<span class="token punctuation">.</span><span class="token function">getS
 <div class="alert alert-info">
 <div class="alert-text">
 <p>This issue has been found on OpenVZ systems, but other Hypervisors might also be affected. See
-&lt;a
-href=&quot;http://blog.aplikacja.info/2010/01/105-no-buffer-space-available-on-openvz-vps/&quot;
-target=&quot;_blank&quot;</p>
-<blockquote>
-<p>http://blog.aplikacja.info/2010/01/105-no-buffer-space-available-on-openvz-vps/</a>
+<a href="http://blog.aplikacja.info/105_no_buffer_space_available_on_openvz_vps.html">http://blog.aplikacja.info/105_no_buffer_space_available_on_openvz_vps.html</a>
 on how to diagnose this issue.</p>
-</blockquote>
 </div></div>
 <div class='h3'><div class='anchor-id' id='package_pouchdb_webpack'></div><a class='anchor' href='#package_pouchdb_webpack' name='package_pouchdb_webpack'>Packaging PouchDB in an app with WebPack</a></div>
 <p>PouchDB may have various dependencies that may not play nicely with WebPack. Here are some issues you may run into and their resolutions:</p>
 <p><strong>You may need an appropriate loader to handle this file type.</strong></p>
 <p>If you run into the following error (or similar):</p>
-<figure class="highlight"><pre data-copybutton><code class="language-sh">ERROR <span class="token keyword">in</span> ./~/pouchdb/~/levelup/package.json
+<pre class="language-bash"><code class="language-bash">ERROR <span class="token keyword">in</span> ./~/pouchdb/~/levelup/package.json
 Module parse failed: /path/to/node_modules/pouchdb/node_modules/levelup/package.json Line <span class="token number">2</span>: Unexpected token <span class="token builtin class-name">:</span>
 You may need an appropriate loader to handle this <span class="token function">file</span> type.
 <span class="token operator">|</span> <span class="token punctuation">{</span>
 <span class="token operator">|</span>   <span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"levelup"</span>,
 <span class="token operator">|</span>   <span class="token string">"description"</span><span class="token builtin class-name">:</span> <span class="token string">"Fast &amp; simple storage - a Node.js-style LevelDB wrapper"</span>,
 <span class="token operator">|</span>   <span class="token string">"version"</span><span class="token builtin class-name">:</span> <span class="token string">"0.18.6"</span>,
- @ ./~/pouchdb/~/levelup/lib/util.js <span class="token number">102</span>:30-56</code></pre></figure><p>WebPack needs to be configured to recognize how to load json files. Simply, install <code>json-loader</code> and edit <code>webpack.config.js</code> as follows:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token literal-property property">module</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+ @ ./~/pouchdb/~/levelup/lib/util.js <span class="token number">102</span>:30-56
+</code></pre>
+<p>WebPack needs to be configured to recognize how to load json files. Simply, install <code>json-loader</code> and edit <code>webpack.config.js</code> as follows:</p>
+<pre class="language-js"><code class="language-js"><span class="token literal-property property">module</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token literal-property property">loaders</span><span class="token operator">:</span> <span class="token punctuation">[</span>
         <span class="token comment">// https://github.com/apache/pouchdb/issues/3319</span>
         <span class="token punctuation">{</span>
@@ -291,24 +295,27 @@ You may need an appropriate loader to handle this <span class="token function">f
             <span class="token literal-property property">loader</span><span class="token operator">:</span> <span class="token string">"json-loader"</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">]</span>
-<span class="token punctuation">}</span></code></pre></figure><div class='h3'><div class='anchor-id' id='couchbase_dbname'></div><a class='anchor' href='#couchbase_dbname' name='couchbase_dbname'>Failed to load resource: the server responded with a status of 400 (Bad request) </a></div>
+<span class="token punctuation">}</span></code></pre>
+<div class='h3'><div class='anchor-id' id='couchbase_dbname'></div><a class='anchor' href='#couchbase_dbname' name='couchbase_dbname'>Failed to load resource: the server responded with a status of 400 (Bad request) </a></div>
 <p>If you are using Couchbase Lite to sync with PouchDB then you cannot use capital letters in your database name as Couchbase Lite has restrictions on valid database names.</p>
 <div class='h3'><div class='anchor-id' id='webextension_live_changes'></div><a class='anchor' href='#webextension_live_changes' name='webextension_live_changes'>Live changes pass undetected (Web Extension)</a></div>
 <p>When using PouchDB in a WebExtension (at least in Chromium 55 and Firefox 50), but apparently only if the <code>manifest.json</code> contains the <code>store</code> permission, a <a href="/guides/changes.html#live-changes-feed">live changes feed</a> in one tab or background process may not detect changes made in another tab/process. It will of course still report those changes upon the next change that it does detect.
 Minimal code to reproduce this can be found <a href="https://gist.github.com/Treora/150dca4b57b1b881bd049303e82c5ced">here</a>.</p>
 <div class='h3'><div class='anchor-id' id='pouchdb_install_errors_windows'></div><a class='anchor' href='#pouchdb_install_errors_windows' name='pouchdb_install_errors_windows'>PouchDB install errors on Windows</a></div>
 <p>Sometimes <code>npm install pouchdb</code> fails on windows, when no prebuilt binary is available. The error looks similar to this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-sh">C:<span class="token punctuation">\</span>XXX<span class="token punctuation">\</span>node_modules<span class="token punctuation">\</span>project_name<span class="token operator">></span>if not defined npm_config_node_gyp <span class="token punctuation">(</span>node <span class="token string">"C:\XXX<span class="token entity" title="\n">\n</span>ode_modules<span class="token entity" title="\n">\n</span>pm<span class="token entity" title="\b">\b</span>in<span class="token entity" title="\n">\n</span>ode-gyp-bin\....<span class="token entity" title="\n">\n</span>ode_modules<span class="token entity" title="\n">\n</span>ode-gyp<span class="token entity" title="\b">\b</span>in<span class="token entity" title="\n">\n</span>ode-gyp.js"</span> rebuild <span class="token punctuation">)</span> <span class="token keyword">else</span> <span class="token punctuation">(</span>node <span class="token string">""</span> rebuild <span class="token punctuation">)</span>
+<pre class="language-bash"><code class="language-bash">C:<span class="token punctuation">\</span>XXX<span class="token punctuation">\</span>node_modules<span class="token punctuation">\</span>project_name<span class="token operator">></span>if not defined npm_config_node_gyp <span class="token punctuation">(</span>node <span class="token string">"C:\XXX<span class="token entity" title="\n">\n</span>ode_modules<span class="token entity" title="\n">\n</span>pm<span class="token entity" title="\b">\b</span>in<span class="token entity" title="\n">\n</span>ode-gyp-bin\....<span class="token entity" title="\n">\n</span>ode_modules<span class="token entity" title="\n">\n</span>ode-gyp<span class="token entity" title="\b">\b</span>in<span class="token entity" title="\n">\n</span>ode-gyp.js"</span> rebuild <span class="token punctuation">)</span> <span class="token keyword">else</span> <span class="token punctuation">(</span>node <span class="token string">""</span> rebuild <span class="token punctuation">)</span>
 gyp ERR<span class="token operator">!</span> configure error
 gyp ERR<span class="token operator">!</span> stack Error: Can't <span class="token function">find</span> Python executable <span class="token string">"python"</span>, you can <span class="token builtin class-name">set</span> the PYTHON <span class="token function">env</span> variable.
-gyp ERR<span class="token operator">!</span> stack at PythonFinder.failNoPython <span class="token punctuation">(</span>C:<span class="token punctuation">\</span>XXX<span class="token punctuation">\</span>nodejs<span class="token punctuation">\</span>node_modules<span class="token punctuation">\</span>npm<span class="token punctuation">\</span>node_modules<span class="token punctuation">\</span>node-gyp<span class="token punctuation">\</span>lib<span class="token punctuation">\</span>configure.js:483:19<span class="token punctuation">)</span></code></pre></figure><p>or something like this</p>
-<figure class="highlight"><pre data-copybutton><code class="language-sh">gyp ERR<span class="token operator">!</span> configure error
+gyp ERR<span class="token operator">!</span> stack at PythonFinder.failNoPython <span class="token punctuation">(</span>C:<span class="token punctuation">\</span>XXX<span class="token punctuation">\</span>nodejs<span class="token punctuation">\</span>node_modules<span class="token punctuation">\</span>npm<span class="token punctuation">\</span>node_modules<span class="token punctuation">\</span>node-gyp<span class="token punctuation">\</span>lib<span class="token punctuation">\</span>configure.js:483:19<span class="token punctuation">)</span></code></pre>
+<p>or something like this</p>
+<pre class="language-bash"><code class="language-bash">gyp ERR<span class="token operator">!</span> configure error
 <span class="token function">npm</span> ERR<span class="token operator">!</span> code ELIFECYCLE
 <span class="token function">npm</span> ERR<span class="token operator">!</span> errno <span class="token number">1</span>
 <span class="token function">npm</span> ERR<span class="token operator">!</span> leveldown@3.0.0 install: <span class="token variable"><span class="token variable">`</span>prebuild-install <span class="token operator">||</span> node-gyp rebuild<span class="token variable">`</span></span>
 <span class="token function">npm</span> ERR<span class="token operator">!</span> Exit status <span class="token number">1</span>
 <span class="token function">npm</span> ERR<span class="token operator">!</span>
-<span class="token function">npm</span> ERR<span class="token operator">!</span> Failed at the leveldown@3.0.0 <span class="token function">install</span> script.</code></pre></figure><p>If you are on windows and getting any error messages mentioning <strong>leveldown</strong> and <strong>Python</strong>, please attempt the steps below.</p>
+<span class="token function">npm</span> ERR<span class="token operator">!</span> Failed at the leveldown@3.0.0 <span class="token function">install</span> script.</code></pre>
+<p>If you are on windows and getting any error messages mentioning <strong>leveldown</strong> and <strong>Python</strong>, please attempt the steps below.</p>
 <p>Node-Gyp requires Python 2.7, it does not work with Python 3.x unfortunately.</p>
 <p>Here are a few steps you can take:</p>
 <ol>
@@ -453,13 +460,8 @@ gyp ERR<span class="token operator">!</span> stack at PythonFinder.failNoPython 
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

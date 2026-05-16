@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Local documents</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Local documents</h1>
+          <h1 class="margin-bottom-none">Local documents
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -232,12 +233,13 @@
 </ul>
 <p>So basically, local docs only exist <em>for that database</em>, and they don't mix with the &quot;normal&quot; documents.</p>
 <p>To create a local doc, you simply use <code>'_local/'</code> as the prefix of the <code>_id</code>. This is supported in both CouchDB and PouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'_local/foobar'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">someText</span><span class="token operator">:</span> <span class="token string">'yo, this is my local doc!'</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'_local/foobar'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='advantages-of-local–docs'></div><a class='anchor' href='#advantages-of-local–docs' name='advantages-of-local–docs'>Advantages of local docs</a></div>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<div class='h2'><div class='anchor-id' id='advantages-of-local–docs'></div><a class='anchor' href='#advantages-of-local–docs' name='advantages-of-local–docs'>Advantages of local docs</a></div>
 <p>Local docs are useful for small bits of configuration or metadata, which you don't necessarily want to replicate, but which you want to keep in the database anyway. Many PouchDB plugins and core components use local docs. For instance, the replication algorithm uses them to store checkpoints, and map/reduce uses them to keep track of what's been <code>emit</code>ted.</p>
 <p>Local docs also have some good performance characteristics compared to regular docs. They don't have a version history, so only the most recent revision is ever stored in the database. This means that <code>put()</code>s and <code>get()</code>s are faster for local docs than for regular docs, and that local docs tend to take up less space on disk.  In a sense, they are auto-compacted, although they take up even less space on disk than documents in a compacted database.</p>
 <p>Regardless, you need to provide the current <code>_rev</code> when you update local docs, just like with regular docs.</p>
@@ -432,13 +434,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

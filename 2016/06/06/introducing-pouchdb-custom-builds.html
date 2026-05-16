@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Introducing PouchDB custom builds</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Introducing PouchDB custom builds</h1>
+          <h1 class="margin-bottom-none">Introducing PouchDB custom builds
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -182,7 +183,7 @@ modules that were previously internal to PouchDB can now be <code>npm install</c
 <p>With this release, we are also committing to the <code>jsnext:main</code> standard <a href="https://github.com/rollup/rollup/wiki/jsnext:main">as promoted by Rollup</a>, meaning that all of our packages (including <code>pouchdb</code> itself) now ship with both ES modules and CommonJS, and you are free to use whichever one you want. In general, the ES modules will tend to give you smaller bundle sizes (assuming you are using Rollup, SystemJS, or Webpack 2 as your bundler), whereas the CommonJS bundle is more appropriate for backwards compatibility. (Neither release makes use of ES6 features aside from ES modules, so you do not need a transpiler like Babel or <a href="http://buble.surge.sh/">Bublé</a>).</p>
 <h3>Cool, how does it work?</h3>
 <p>PouchDB now ships with a few presets, which are a good demonstration of how the new plugin feature works. Here's <code>pouchdb-browser</code> (as CommonJS), which is the &quot;browser&quot; version of PouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-idb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-websql'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -190,21 +191,25 @@ PouchDB<span class="token punctuation">.</span><span class="token function">plug
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-mapreduce'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-replication'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-module<span class="token punctuation">.</span>exports <span class="token operator">=</span> PouchDB<span class="token punctuation">;</span></code></pre></figure><p>As you can see, <code>pouchdb-browser</code> is just an extension of <code>pouchdb-core</code>, with some key modules added in: the IndexedDB adapter, the WebSQL adapter, the HTTP adapter, map/reduce, and replication. If you're not using any of these features, you can just delete that plugin and enjoy the file savings.</p>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> PouchDB<span class="token punctuation">;</span></code></pre>
+<p>As you can see, <code>pouchdb-browser</code> is just an extension of <code>pouchdb-core</code>, with some key modules added in: the IndexedDB adapter, the WebSQL adapter, the HTTP adapter, map/reduce, and replication. If you're not using any of these features, you can just delete that plugin and enjoy the file savings.</p>
 <p>Additionally, you'll notice that <code>pouchdb-browser</code> does not depend on LevelDB at all. Instead, that lives in <code>pouchdb-node</code>, a.k.a. the &quot;Node&quot; version of PouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-leveldb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-mapreduce'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-replication'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-module<span class="token punctuation">.</span>exports <span class="token operator">=</span> PouchDB<span class="token punctuation">;</span></code></pre></figure><p>The only difference here is that <code>pouchdb-browser</code> uses IndexedDB and WebSQL, whereas <code>pouchdb-node</code> uses LevelDB. Hence, LevelDB is not installed if you do <code>npm install pouchdb-browser</code>.</p>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> PouchDB<span class="token punctuation">;</span></code></pre>
+<p>The only difference here is that <code>pouchdb-browser</code> uses IndexedDB and WebSQL, whereas <code>pouchdb-node</code> uses LevelDB. Hence, LevelDB is not installed if you do <code>npm install pouchdb-browser</code>.</p>
 <p>Also, if you'd like to use a custom adapter, those are now shipped separately. So if you want to use PouchDB in a purely in-memory mode, you can do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-memory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Or if you're only using PouchDB to talk to CouchDB:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This applies to all of the plugins we previously shipped in the <a href="/api.html#extras">&quot;extras&quot; API</a>. Any of these can now be mixed and matched as desired:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-memory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Or if you're only using PouchDB to talk to CouchDB:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-http'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This applies to all of the plugins we previously shipped in the <a href="/api.html#extras">&quot;extras&quot; API</a>. Any of these can now be mixed and matched as desired:</p>
 <ul>
 <li><code>pouchdb-adapter-fruitdown</code></li>
 <li><code>pouchdb-adapter-localstorage</code></li>
@@ -212,11 +217,12 @@ module<span class="token punctuation">.</span>exports <span class="token operato
 <li><code>pouchdb-adapter-node-websql</code></li>
 </ul>
 <p>Note that the plugin order of the non-HTTP adapters matters. So for instance, if you wanted to fall back from IndexedDB to WebSQL to LocalStorage to in-memory, you would do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-core'</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-idb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-websql'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-localstorage'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-memory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This also opens up the possibility of more easily including custom third-party adapters, such
+  <span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-memory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This also opens up the possibility of more easily including custom third-party adapters, such
 as <a href="https://github.com/nolanlawson/worker-pouch">worker-pouch</a> and <a href="https://github.com/nolanlawson/socket-pouch">socket-pouch</a>.</p>
 <h3>How many bytes can it save?</h3>
 <p>Here is a breakdown of the bundle size of various possible PouchDB configurations, using Browserify, <a href="https://github.com/substack/bundle-collapser">bundle-collapser</a>, and Uglify.</p>
@@ -439,13 +445,8 @@ such as Rollup or Webpack 2. (If you use such a tool, and it supports <code>jsne
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

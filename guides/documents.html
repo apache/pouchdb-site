@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Working with documents</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Working with documents</h1>
+          <h1 class="margin-bottom-none">Working with documents
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -224,7 +225,7 @@
 <div class='h2'><div class='anchor-id' id='whats-a–document'></div><a class='anchor' href='#whats-a–document' name='whats-a–document'>What's a document?</a></div>
 <p>PouchDB is a NoSQL database, meaning that you store unstructured <em>documents</em> rather than explicitly specifying a schema with rows, tables, and all that jazz.</p>
 <p>A document might look like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"mittens"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token string">"Mittens"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"occupation"</span><span class="token operator">:</span> <span class="token string">"kitten"</span><span class="token punctuation">,</span>
@@ -234,7 +235,8 @@
     <span class="token string">"chasing laser pointers"</span><span class="token punctuation">,</span>
     <span class="token string">"lookin' hella cute"</span>
   <span class="token punctuation">]</span>
-<span class="token punctuation">}</span></code></pre></figure><p>If you come from a SQL background, this handy conversion chart may help:</p>
+<span class="token punctuation">}</span></code></pre>
+<p>If you come from a SQL background, this handy conversion chart may help:</p>
 <div class="table-responsive">
 <table class="table">
 <tr>
@@ -266,7 +268,7 @@
 <p>We'll discuss these concepts later on.</p>
 <div class='h2'><div class='anchor-id' id='storing-a–document'></div><a class='anchor' href='#storing-a–document' name='storing-a–document'>Storing a document</a></div>
 <p>To store a document, you simply <code>put</code> it:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> doc <span class="token operator">=</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> doc <span class="token operator">=</span> <span class="token punctuation">{</span>
   <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"mittens"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token string">"Mittens"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"occupation"</span><span class="token operator">:</span> <span class="token string">"kitten"</span><span class="token punctuation">,</span>
@@ -277,12 +279,14 @@
     <span class="token string">"lookin' hella cute"</span>
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
-db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Whenever you <code>put()</code> a document, it must have an <code>_id</code> field so that you can retrieve it later.</p>
+db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Whenever you <code>put()</code> a document, it must have an <code>_id</code> field so that you can retrieve it later.</p>
 <p>So now let's <code>get()</code> the document by using its <code>_id</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mittens'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mittens'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You should see:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You should see:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token string">"Mittens"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"occupation"</span><span class="token operator">:</span> <span class="token string">"kitten"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"age"</span><span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
@@ -293,23 +297,26 @@ db<span class="token punctuation">.</span><span class="token function">put</span
   <span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"mittens"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_rev"</span><span class="token operator">:</span> <span class="token string">"1-bea5fa18e06522d12026f4aee6b15ee4"</span>
-<span class="token punctuation">}</span></code></pre></figure><p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/c02bba75247012afb1bf">live example</a></strong> of this code.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/c02bba75247012afb1bf">live example</a></strong> of this code.</p>
 <p>The document looks exactly the same as when we put it, except... aha! What is this? There is a new field, <code>_rev</code>, that contains what looks like garbage. PouchDB gots some 'splainin' to do.</p>
-<div class='h2'><div class='anchor-id' id='understanding-revisions-rev'></div><a class='anchor' href='#understanding-revisions-rev' name='understanding-revisions-rev'>Understanding revisions (`_rev`)</a></div>
+<div class='h2'><div class='anchor-id' id='understanding-revisions-rev'></div><a class='anchor' href='#understanding-revisions-rev' name='understanding-revisions-rev'>Understanding revisions (<code>_rev</code>)</a></div>
 <p>The new field, <code>_rev</code> is the <em>revision marker</em>. It is a randomly-generated ID that changes whenever a document is created or updated.</p>
 <p>Unlike most other databases, whenever you update a document in PouchDB or CouchDB, you must present the <em>entire document</em> along with its current <em>revision marker</em>.</p>
 <p>For instance, to increment Mittens' age to 4, we would do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">doc<span class="token punctuation">.</span>age <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js">doc<span class="token punctuation">.</span>age <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
 doc<span class="token punctuation">.</span>_rev <span class="token operator">=</span> <span class="token string">"1-bea5fa18e06522d12026f4aee6b15ee4"</span><span class="token punctuation">;</span>
-db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>If you fail to include the correct <code>_rev</code>, you will get the following sad error:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>If you fail to include the correct <code>_rev</code>, you will get the following sad error:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"status"</span><span class="token operator">:</span> <span class="token number">409</span><span class="token punctuation">,</span>
   <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token string">"conflict"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"message"</span><span class="token operator">:</span> <span class="token string">"Document update conflict"</span>
-<span class="token punctuation">}</span></code></pre></figure><p><code>HTTP 409</code> is a standard HTTP error message that indicates a conflict.</p>
+<span class="token punctuation">}</span></code></pre>
+<p><code>HTTP 409</code> is a standard HTTP error message that indicates a conflict.</p>
 <div class='h2'><div class='anchor-id' id='updating-documents–correctly'></div><a class='anchor' href='#updating-documents–correctly' name='updating-documents–correctly'>Updating documents correctly</a></div>
 <p>So to update Mittens' age, we will first need to fetch Mittens from the database, to ensure that we have the correct <code>_rev</code> before we put them back. We don't need to manually assign the <code>_rev</code> value here (like we did above), as it is already in the <code>doc</code> we're fetching.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token comment">// fetch mittens</span>
+<pre class="language-js"><code class="language-js"><span class="token comment">// fetch mittens</span>
 db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mittens'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// update their age</span>
   doc<span class="token punctuation">.</span>age <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
@@ -320,13 +327,14 @@ db<span class="token punctuation">.</span><span class="token function">get</span
   <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mittens'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/d6daa02ca3875d1222dd">live example</a></strong> of this code.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/d6daa02ca3875d1222dd">live example</a></strong> of this code.</p>
 <div class="alert alert-info">
 <div class="alert-text">
 <p>Don't worry if the structure of this code seems strange! It's using <strong>promises</strong>, which will be discussed in the next chapter.</p>
 </div></div>
 <p>Now you should see the following:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token string">"Mittens"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"occupation"</span><span class="token operator">:</span> <span class="token string">"kitten"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"age"</span><span class="token operator">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
@@ -337,7 +345,8 @@ db<span class="token punctuation">.</span><span class="token function">get</span
   <span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_id"</span><span class="token operator">:</span> <span class="token string">"mittens"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"_rev"</span><span class="token operator">:</span> <span class="token string">"2-3e3fd988b331193beeeea2d4221b57e7"</span>
-<span class="token punctuation">}</span></code></pre></figure><p>As you can see, we have successfully updated Mittens' age to 4 (they grow up so fast!), and their revision marker has also changed to <code>&quot;2-3e3fd988b331193beeeea2d4221b57e7&quot;</code>. If we wanted to increment their age to 5, we would need to supply this new revision marker.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>As you can see, we have successfully updated Mittens' age to 4 (they grow up so fast!), and their revision marker has also changed to <code>&quot;2-3e3fd988b331193beeeea2d4221b57e7&quot;</code>. If we wanted to increment their age to 5, we would need to supply this new revision marker.</p>
 <div class='h2'><div class='anchor-id' id='related-api-documentation'></div><a class='anchor' href='#related-api-documentation' name='related-api-documentation'>Related API documentation</a></div>
 <ul>
 <li><a href="/api.html#fetch_document">get()</a></li>
@@ -534,13 +543,8 @@ db<span class="token punctuation">.</span><span class="token function">get</span
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 5.4.0</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 5.4.0</h1>
+          <h1 class="margin-bottom-none">PouchDB 5.4.0
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -159,23 +160,28 @@
 <p>We have removed the <code>PouchDB.utils</code>, <code>PouchDB.ajax</code>, and <code>PouchDB.Errors</code> APIs. These were always
 undocumented and unsupported, and we regret if anybody accidentally ended up relying on them.</p>
 <p>If you are using these APIs you can now <code>require</code> them directly as so:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 PouchDB<span class="token punctuation">.</span>utils <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token literal-property property">promise</span><span class="token operator">:</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-promise'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
 PouchDB<span class="token punctuation">.</span>ajax <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-ajax'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-PouchDB<span class="token punctuation">.</span>Errors <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-errors'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Alternatively you can look at the <a href="/custom.html">Custom Builds API</a> instead.</p>
+PouchDB<span class="token punctuation">.</span>Errors <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-errors'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Alternatively you can look at the <a href="/custom.html">Custom Builds API</a> instead.</p>
 <p><strong>Deprecation #2: db.put(doc, id, rev)</strong></p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">'myid'</span><span class="token punctuation">,</span> <span class="token string">'2-xxx'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Instead of doing this, please put the <code>_id</code> and <code>_rev</code> on the document itself:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'myid'</span><span class="token punctuation">,</span> <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'2-xxx'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This API was not removed, but will log a warning if you try to use it.</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">'myid'</span><span class="token punctuation">,</span> <span class="token string">'2-xxx'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Instead of doing this, please put the <code>_id</code> and <code>_rev</code> on the document itself:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'myid'</span><span class="token punctuation">,</span> <span class="token literal-property property">_rev</span><span class="token operator">:</span> <span class="token string">'2-xxx'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This API was not removed, but will log a warning if you try to use it.</p>
 <p><strong>Deprecation #3: new PouchDB(dbName, callback)</strong></p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// called when PouchDB has asynchronously finished setting up</span>
   <span class="token comment">// (or has errored)</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Instead of using this format (which has been undocumented and unrecommended for
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Instead of using this format (which has been undocumented and unrecommended for
 some time), please do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 db<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// db is now ready</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token comment">/* ... */</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>There is no need to &quot;wait&quot; for the PouchDB constructor to asynchronously finish
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token comment">/* ... */</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>There is no need to &quot;wait&quot; for the PouchDB constructor to asynchronously finish
 setting up, since the constructor has been made stateless. However, if you really
 want to verify that the database is ready and working, you can do an <code>info()</code> request.</p>
 <p>This API was not removed, but will log a warning if you try to use it.</p>
@@ -365,13 +371,8 @@ want to verify that the database is ready and working, you can do an <code>info(
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

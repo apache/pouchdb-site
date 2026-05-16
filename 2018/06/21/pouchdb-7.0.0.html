@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 7.0 - 17.5% less PouchDB</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 7.0 - 17.5% less PouchDB</h1>
+          <h1 class="margin-bottom-none">PouchDB 7.0 - 17.5% less PouchDB
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -154,12 +155,13 @@
 <p><a href="https://github.com/pouchdb/pouchdb/issues/6945">#6945</a> - Including our own Promise polyfill means larger bundles when most apps already include their own polyfill if they need it. So if you support <a href="https://caniuse.com/#feat=promises">browsers which do not support Promises natively</a> you will need to include a polyfill yourself. We use <a href="https://www.npmjs.com/package/promise-polyfill">promise-polyfill</a> and have found it to work great.</p>
 <h2>Switch to fetch</h2>
 <p><a href="https://github.com/pouchdb/pouchdb/issues/6944">#6944</a> - This is another API that may need polyfilled if you use PouchDB and support IE, we use <a href="https://www.npmjs.com/package/whatwg-fetch">whatwg-fetch</a>. Switching to fetch has allowed us to expose the ability to intercept the requests PouchDB makes for more flexibility, such as:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://example.com/dbname'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://example.com/dbname'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
   <span class="token function-variable function">fetch</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">url<span class="token punctuation">,</span> opts</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     opts<span class="token punctuation">.</span>headers<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'X-Some-Special-Header'</span><span class="token punctuation">,</span> <span class="token string">'foo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> PouchDB<span class="token punctuation">.</span><span class="token function">fetch</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> opts<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>That will add a <code>X-Some-Special-Header</code> to every HTTP request PouchDB makes.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>That will add a <code>X-Some-Special-Header</code> to every HTTP request PouchDB makes.</p>
 <h2>Deterministic Revisions</h2>
 <p><a href="https://github.com/pouchdb/pouchdb/issues/4642">#4642</a> - We now match CouchDB default behaviour and use the documents contents to determine its revision, this means automated conflict resolution handlers are less likely to generate extra conflicts.</p>
 <h2>More Deprecations</h2>
@@ -317,13 +319,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

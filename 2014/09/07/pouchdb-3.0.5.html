@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 3.0.5&#58; Turtles All the Way Down</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 3.0.5&#58; Turtles All the Way Down</h1>
+          <h1 class="margin-bottom-none">PouchDB 3.0.5&#58; Turtles All the Way Down
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -158,7 +159,7 @@
 <p>The <a href="https://github.com/pouchdb/pouchdb/issues/2543">&quot;infinite recursion&quot; bug</a> shows up when you have many (&gt; 1000) revisions to the same document. For instance, imagine a text editor that <code>put()</code>s a new version of the document for every keystroke. This is fine in traditional databases, but it can be a big problem in PouchDB/CouchDB, because we store the entire history of the database.</p>
 <p>Make no mistake: infinitely-large revision histories will now work in PouchDB 3.0.5. However, it's a lot like riding a bicycle without a helmet: you <em>can</em> do it, but you probably shouldn't.</p>
 <p>Your mental model for this can be something like Git. Imagine a new <code>git commit</code> for every keystroke, and you'll see why it might be a bit problematic.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"The quick brown fox jumps over the lazy doge."</span> <span class="token punctuation">}</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"The quick brown fox jumps over the lazy doge."</span> <span class="token punctuation">}</span>
 <span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"The quick brown fox jumps over the lazy doge"</span> <span class="token punctuation">}</span>
 <span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"The quick brown fox jumps over the lazy dog"</span> <span class="token punctuation">}</span>
 <span class="token comment">//</span>
@@ -168,7 +169,8 @@
 <span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"The "</span> <span class="token punctuation">}</span>
 <span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"The"</span> <span class="token punctuation">}</span>
 <span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"Th"</span> <span class="token punctuation">}</span>
-<span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"T"</span> <span class="token punctuation">}</span></code></pre></figure><p>Of course, you can always <code>compact()</code> to remove old versions, but this just removes the document data. PouchDB still needs to maintain a permanent tree of the <code>_rev</code> hashes in order for the replication algorithm to work properly. If this tree grows excessively, it can bloat your database, whether or not you do compaction.</p>
+<span class="token punctuation">{</span> <span class="token string-property property">"text"</span><span class="token operator">:</span> <span class="token string">"T"</span> <span class="token punctuation">}</span></code></pre>
+<p>Of course, you can always <code>compact()</code> to remove old versions, but this just removes the document data. PouchDB still needs to maintain a permanent tree of the <code>_rev</code> hashes in order for the replication algorithm to work properly. If this tree grows excessively, it can bloat your database, whether or not you do compaction.</p>
 <p>What this means is that you should be very careful about updating your documents. Try to update your documents in larger batches, or use a pattern like <a href="https://github.com/redgeoff/delta-pouch">delta-pouch</a> to avoid creating new revisions altogether.</p>
 
     </article>
@@ -304,13 +306,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

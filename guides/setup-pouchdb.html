@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Setting up PouchDB</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Setting up PouchDB</h1>
+          <h1 class="margin-bottom-none">Setting up PouchDB
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -224,26 +225,37 @@
 <p>Installing PouchDB is easy. There are a few different ways to do it:</p>
 <div class='h2'><div class='anchor-id' id='direct-download'></div><a class='anchor' href='#direct-download' name='direct-download'>Direct download</a></div>
 <p>Download the latest <strong>pouchdb-9.0.0.min.js</strong> from the big green button above. Then in your <code>index.html</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb-9.0.0.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><div class='h2'><div class='anchor-id' id='bower'></div><a class='anchor' href='#bower' name='bower'>Bower</a></div>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pouchdb-9.0.0.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre>
+<div class='h2'><div class='anchor-id' id='bower'></div><a class='anchor' href='#bower' name='bower'>Bower</a></div>
 <p>Run this on the command line:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">$ bower install pouchdb</code></pre></figure><p>Then in your <code>index.html</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bower_components/pouchdb/dist/pouchdb.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><div class='h2'><div class='anchor-id' id='npm'></div><a class='anchor' href='#npm' name='npm'>npm</a></div>
+<pre class="language-bash"><code class="language-bash">$ bower <span class="token function">install</span> pouchdb</code></pre>
+<p>Then in your <code>index.html</code>:</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bower_components/pouchdb/dist/pouchdb.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre>
+<div class='h2'><div class='anchor-id' id='npm'></div><a class='anchor' href='#npm' name='npm'>npm</a></div>
 <p>Run this on the command line:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">$ npm install pouchdb</code></pre></figure><p>Then in your <code>index.html</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>node_modules/pouchdb/dist/pouchdb.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><div class='h2'><div class='anchor-id' id='jsdelivr-cdn'></div><a class='anchor' href='#jsdelivr-cdn' name='jsdelivr-cdn'>jsdelivr CDN</a></div>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> pouchdb</code></pre>
+<p>Then in your <code>index.html</code>:</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>node_modules/pouchdb/dist/pouchdb.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre>
+<div class='h2'><div class='anchor-id' id='jsdelivr-cdn'></div><a class='anchor' href='#jsdelivr-cdn' name='jsdelivr-cdn'>jsdelivr CDN</a></div>
 <p>Add this to your <code>index.html</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>//cdn.jsdelivr.net/npm/pouchdb@9.0.0/dist/pouchdb.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre></figure><div class='h2'><div class='anchor-id' id='nodejs'></div><a class='anchor' href='#nodejs' name='nodejs'>Node.js</a></div>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>//cdn.jsdelivr.net/npm/pouchdb@9.0.0/dist/pouchdb.min.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre>
+<div class='h2'><div class='anchor-id' id='nodejs'></div><a class='anchor' href='#nodejs' name='nodejs'>Node.js</a></div>
 <p>Run this on the command line:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">$ npm install pouchdb</code></pre></figure><p>Then in your JavaScript:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class='h2'><div class='anchor-id' id='typescript'></div><a class='anchor' href='#typescript' name='typescript'>With TypeScript</a></div>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> pouchdb</code></pre>
+<p>Then in your JavaScript:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> PouchDB <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<div class='h2'><div class='anchor-id' id='typescript'></div><a class='anchor' href='#typescript' name='typescript'>With TypeScript</a></div>
 <p>Run this on the command line:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">$ npm install pouchdb @types/pouchdb</code></pre></figure><p>In your <code>tsconfig.json</code> activate <code>allowSyntheticDefaultImports</code>:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-json"><span class="token punctuation">{</span>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> pouchdb @types/pouchdb</code></pre>
+<p>In your <code>tsconfig.json</code> activate <code>allowSyntheticDefaultImports</code>:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"compilerOptions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token property">"allowSyntheticDefaultImports"</span><span class="token operator">:</span> <span class="token boolean">true</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span></code></pre></figure><p>Then in your TypeScript:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-typescript"><span class="token keyword">import</span> PouchDB <span class="token keyword">from</span> <span class="token string">'pouchdb'</span><span class="token punctuation">;</span></code></pre></figure><p>You can install a plugin (provided there is a <a href="https://www.npmjs.com/search?q=scope:types%20pouchdb">type definition for it in npm</a>), import it in the same way and then pass the imported name to <code>PouchDB.plugin()</code> method just as you would do in JavaScript.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>Then in your TypeScript:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">import</span> PouchDB <span class="token keyword">from</span> <span class="token string">'pouchdb'</span><span class="token punctuation">;</span></code></pre>
+<p>You can install a plugin (provided there is a <a href="https://www.npmjs.com/search?q=scope:types%20pouchdb">type definition for it in npm</a>), import it in the same way and then pass the imported name to <code>PouchDB.plugin()</code> method just as you would do in JavaScript.</p>
 <div class='h2'><div class='anchor-id' id='next'></div><a class='anchor' href='#next' name='next'>Next</a></div>
 <p>Now that you have PouchDB installed, let's start working with databases.</p>
 
@@ -435,13 +447,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

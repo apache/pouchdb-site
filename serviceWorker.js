@@ -3,274 +3,116 @@
 // - https://eduardoboucas.com/blog/2015/06/04/supercharging-jekyll-with-a-serviceworker.html
 // - https://jakearchibald.com/2014/offline-cookbook
 
-var newCacheName = 'pouchdb-assets-cache-v2026-04-30T13:14:15.127Z';
+var newCacheName = 'pouchdb-assets-cache-v2026-05-16T09:39:35.073Z';
 
 var criticalAssets = [
   '/offline.html',
-  '/static/css/pouchdb.css',
+  '/static/css/pouchdb.min.css',
 ];
 
 var pages = [
-  
-    
-      '/.asf.yml',
-    
-  
-    
-      '/feed.xml',
-    
-  
-    
-  
-    
-      '/serviceWorker.js',
-    
-  
-    
-      '/',
-    
-  
-    
-      '/offline.html',
-    
-  
-    
-      '/api.html',
-    
-  
-    
-      '/adapters.html',
-    
-  
-    
-      '/custom.html',
-    
-  
-    
-      '/download.html',
-    
-  
-    
-      '/errors.html',
-    
-  
-    
-      '/external.html',
-    
-  
-    
-      '/faq.html',
-    
-  
-    
-      '/getting-started.html',
-    
-  
-    
-      '/learn.html',
-    
-  
-    
-      '/users.html',
-    
-  
-    
-      '/blog/',
-    
-  
-    
-      '/blog/page2/',
-    
-  
-    
-      '/blog/page3/',
-    
-  
-    
-      '/blog/page4/',
-    
-  
-    
-      '/blog/page5/',
-    
-  
-    
-      '/blog/page6/',
-    
-  
-    
-      '/blog/page7/',
-    
-  
-    
-      '/blog/page8/',
-    
-  
-    
-      '/blog/page9/',
-    
-  
-    
-      '/blog/page10/',
-    
-  
-    
-      '/blog/page11/',
-    
-  
-    
-      '/blog/page12/',
-    
-  
-  
-    '/guides/',
-  
-    '/guides/setup-couchdb.html',
-  
-    '/guides/setup-pouchdb.html',
-  
-    '/guides/databases.html',
-  
-    '/guides/documents.html',
-  
-    '/guides/async-code.html',
-  
-    '/guides/updating-deleting.html',
-  
-    '/guides/bulk-operations.html',
-  
-    '/guides/attachments.html',
-  
-    '/guides/replication.html',
-  
-    '/guides/conflicts.html',
-  
-    '/guides/changes.html',
-  
-    '/guides/mango-queries.html',
-  
-    '/guides/queries.html',
-  
-    '/guides/compact-and-destroy.html',
-  
-    '/guides/local-documents.html',
-  
-];
+  '/.asf.yml',
+  '/feed.xml',
+  '/serviceWorker.js',
+  '/',
+  '/offline.html',
+  '/api.html',
+  '/adapters.html',
+  '/custom.html',
+  '/download.html',
+  '/errors.html',
+  '/external.html',
+  '/faq.html',
+  '/getting-started.html',
+  '/learn.html',
+  '/users.html',
+  '/blog/',
+  '/blog/page2/',
+  '/blog/page3/',
+  '/blog/page4/',
+  '/blog/page5/',
+  '/blog/page6/',
+  '/blog/page7/',
+  '/blog/page8/',
+  '/blog/page9/',
+  '/blog/page10/',
+  '/blog/page11/',
+  '/blog/page12/',
+  '/guides/',
+  '/guides/setup-couchdb.html',
+  '/guides/setup-pouchdb.html',
+  '/guides/databases.html',
+  '/guides/documents.html',
+  '/guides/async-code.html',
+  '/guides/updating-deleting.html',
+  '/guides/bulk-operations.html',
+  '/guides/attachments.html',
+  '/guides/replication.html',
+  '/guides/conflicts.html',
+  '/guides/changes.html',
+  '/guides/mango-queries.html',
+  '/guides/queries.html',
+  '/guides/compact-and-destroy.html',
+  '/guides/local-documents.html'
+  ];
 
 var blogPosts = [
-  
-    '/2026/04/10/migration-to-nodesqlite.html',
-  
-    '/2024/05/24/pouchdb-9.0.0.html',
-  
-    '/2023/02/09/pouchdb-8.0.1.html',
-  
-    '/2022/12/14/pouchdb-8.0.0.html',
-  
-    '/2022/11/11/pouchdb-7.3.1.html',
-  
-    '/2022/04/13/pouchdb-7.3.0.html',
-  
-    '/2020/02/12/pouchdb-7.2.0.html',
-  
-    '/2019/06/13/pouchdb-7.1.1.html',
-  
-    '/2018/06/21/pouchdb-7.0.0.html',
-  
-    '/2018/01/23/pouchdb-6.4.2.html',
-  
-    '/2017/12/16/pouchdb-6.4.0.html',
-  
-    '/2017/07/13/pouchdb-6.3.0.html',
-  
-    '/2017/04/20/pouchdb-6.2.0.html',
-  
-    '/2017/01/05/pouchdb-6.1.1.html',
-  
-    '/2016/12/12/pouchdb-6.1.0.html',
-  
-    '/2016/09/05/pouchdb-6.0.0.html',
-  
-    '/2016/06/06/pouchdb-5.4.0.html',
-  
-    '/2016/06/06/introducing-pouchdb-custom-builds.html',
-  
-    '/2016/04/28/prebuilt-databases-with-pouchdb.html',
-  
-    '/2016/03/04/pouchdb-5.3.0-sqlite-support-in-node.html',
-  
-    '/2016/01/13/pouchdb-5.2.0-a-better-build-system-with-rollup.html',
-  
-    '/2015/11/03/cover-all.html',
-  
-    '/2015/10/06/pouchdb-5.0.0-five-years-of-pouchdb.html',
-  
-    '/2015/09/12/pouchdb-4.0.2-a-little-extra.html',
-  
-    '/2015/09/01/pouchdb-4.0.1-gotta-go-fast.html',
-  
-    '/2015/08/03/pouchdb-4.0.0-ballast-overboard.html',
-  
-    '/2015/06/01/pouchdb-3.6.0.html',
-  
-    '/2015/05/18/we-have-a-problem-with-promises.html',
-  
-    '/2015/05/07/pouchdb-3.5.0-vote-for-pouchdb.html',
-  
-    '/2015/04/07/better-late-than-never.html',
-  
-    '/2015/04/05/filtered-replication.html',
-  
-    '/2015/03/05/taming-the-async-beast-with-es7.html',
-  
-    '/2015/02/28/efficiently-managing-ui-state-in-pouchdb.html',
-  
-    '/2015/02/14/a-quick-one.html',
-  
-    '/2015/02/03/fix-up-look-sharp.html',
-  
-    '/2015/01/05/pouchdb-3.2.1-you-can-always-be-faster.html',
-  
-    '/2014/12/11/the-pains-of-being-async-at-heart.html',
-  
-    '/2014/12/04/3.2.0.html',
-  
-    '/2014/11/27/testing-pouchdb.html',
-  
-    '/2014/11/10/3.1.0.html',
-  
-    '/2014/10/26/10-things-i-learned-from-reading-and-writing-the-pouchdb-source.html',
-  
-    '/2014/09/22/3.0.6.html',
-  
-    '/2014/09/07/pouchdb-3.0.5.html',
-  
-    '/2014/09/04/pouchdb-3.0.4.html',
-  
-    '/2014/08/29/pouchdb-3.0.3.html',
-  
-    '/2014/08/20/pouchdb-3.0.2.html',
-  
-    '/2014/08/16/pouchdb-3.0.1.html',
-  
-    '/2014/08/12/pouchdb-3.0.0.html',
-  
-    '/2014/07/25/pouchdb-levels-up.html',
-  
-    '/2014/06/17/12-pro-tips-for-better-code-with-pouchdb.html',
-  
-    '/2014/06/01/pouchdb-2.2.3.html',
-  
-    '/2014/05/01/secondary-indexes-have-landed-in-pouchdb.html',
-  
-    '/2014/05/01/pouchdb-2.2.0.html',
-  
-    '/2014/04/14/pagination-strategies-with-pouchdb.html',
-  
-    '/2014/04/01/welcome-to-the-pouchdb-blog.html',
-  
-    '/2014/04/01/pouchdb-2.1.0.html',
-  
+  '/2026/04/10/migration-to-nodesqlite.html',
+  '/2024/05/24/pouchdb-9.0.0.html',
+  '/2023/02/09/pouchdb-8.0.1.html',
+  '/2022/12/14/pouchdb-8.0.0.html',
+  '/2022/11/11/pouchdb-7.3.1.html',
+  '/2022/04/13/pouchdb-7.3.0.html',
+  '/2020/02/12/pouchdb-7.2.0.html',
+  '/2019/06/13/pouchdb-7.1.1.html',
+  '/2018/06/21/pouchdb-7.0.0.html',
+  '/2018/01/23/pouchdb-6.4.2.html',
+  '/2017/12/16/pouchdb-6.4.0.html',
+  '/2017/07/13/pouchdb-6.3.0.html',
+  '/2017/04/20/pouchdb-6.2.0.html',
+  '/2017/01/05/pouchdb-6.1.1.html',
+  '/2016/12/12/pouchdb-6.1.0.html',
+  '/2016/09/05/pouchdb-6.0.0.html',
+  '/2016/06/06/pouchdb-5.4.0.html',
+  '/2016/06/06/introducing-pouchdb-custom-builds.html',
+  '/2016/04/28/prebuilt-databases-with-pouchdb.html',
+  '/2016/03/04/pouchdb-5.3.0-sqlite-support-in-node.html',
+  '/2016/01/13/pouchdb-5.2.0-a-better-build-system-with-rollup.html',
+  '/2015/11/03/cover-all.html',
+  '/2015/10/06/pouchdb-5.0.0-five-years-of-pouchdb.html',
+  '/2015/09/12/pouchdb-4.0.2-a-little-extra.html',
+  '/2015/09/01/pouchdb-4.0.1-gotta-go-fast.html',
+  '/2015/08/03/pouchdb-4.0.0-ballast-overboard.html',
+  '/2015/06/01/pouchdb-3.6.0.html',
+  '/2015/05/18/we-have-a-problem-with-promises.html',
+  '/2015/05/07/pouchdb-3.5.0-vote-for-pouchdb.html',
+  '/2015/04/07/better-late-than-never.html',
+  '/2015/04/05/filtered-replication.html',
+  '/2015/03/05/taming-the-async-beast-with-es7.html',
+  '/2015/02/28/efficiently-managing-ui-state-in-pouchdb.html',
+  '/2015/02/14/a-quick-one.html',
+  '/2015/02/03/fix-up-look-sharp.html',
+  '/2015/01/05/pouchdb-3.2.1-you-can-always-be-faster.html',
+  '/2014/12/11/the-pains-of-being-async-at-heart.html',
+  '/2014/12/04/3.2.0.html',
+  '/2014/11/27/testing-pouchdb.html',
+  '/2014/11/10/3.1.0.html',
+  '/2014/10/26/10-things-i-learned-from-reading-and-writing-the-pouchdb-source.html',
+  '/2014/09/22/3.0.6.html',
+  '/2014/09/07/pouchdb-3.0.5.html',
+  '/2014/09/04/pouchdb-3.0.4.html',
+  '/2014/08/29/pouchdb-3.0.3.html',
+  '/2014/08/20/pouchdb-3.0.2.html',
+  '/2014/08/16/pouchdb-3.0.1.html',
+  '/2014/08/12/pouchdb-3.0.0.html',
+  '/2014/07/25/pouchdb-levels-up.html',
+  '/2014/06/17/12-pro-tips-for-better-code-with-pouchdb.html',
+  '/2014/06/01/pouchdb-2.2.3.html',
+  '/2014/05/01/secondary-indexes-have-landed-in-pouchdb.html',
+  '/2014/05/01/pouchdb-2.2.0.html',
+  '/2014/04/14/pagination-strategies-with-pouchdb.html',
+  '/2014/04/01/welcome-to-the-pouchdb-blog.html',
+  '/2014/04/01/pouchdb-2.1.0.html',
 ];
 
 // Only cache the first blog page
@@ -283,33 +125,33 @@ var nonCriticalAssets =
     'https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js',
   ]
   .concat(pages)
-  .filter(function(file) {
+  .filter(function (file) {
     return file.indexOf('/blog/page') === -1;
   })
   .concat(blogPosts.slice(0, 5)); // Let's only cache the first five by default
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open(newCacheName)
-      .then(function(cache) {
+      .then(function (cache) {
         cache.addAll(nonCriticalAssets);
         // Only return the criticalAssets to waitUntil
         // This will allow the noncritical assets to fail
         return cache.addAll(criticalAssets);
       })
-      .then(function() {
+      .then(function () {
         return self.skipWaiting();
       })
   );
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   // remove caches beginning "pouchdb-" that aren't the new cache
   event.waitUntil(
     caches.keys()
-      .then(function(cacheNames) {
+      .then(function (cacheNames) {
         return Promise.all(
-          cacheNames.map(function(cacheName) {
+          cacheNames.map(function (cacheName) {
             if (!/^pouchdb-/.test(cacheName)) {
               return;
             }
@@ -319,25 +161,32 @@ self.addEventListener('activate', function(event) {
           })
         );
       })
-      .then(function() {
+      .then(function () {
         return self.clients.claim();
       })
   );
 });
 
-self.addEventListener('fetch', function(event) {
-  // Try the cache, if it's not in there try the network, then cache that response
-  // if that network request fails show the offline.html page.
-  event.respondWith(
-    caches.open(newCacheName).then(function(cache) {
-      return cache.match(event.request).then(function (response) {
-        return response || fetch(event.request).then(function(response) {
-          cache.put(event.request, response.clone());
-          return response;
-        }).catch(function () {
-          return cache.match('/offline.html');
-        });
-      });
-   })
-  );
+self.addEventListener('fetch', function (event) {
+  // Ignore POST etc, which will happen when using PouchDB
+  // in the browser console
+  if (event.request.method === "GET") {
+    // Ignore requests from browser extensions etc
+    if ((event.request.url.indexOf('http') === 0)) {
+      // Try the cache, if it's not in there try the network, then cache that response
+      // if that network request fails show the offline.html page.
+      event.respondWith(
+        caches.open(newCacheName).then(function (cache) {
+          return cache.match(event.request).then(function (response) {
+            return response || fetch(event.request).then(function (response) {
+              cache.put(event.request, response.clone());
+              return response;
+            }).catch(function () {
+              return cache.match('/offline.html');
+            });
+          });
+      })
+      );
+    }
+  }
 });

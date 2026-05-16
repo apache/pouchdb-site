@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 4.0.0 - Ballast Overboard</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 4.0.0 - Ballast Overboard</h1>
+          <h1 class="margin-bottom-none">PouchDB 4.0.0 - Ballast Overboard
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -158,7 +159,8 @@ we should also discuss what to remove. - possibly Joe Armstrong</p>
 </ul>
 <p>We previously used <code>bluebird</code> as our <code>Promise</code> polyfill in node.js because it is a fast library. However <code>bluebird</code> contains a lot of non-standard <code>Promise</code> functionality, which authors could use and then have their code break in browsers as well as iojs and future versions of node.js, which have introduced a standard <code>Promise</code> implementation.</p>
 <p>PouchDB will always use the globally available <code>Promise</code> object where available, so if you have only used standard <code>Promise</code> functionality, this change will not break anything. If you require the extra functionality provided by <code>bluebird</code>, then you can have PouchDB use it with</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">global<span class="token punctuation">.</span>Promise <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'bluebird'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><ul>
+<pre class="language-js"><code class="language-js">global<span class="token punctuation">.</span>Promise <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'bluebird'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<ul>
 <li>Remove <code>local_seq</code> - (<a href="https://github.com/pouchdb/pouchdb/issues/4080">#4080</a>)</li>
 </ul>
 <p>This was a little-used functionality whose semantics are due to change in CouchDB 2.0.</p>
@@ -166,18 +168,22 @@ we should also discuss what to remove. - possibly Joe Armstrong</p>
 <li>Remove <code>onChange</code> and <code>complete</code> callbacks - (<a href="https://github.com/pouchdb/pouchdb/issues/4098">#4098</a>)</li>
 </ul>
 <p>These callbacks have long been replaced with the <code>EventEmitter</code>-style <code>changes()</code>, <code>replicate()</code> and <code>sync()</code> APIs, and are finally being removed. If you still have:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
   <span class="token literal-property property">onChange</span><span class="token operator">:</span> changeFun<span class="token punctuation">,</span>
   <span class="token literal-property property">complete</span><span class="token operator">:</span> completeFun
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can replace them with:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can replace them with:</p>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">changes</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> changeFun<span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">,</span> completeFun<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><ul>
+  <span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'complete'</span><span class="token punctuation">,</span> completeFun<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<ul>
 <li>Remove <code>uptodate</code> event - (<a href="https://github.com/pouchdb/pouchdb/issues/4100">#4100</a>)</li>
 </ul>
 <p><code>uptodate</code> was an event introduced to indicate when a <code>live</code> replication had finished processing all current changes and was waiting on future changes. It has since been replaced by the <code>paused</code> event, which will do the same and additionally indicate whether the replication was paused due to an error. If you have:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">replication<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'uptodate'</span><span class="token punctuation">,</span> doneFun<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can replace it with:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">replication<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'paused'</span><span class="token punctuation">,</span> doneFun<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h3>New features</h3>
+<pre class="language-js"><code class="language-js">replication<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'uptodate'</span><span class="token punctuation">,</span> doneFun<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can replace it with:</p>
+<pre class="language-js"><code class="language-js">replication<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'paused'</span><span class="token punctuation">,</span> doneFun<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h3>New features</h3>
 <ul>
 <li>Return Blobs (or Buffers) in <code>get()</code> + <code>allDocs()</code> + <code>changes()</code> + <code>query()</code> with <code>{binary: true}</code> (<a href="https://github.com/pouchdb/pouchdb/issues/2858">#2858</a>)</li>
 <li>Allow chaining of plugin registration (<a href="https://github.com/pouchdb/pouchdb/issues/3943">#3943</a>)</li>
@@ -332,13 +338,8 @@ we should also discuss what to remove. - possibly Joe Armstrong</p>
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

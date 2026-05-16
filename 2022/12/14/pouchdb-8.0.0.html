@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 8.0.0 — Modernizing PouchDB</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 8.0.0 — Modernizing PouchDB</h1>
+          <h1 class="margin-bottom-none">PouchDB 8.0.0 — Modernizing PouchDB
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -154,33 +155,37 @@
 <h2>Add <code>activeTasks</code></h2>
 <p><a href="https://github.com/pouchdb/pouchdb/issues/8422">#8422</a> <a href="https://github.com/pouchdb/pouchdb/issues/8441">#8441</a> Analogous to the <code>_active_tasks</code> feature in CouchDB, PouchDB now has <code>activeTasks</code>. With this functionality, PouchDB is able to list all active database tasks, like <code>database_compaction</code>, <code>view_indexing</code>, or <code>replication</code>. PouchDB will report the progress of these tasks to the active tasks API and remove tasks as soon as they are completed or have failed.</p>
 <p>Example usage:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">let</span> tasks <span class="token operator">=</span> PouchDB<span class="token punctuation">.</span>activeTasks<span class="token punctuation">.</span><span class="token function">list</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre></figure><p>Example result:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">[</span><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> tasks <span class="token operator">=</span> PouchDB<span class="token punctuation">.</span>activeTasks<span class="token punctuation">.</span><span class="token function">list</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+<p>Example result:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">[</span><span class="token punctuation">{</span>
   <span class="token string-property property">"id"</span><span class="token operator">:</span> <span class="token string">"d81fea92-8ce4-42df-bb2b-89a4e67536c3"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"name"</span><span class="token operator">:</span> <span class="token string">"database_compaction"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"created_at"</span><span class="token operator">:</span> <span class="token string">"2022-02-08T15:38:45.318Z"</span><span class="token punctuation">,</span>
   <span class="token string-property property">"total_items"</span><span class="token operator">:</span> <span class="token number">12</span><span class="token punctuation">,</span>
   <span class="token string-property property">"completed_items"</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
   <span class="token string-property property">"updated_at"</span><span class="token operator">:</span> <span class="token string">"2022-02-08T15:38:45.821Z"</span>
-<span class="token punctuation">}</span><span class="token punctuation">]</span></code></pre></figure><h2>Add <code>purge</code> to the <code>indexeddb</code> adapter</h2>
+<span class="token punctuation">}</span><span class="token punctuation">]</span></code></pre>
+<h2>Add <code>purge</code> to the <code>indexeddb</code> adapter</h2>
 <p><a href="https://github.com/pouchdb/pouchdb/pull/8453">#8453</a> Similar to CouchDB's <code>purge</code>, PouchDB has now <code>purge</code> for its <code>indexeddb</code> adapter.</p>
 <p>Purge permanently removes data from the database. Normal deletion with <code>db.remove()</code> does not, it only marks the document as <code>_deleted=true</code> and creates a new revision. This behaviour ensures that deletes can be replicated across databases, and deleted documents don’t get undeleted by syncing with a database that still has this document.</p>
 <p><code>db.purge()</code> is not intended as a regular method for deleting documents, instead, it is meant as an admin function for cases where some secret was erroneously added to the database and must now be removed completely, eg. a credit card or social security number. Purge effectively puts the database in a state where the offending write never happened.</p>
 <p>Example usage:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">try</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token keyword">try</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> db<span class="token punctuation">.</span><span class="token function">purge</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">,</span> <span class="token string">'6-3a24009a9525bde9e4bfa8a99046b00d'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment">// handle result</span>
 <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle error</span>
-<span class="token punctuation">}</span></code></pre></figure><p>Example result:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Example result:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token string-property property">"ok"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
   <span class="token string-property property">"deletedRevs"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
     <span class="token string">"6-3a24009a9525bde9e4bfa8a99046b00d"</span><span class="token punctuation">,</span>
     <span class="token string">"5-df4a81cd21c75c71974d96e88a68fc2f"</span>
   <span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token string-property property">"documentWasRemovedCompletely"</span><span class="token operator">:</span> <span class="token boolean">false</span>
-<span class="token punctuation">}</span></code></pre></figure><h2>Improving publishing packages</h2>
+<span class="token punctuation">}</span></code></pre>
+<h2>Improving publishing packages</h2>
 <p><a href="https://github.com/pouchdb/pouchdb/pull/8576">#8576</a> Previously, if publishing packages failed part-way through, the release script halt and the remaining packages needed to be published by hand. With this improvement the script can be run again to publish the remaining packages.</p>
 <h2>Changelog</h2>
 <h3>New features</h3>
@@ -431,13 +436,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

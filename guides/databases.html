@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Working with databases</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Working with databases</h1>
+          <h1 class="margin-bottom-none">Working with databases
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -224,7 +225,8 @@
 <p>PouchDB databases come in two flavors: local and remote.</p>
 <div class='h2'><div class='anchor-id' id='local–databases'></div><a class='anchor' href='#local–databases' name='local–databases'>Local databases</a></div>
 <p>To create a local database, you simply call <code>new PouchDB</code> and give it a name:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'kittens'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/bddac54b92c2d8d39241">live example</a></strong> of this code.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'kittens'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>You can see a <strong><a href="http://bl.ocks.org/nolanlawson/bddac54b92c2d8d39241">live example</a></strong> of this code.</p>
 <div class="alert alert-info">
 <div class="alert-text">
 <p><strong>Protip:</strong> whenever you see a live example in this guide, you can download it to follow along at home! For example, to run this example, just enter the following commands in your command prompt:</p>
@@ -240,28 +242,37 @@ Now the site is up and running at <a href='http://localhost:8000'>http://localho
 </div></div>
 <div class='h2'><div class='anchor-id' id='remote-databases'></div><a class='anchor' href='#remote-databases' name='remote-databases'>Remote databases</a></div>
 <p>To create a remote database, you call <code>new PouchDB</code> and give it a path to a database in CouchDB.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://localhost:5984/kittens'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><div class="alert alert-info">
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'http://localhost:5984/kittens'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<div class="alert alert-info">
 <div class="alert-text">
 <p><strong>note:</strong> The remote database will not be created until you do an API call, e.g.: <code>db.info()</code>. The reason behind that is that the <code>PouchDB</code> constructor is completely
 synchronous, for ease of error handling (i.e. no asynchronous errors).</p>
 </div></div>
 <p>The structure of a CouchDB URL is very simple:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">http://     localhost:5984     /kittens
+<pre><code>http://     localhost:5984     /kittens
 ⌞_____⌟     ⌞____________⌟      ⌞_____⌟
    |              |                |
 Protocol     Where CouchDB       database
 (https if    itself is           name
-Cloudant)    hosted</code></pre></figure><p>If the remote database doesn't exist, then PouchDB will create it for you.</p>
+Cloudant)    hosted
+
+</code></pre>
+<p>If the remote database doesn't exist, then PouchDB will create it for you.</p>
 <p>You can verify that your database is working by visiting the URL  <a href="http://localhost:5984/kittens">http://localhost:5984/kittens</a>.  You should see something like this:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">,</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"doc_del_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"purge_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"compact_running"</span><span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token string-property property">"disk_size"</span><span class="token operator">:</span><span class="token number">79</span><span class="token punctuation">,</span><span class="token string-property property">"data_size"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"instance_start_time"</span><span class="token operator">:</span><span class="token string">"1410722558431975"</span><span class="token punctuation">,</span><span class="token string-property property">"disk_format_version"</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token string-property property">"committed_update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">}</span></code></pre></figure><p>If instead you see:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"error"</span><span class="token operator">:</span><span class="token string">"not_found"</span><span class="token punctuation">,</span><span class="token string-property property">"reason"</span><span class="token operator">:</span><span class="token string">"no_db_file"</span><span class="token punctuation">}</span></code></pre></figure><p>Then check to make sure that your remote CouchDB has started up correctly. Common errors (such as CORS) are <a href="/errors.html">listed here</a>.</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">,</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"doc_del_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"purge_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"compact_running"</span><span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token string-property property">"disk_size"</span><span class="token operator">:</span><span class="token number">79</span><span class="token punctuation">,</span><span class="token string-property property">"data_size"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"instance_start_time"</span><span class="token operator">:</span><span class="token string">"1410722558431975"</span><span class="token punctuation">,</span><span class="token string-property property">"disk_format_version"</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token string-property property">"committed_update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">}</span></code></pre>
+<p>If instead you see:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"error"</span><span class="token operator">:</span><span class="token string">"not_found"</span><span class="token punctuation">,</span><span class="token string-property property">"reason"</span><span class="token operator">:</span><span class="token string">"no_db_file"</span><span class="token punctuation">}</span></code></pre>
+<p>Then check to make sure that your remote CouchDB has started up correctly. Common errors (such as CORS) are <a href="/errors.html">listed here</a>.</p>
 <div class='h2'><div class='anchor-id' id='get-basic-info-about-the–database'></div><a class='anchor' href='#get-basic-info-about-the–database' name='get-basic-info-about-the–database'>Get basic info about the database</a></div>
 <p>You can see basic information about the database by using the <code>info()</code> method.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">info</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">info</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>info<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></figure><p>The local database should show something like:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">}</span></code></pre></figure><p>The remote database may have a bit more information:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">,</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"doc_del_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"purge_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"compact_running"</span><span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token string-property property">"disk_size"</span><span class="token operator">:</span><span class="token number">79</span><span class="token punctuation">,</span><span class="token string-property property">"data_size"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"instance_start_time"</span><span class="token operator">:</span><span class="token string">"1410722558431975"</span><span class="token punctuation">,</span><span class="token string-property property">"disk_format_version"</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token string-property property">"committed_update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">}</span></code></pre></figure><p>The most important bits of information are:</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre>
+<p>The local database should show something like:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">}</span></code></pre>
+<p>The remote database may have a bit more information:</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span><span class="token string-property property">"db_name"</span><span class="token operator">:</span><span class="token string">"kittens"</span><span class="token punctuation">,</span><span class="token string-property property">"doc_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"doc_del_count"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"purge_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"compact_running"</span><span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span><span class="token string-property property">"disk_size"</span><span class="token operator">:</span><span class="token number">79</span><span class="token punctuation">,</span><span class="token string-property property">"data_size"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string-property property">"instance_start_time"</span><span class="token operator">:</span><span class="token string">"1410722558431975"</span><span class="token punctuation">,</span><span class="token string-property property">"disk_format_version"</span><span class="token operator">:</span><span class="token number">6</span><span class="token punctuation">,</span><span class="token string-property property">"committed_update_seq"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">}</span></code></pre>
+<p>The most important bits of information are:</p>
 <ul>
 <li><code>doc_count</code>: the number of undeleted documents in the database</li>
 <li><code>db_name</code>: the name of the database</li>
@@ -487,13 +498,8 @@ Cloudant)    hosted</code></pre></figure><p>If the remote database doesn't exist
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

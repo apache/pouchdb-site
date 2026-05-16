@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Updating and deleting documents</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">Updating and deleting documents</h1>
+          <h1 class="margin-bottom-none">Updating and deleting documents
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -226,14 +227,15 @@
 <div class='h2'><div class='anchor-id' id='creating-a–default-document'></div><a class='anchor' href='#creating-a–default-document' name='creating-a–default-document'>Creating a default document</a></div>
 <p>Often in our code, we'll want to <code>get()</code> a document, and if it doesn't exist, we want to create some default.</p>
 <p>For instance, let's say we have a configuration object. We want to provide some reasonable defaults for our config:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">{</span>
   <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'config'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">background</span><span class="token operator">:</span> <span class="token string">'blue'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">foreground</span><span class="token operator">:</span> <span class="token string">'white'</span><span class="token punctuation">,</span>
   <span class="token literal-property property">sparkly</span><span class="token operator">:</span> <span class="token string">'false'</span>
-<span class="token punctuation">}</span></code></pre></figure><p>This is a pretty good default setting! So let's write the code to set it as our default.</p>
+<span class="token punctuation">}</span></code></pre>
+<p>This is a pretty good default setting! So let's write the code to set it as our default.</p>
 <p>Thankfully, promises make this rather easy:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'config'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'config'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">.</span>name <span class="token operator">===</span> <span class="token string">'not_found'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token punctuation">{</span>
       <span class="token literal-property property">_id</span><span class="token operator">:</span> <span class="token string">'config'</span><span class="token punctuation">,</span>
@@ -248,7 +250,8 @@
   <span class="token comment">// sweet, here is our configDoc</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">// handle any errors</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>This code is doing the following:</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>This code is doing the following:</p>
 <ul>
 <li>Try to <code>get()</code> a doc with <code>_id</code> equal to <code>'config'</code></li>
 <li>If it doesn't find it, return the default doc</li>
@@ -260,45 +263,54 @@
 <p>The answer is: because <code>_rev</code>s are what makes sync work so well. PouchDB asks for a little upfront effort with managing document revisions, so that later on, sync is a breeze.</p>
 <p>In fact, you are probably already familiar with a system that forces you to go through a similar dance. This system is called <a href="http://www.git-scm.com/">Git</a>.</p>
 <p>PouchDB and CouchDB's document revision structure is very similar to Git's. In fact, each document's revision history is stored as a tree (exactly like Git), which allows you to handle conflicts when any two databases get out of sync.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">rev 3-a  rev 3-b
+<pre><code>rev 3-a  rev 3-b
       \___/
         |
       rev 2
         |
-      rev 1</code></pre></figure><p>Conflicts will be discussed later in this guide. For now, you can think of revisions as being a single lineage:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">rev 4
+      rev 1
+</code></pre>
+<p>Conflicts will be discussed later in this guide. For now, you can think of revisions as being a single lineage:</p>
+<pre><code>      rev 4
         |
       rev 3
         |
       rev 2
         |
-      rev 1</code></pre></figure><div class='h2'><div class='anchor-id' id='deleting-documents'></div><a class='anchor' href='#deleting-documents' name='deleting-documents'>Deleting documents</a></div>
+      rev 1
+</code></pre>
+<div class='h2'><div class='anchor-id' id='deleting-documents'></div><a class='anchor' href='#deleting-documents' name='deleting-documents'>Deleting documents</a></div>
 <p>When you <code>remove()</code> a document, it's not really deleted; it just gets a <code>_deleted</code> attribute added to it.</p>
 <p>That is, the database saves a tombstone at the end of the revision tree.</p>
-<figure class="highlight"><pre data-copybutton><code class="language-">{_id: 'foo', _rev: '4-z', _deleted: true}
+<pre><code>{_id: 'foo', _rev: '4-z', _deleted: true}
             |
 {_id: 'foo', _rev: '3-y'}
             |
 {_id: 'foo', _rev: '2-x'}
             |
-{_id: 'foo', _rev: '1-w'}</code></pre></figure><p>There are three ways of deleting a document, which are all equivalent:</p>
+{_id: 'foo', _rev: '1-w'}
+</code></pre>
+<p>There are three ways of deleting a document, which are all equivalent:</p>
 <ol>
 <li>You can call <code>db.remove(doc)</code>:</li>
 </ol>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><ol start="2">
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<ol start="2">
 <li>You can call <code>db.remove(doc._id, doc._rev)</code>:</li>
 </ol>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>doc<span class="token punctuation">.</span>_id<span class="token punctuation">,</span> doc<span class="token punctuation">.</span>_rev<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><ol start="3">
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<ol start="3">
 <li>You can call <code>db.put(doc)</code> with <code>_deleted</code> set to <code>true</code>:</li>
 </ol>
-<figure class="highlight"><pre data-copybutton><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<pre class="language-js"><code class="language-js">db<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'mydoc'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">doc</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   doc<span class="token punctuation">.</span>_deleted <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> db<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>doc<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Of course, you will want to add <code>catch()</code> to the end of all these, unless you like to live dangerously.</p>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Of course, you will want to add <code>catch()</code> to the end of all these, unless you like to live dangerously.</p>
 <p>You can see <strong><a href="http://bl.ocks.org/nolanlawson/b2049ad69308e92f15bc">a live example</a></strong> of this code.</p>
 <div class='h2'><div class='anchor-id' id='related-api-documentation'></div><a class='anchor' href='#related-api-documentation' name='related-api-documentation'>Related API documentation</a></div>
 <ul>
@@ -497,13 +509,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

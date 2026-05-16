@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 5.3.0&#58; SQLite support in Node</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 5.3.0&#58; SQLite support in Node</h1>
+          <h1 class="margin-bottom-none">PouchDB 5.3.0&#58; SQLite support in Node
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -153,8 +154,9 @@ that, in addition to the LevelDB-based <a href="https://github.com/Level/leveldo
 also use <a href="https://github.com/mapbox/node-sqlite3">sqlite3</a>, via PouchDB's
 WebSQL adapter.</p>
 <p>To get started, just do:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb/extras/websql'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'database.db'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'websql'</span><span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre></figure><p>This feature will also be available in <a href="https://github.com/pouchdb/pouchdb-server/">PouchDB Server</a>, as <code>pouchdb-server --sqlite</code>.</p>
+<pre class="language-js"><code class="language-js"><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb/extras/websql'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'database.db'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'websql'</span><span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre>
+<p>This feature will also be available in <a href="https://github.com/pouchdb/pouchdb-server/">PouchDB Server</a>, as <code>pouchdb-server --sqlite</code>.</p>
 <p>Note that this doesn't change the behavior of the WebSQL adapter in the browser.
 That adapter is still bundled by default in PouchDB's browser version. For more
 details, see the <a href="/api.html#extras">&quot;extras&quot; API documentation</a>.</p>
@@ -309,13 +311,8 @@ details, see the <a href="/api.html#extras">&quot;extras&quot; API documentation
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {

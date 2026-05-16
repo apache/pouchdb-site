@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PouchDB 7.3.0</title>
     <link rel="alternate" title="PouchDB, the JavaScript Database that Syncs!" type="application/rss+xml" href="/feed.xml">
-    <link rel="stylesheet" href="/static/css/pouchdb.css" />
+    <link rel="stylesheet" href="/static/css/pouchdb.min.css" />
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
@@ -69,9 +69,9 @@
 
         <div class="container">
 
-          <h1 class="margin-bottom-none">PouchDB 7.3.0</h1>
+          <h1 class="margin-bottom-none">PouchDB 7.3.0
           
-            <span class="h1 margin-bottom-none">
+            <span class="margin-bottom-none">
               
 <a
   data-toggle="tooltip"
@@ -84,6 +84,7 @@
 
             </span>
           
+          </h1>
           
 
         </div>
@@ -163,8 +164,9 @@
 </ul>
 <h2>Add <code>indexeddb</code> adapter in the default distribution</h2>
 <p>The indexeddb adapter is now available in the default distribution. You can use it specifying the adapter:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-indexeddb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'indexeddb'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><p>Please note that it is considered BETA quality, use it carefully and please <a href="https://github.com/pouchdb/pouchdb/issues/new">report</a> any issues you find. Thank you.</p>
+<pre class="language-js"><code class="language-js">PouchDB<span class="token punctuation">.</span><span class="token function">plugin</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pouchdb-adapter-indexeddb'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token string">'mydb'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'indexeddb'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>Please note that it is considered BETA quality, use it carefully and please <a href="https://github.com/pouchdb/pouchdb/issues/new">report</a> any issues you find. Thank you.</p>
 <h2>Add <code>view_update_changes_batch_size</code></h2>
 <p><a href="https://github.com/pouchdb/pouchdb/pull/8320">#8320</a> With <code>view_update_changes_batch_size</code>, we can now specify how many change records will be consumed at a time when rebuilding view indexes when the <code>query()</code> method is used.</p>
 <h2>Support <code>partial_filter_selector</code></h2>
@@ -177,7 +179,8 @@
 <p><a href="https://github.com/pouchdb/pouchdb/issues/8380">#8380</a> <a href="https://github.com/pouchdb/pouchdb/issues/8379">#8379</a> We expose changes feed <code>style</code> to replication options.</p>
 <h2>Add <code>view_adapter</code> option</h2>
 <p><a href="https://github.com/pouchdb/pouchdb/pull/8335">#8335</a> <code>view_adapter</code> provides an option for the user to specify a separate adapter to store their view index in addition to the main adapter for their core data:</p>
-<figure class="highlight"><pre data-copybutton><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token constant">DB_NAME</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'indexeddb'</span><span class="token punctuation">,</span> <span class="token literal-property property">view_adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></figure><h2>Enable discussions and projects</h2>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> db <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PouchDB</span><span class="token punctuation">(</span><span class="token constant">DB_NAME</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token literal-property property">adapter</span><span class="token operator">:</span> <span class="token string">'indexeddb'</span><span class="token punctuation">,</span> <span class="token literal-property property">view_adapter</span><span class="token operator">:</span> <span class="token string">'memory'</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h2>Enable discussions and projects</h2>
 <p>In Github we have enabled:</p>
 <ul>
 <li><a href="https://github.com/pouchdb/pouchdb/discussions">Discussions</a>: feel free to open and participate</li>
@@ -440,13 +443,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="/static/js/stickyfill.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
     <script type="text/javascript">
-      var $navSidebarWrapper = $('.nav-sidebar-wrapper');
-      if ($navSidebarWrapper.length) {
-        $navSidebarWrapper.Stickyfill();
-      }
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {
