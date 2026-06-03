@@ -3,17 +3,21 @@
 // - https://eduardoboucas.com/blog/2015/06/04/supercharging-jekyll-with-a-serviceworker.html
 // - https://jakearchibald.com/2014/offline-cookbook
 
-var newCacheName = 'pouchdb-assets-cache-v2026-05-16T09:39:35.073Z';
+var newCacheName = 'pouchdb-assets-cache-v2026-06-03T14:27:13.908Z';
 
 var criticalAssets = [
   '/offline.html',
   '/static/css/pouchdb.min.css',
+  '/static/fonts/LatoLatin-Medium.woff2',
+  '/static/fonts//open-sans-v44-latin_latin-ext-regular.woff2',
+  '/static/fonts//open-sans-v44-latin_latin-ext-700.woff2'
 ];
 
 var pages = [
   '/.asf.yml',
   '/feed.xml',
   '/serviceWorker.js',
+  '/WEBSITE_README.html',
   '/',
   '/offline.html',
   '/api.html',
@@ -120,9 +124,9 @@ var nonCriticalAssets =
   [
     '/static/favicon.ico',
     '/static/js/code.min.js',
-    'https://code.jquery.com/jquery.min.js',
-    'https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js',
-    'https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js',
+    '/static/js/jquery.min.js',
+    '/static/js/bootstrap.min.js',
+    '/static/js/pouchdb.min.js',
   ]
   .concat(pages)
   .filter(function (file) {

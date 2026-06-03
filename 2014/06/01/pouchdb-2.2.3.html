@@ -9,18 +9,6 @@
     <link rel="me" href="https://fosstodon.org/@pouchdb" />
     <meta name="theme-color" content="#6ccb99">
     <meta name="msapplication-TileColor" content="#6ccb99">
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-42479701-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-    <link href='//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon"/>
   </head>
 
@@ -134,9 +122,7 @@
 
 <div class="post">
   <div class="media">
-    <a class="pull-left" href="#">
-    <img class="media-object img-circle img-responsive" src='https://gravatar.com/avatar/030451d8cfc268d666bae9a7fe8d10ec' alt='Dale Harvey'>
-    </a>
+    <img class="pull-left media-object img-circle img-responsive" src='/static/img/authors/dale_harvey.jpeg' alt='Dale Harvey'>
     <div class="media-body">
     <p>
       <strong>By:</strong> <a href="https://twitter.com/daleharvey">Dale Harvey</a><br>
@@ -295,11 +281,11 @@
       </div>
 
     </footer>
-    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
-    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/code.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pouchdb/dist/pouchdb.min.js"></script>
-    <script type="text/javascript">
+    <script type="text/javascript" src="/static/js/pouchdb.min.js"></script>
+    <script type="text/javascript" defer>
       $('[data-toggle="tooltip"]').tooltip();
       function onCached(e) {
         if (applicationCache.status === 1) {
