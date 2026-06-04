@@ -3,7 +3,7 @@
 // - https://eduardoboucas.com/blog/2015/06/04/supercharging-jekyll-with-a-serviceworker.html
 // - https://jakearchibald.com/2014/offline-cookbook
 
-var newCacheName = 'pouchdb-assets-cache-v2026-06-03T14:27:13.908Z';
+var newCacheName = 'pouchdb-assets-cache-v2026-06-04T13:39:09.832Z';
 
 var criticalAssets = [
   '/offline.html',
@@ -14,7 +14,7 @@ var criticalAssets = [
 ];
 
 var pages = [
-  '/.asf.yml',
+  '/.asf.yaml',
   '/feed.xml',
   '/serviceWorker.js',
   '/WEBSITE_README.html',
