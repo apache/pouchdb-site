@@ -45,6 +45,40 @@
             <a class='btn btn-link btn-lg' href="/learn.html">Learn</a>
           </li>
           <li>
+            <div id="asf-dropdown-container" class="dropdown">
+              <button class="btn btn-link btn-lg dropdown-toggle" type="button" id="asf-dropdown" data-toggle="dropdown">
+                ASF
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="asf-dropdown">
+                <li role="presentation">
+                  <a href="https://www.apache.org/" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Foundation</a>
+                </li>
+                <li role="presentation">
+                  <a href="https://www.apache.org/licenses/" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">License</a>
+                </li>
+                <li role="presentation">
+                  <a href="https://www.apache.org/events/current-event.html" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Events</a>
+                </li>
+                <li role="presentation">
+                  <a href="https://privacy.apache.org/policies/privacy-policy-public.html" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Privacy</a>
+                </li>
+                <li role="presentation">
+                  <a href="https://www.apache.org/security/" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Security</a>
+                </li>
+                <li role="presentation">
+                  <a href="https://www.apache.org/foundation/sponsorship.html" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Sponsorship</a>
+                </li>
+                <li role="presentation">
+                  <a href="https://www.apache.org/foundation/thanks.html" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Thanks</a>
+                </li>
+                <li role="presentation">
+                  <a href="https://www.apache.org/foundation/policies/conduct.html" target="_blank" rel="noopener noreferrer" role="menuitem" tabindex="-1">Code of Conduct</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
             <a class='btn btn-primary btn-lg' href="/download.html">Download <strong>v9.0.0</strong></a>
           </li>
         </ul>
@@ -479,85 +513,65 @@ db<span class="token punctuation">.</span><span class="token function">put</span
     </div>
 
     <div class="band">
-
       <div class="container">
-
-        <div class="row">
-
-          <div class="col-xs-4 col-md-offset-0 col-md-2">
-            <a
-              href="https://bsky.app/profile/pouchdb.bsky.social"
-              target="_blank"
-              rel="noopener noreferrer"
+        <div class="social_logo_band">
+          <a
+            href="https://bsky.app/profile/pouchdb.bsky.social"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="icon"
+              src="/static/img/friends/bluesky.svg"
+              alt="PouchDB's Bluesky"
+            />
+          </a>
+          <a
+            href="https://fosstodon.org/@pouchdb"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="icon"
+              src="/static/img/friends/mastodon.svg"
+              alt="PouchDB's Mastodon"
+            />
+          </a>
+          <a
+            href="https://github.com/rvagg/node-levelup"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="icon"
+              src="/static/img/friends/leveldb.svg"
+              alt="Node Levelup"
+            />
+          </a>
+          <a
+            href="https://github.com/apache/pouchdb"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="icon"
+              src="/static/img/friends/github.svg"
+              alt="PouchDB's Github Repo"
+            />
+          </a>
+          <a
+            href="https://couchdb.apache.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="icon"
+              src="/static/img/friends/couchdb.svg"
+              alt="CouchDB"
             >
-              <img
-                class="icon"
-                src="/static/img/friends/bluesky.svg"
-                alt="PouchDB's Bluesky"
-              />
-            </a>
-          </div>
-
-          <div class="col-xs-4 col-md-offset-0 col-md-2">
-            <a
-              href="https://fosstodon.org/@pouchdb"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                class="icon"
-                src="/static/img/friends/mastodon.svg"
-                alt="PouchDB's Mastodon"
-              />
-            </a>
-          </div>
-
-          <div class="col-xs-4 col-md-2">
-            <a
-              href="https://github.com/rvagg/node-levelup"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                class="icon"
-                src="/static/img/friends/leveldb.svg"
-                alt="Node Levelup"
-              />
-            </a>
-          </div>
-
-          <div class="col-xs-4 col-md-2">
-            <a
-              href="https://github.com/apache/pouchdb"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                class="icon"
-                src="/static/img/friends/github.svg"
-                alt="PouchDB's Github Repo"
-              />
-            </a>
-          </div>
-
-          <div class="col-xs-4 col-md-2">
-            <a
-              href="http://couchdb.apache.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                class="icon"
-                src="/static/img/friends/couchdb.svg"
-                alt="CouchDB"
-              >
-            </a>
-          </div>
-
+          </a>
         </div>
-
       </div>
-
     </div>
 
     <footer class="band band-inverse">
@@ -597,8 +611,37 @@ db<span class="token punctuation">.</span><span class="token function">put</span
             </ul>
           </div>
 
+          <div class="col-sm-3">
+            <a
+              href="https://www.apache.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="apache_logo_footer"
+            >
+              <img
+                src="/static/img/friends/Apache_PoweredBy.svg"
+                alt="Apache Software Foundation"
+              >
+            </a>
+          </div>
+
         </div>
 
+      </div>
+      <div class="container apache_footer">
+        <div>
+          Apache PouchDB (incubating) is an effort undergoing incubation at The Apache Software Foundation (ASF), sponsored by the Incubator. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </div>
+        <img 
+          class="incubator_logo"
+          src="/static/img/friends/apache_incubator_black.svg" 
+          alt="Apache Software Foundation Incubator Logo"/>
+        <div>
+          Apache PouchDB, PouchDB, Apache, the Apache logo, and the Apache PouchDB project logo are either registered trademarks or trademarks of The Apache Software Foundation in the United States and other countries.
+        </div>
+        <div>
+          All other marks mentioned may be trademarks or registered trademarks of their respective owners.
+        </div>
       </div>
 
     </footer>
