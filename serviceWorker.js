@@ -3,7 +3,7 @@
 // - https://eduardoboucas.com/blog/2015/06/04/supercharging-jekyll-with-a-serviceworker.html
 // - https://jakearchibald.com/2014/offline-cookbook
 
-var newCacheName = 'pouchdb-assets-cache-v2026-06-17T10:47:09.178Z';
+var newCacheName = 'pouchdb-assets-cache-v2026-08-25T14:10:14.674Z';
 
 var criticalAssets = [
   '/offline.html',
